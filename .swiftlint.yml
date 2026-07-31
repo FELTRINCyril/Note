@@ -1,0 +1,117 @@
+# Configuration SwiftLint de Slate. Volontairement legere : on veut un garde-fou
+# utile, pas un mur d'avertissements qu'on finit par ignorer.
+# Lancer manuellement :  swiftlint            (lint)
+#                        swiftlint --fix      (corrections automatiques)
+
+included:
+  - App
+  - Packages
+
+excluded:
+  - .build
+  - Packages/SlateEditor/.build
+  - Packages/SlateFeatures/.build
+  - Packages/SlateModel/.build
+  - Packages/SlateServices/.build
+  - Packages/SlateUI/.build
+  - Slate.xcodeproj
+
+# Regles activees en plus du jeu par defaut.
+opt_in_rules:
+  # CLAUDE.md §5 : pas de force-unwrap hors des tests.
+  - force_unwrapping
+  - explicit_init
+  - closure_spacing
+  - collection_alignment
+  - empty_count
+  - empty_string
+  - first_where
+  - contains_over_first_not_nil
+  - last_where
+  - sorted_first_last
+  - redundant_nil_coalescing
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - literal_expression_end_indentation
+  - multiline_parameters
+  - vertical_parameter_alignment_on_call
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prohibited_super_call
+  - fatal_error_message
+  - joined_default_parameter
+  - modifier_order
+  - convenience_type
+  - discouraged_optional_boolean
+  - implicitly_unwrapped_optional
+
+disabled_rules:
+  # Les commentaires de documentation en francais declenchent des faux positifs
+  # sur la ponctuation attendue en anglais.
+  - todo
+
+# Le force-unwrap et l'optionnel implicitement deballe sont des erreurs, pas des
+# avertissements : c'est une regle dure de CLAUDE.md §5.
+force_unwrapping:
+  severity: error
+implicitly_unwrapped_optional:
+  severity: error
+
+line_length:
+  warning: 120
+  error: 160
+  ignores_comments: false
+  ignores_urls: true
+
+file_length:
+  warning: 400
+  error: 600
+
+type_body_length:
+  warning: 250
+  error: 400
+
+function_body_length:
+  warning: 60
+  error: 100
+
+function_parameter_count:
+  warning: 6
+  error: 8
+
+cyclomatic_complexity:
+  warning: 12
+  error: 20
+
+nesting:
+  type_level: 2
+
+identifier_name:
+  min_length:
+    warning: 2
+  excluded:
+    - id
+    - x
+    - y
+    - to
+    - up
+
+type_name:
+  min_length: 3
+  max_length:
+    warning: 45
+    error: 60
+
+trailing_comma:
+  mandatory_comma: false
+
+custom_rules:
+  # Fait respecter la regle typographique du CLAUDE.md global : dans le code, on
+  # n'utilise que des caracteres ASCII pour la ponctuation. Les lettres accentuees
+  # restent autorisees (les chaines d'interface francaises en ont besoin), seuls
+  # les caracteres "typiques d'IA" sont interdits.
+  ascii_punctuation:
+    name: "Ponctuation ASCII"
+    regex: '[\x{2014}\x{2013}\x{2026}\x{2192}\x{2190}\x{21D2}\x{2022}\x{00B7}\x{00D7}\x{201C}\x{201D}\x{2018}\x{2019}\x{00AB}\x{00BB}\x{00A0}\x{2713}\x{2717}]'
+    message: "Caractere non ASCII interdit (em-dash, guillemet typographique, ellipse, fleche, puce, multiplication, espace insecable, coche). Utiliser l'equivalent ASCII : -, \", ..., ->, *, x, espace normale, OK/KO."
+    severity: warning

@@ -12,18 +12,10 @@ struct RootView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarPlaceholderView()
-                .navigationSplitViewColumnWidth(
-                    min: NavigationLayout.sidebarWidth.min,
-                    ideal: NavigationLayout.sidebarWidth.ideal,
-                    max: NavigationLayout.sidebarWidth.max
-                )
+                .slateColumnWidth(NavigationLayout.sidebarWidth)
         } content: {
             NoteListPlaceholderView()
-                .navigationSplitViewColumnWidth(
-                    min: NavigationLayout.listWidth.min,
-                    ideal: NavigationLayout.listWidth.ideal,
-                    max: NavigationLayout.listWidth.max
-                )
+                .slateColumnWidth(NavigationLayout.listWidth)
         } detail: {
             NoteDetailPlaceholderView()
         }

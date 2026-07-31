@@ -71,6 +71,21 @@ targets:
       # Editor / UI / Services remontent transitivement via SlateFeatures.
       - package: SlateFeatures
       - package: SlateModel
+    # SwiftLint tourne apres la compilation, en avertissements seulement (sauf les
+    # regles marquees error dans .swiftlint.yml : force_unwrapping et
+    # implicitly_unwrapped_optional, qui sont des regles dures de CLAUDE.md §5).
+    # Si le binaire n'est pas installe, on n'echoue pas le build : on le signale.
+    postCompileScripts:
+      - name: SwiftLint
+        basedOnDependencyAnalysis: false
+        script: |
+          if command -v swiftlint >/dev/null 2>&1; then
+            swiftlint lint --quiet
+          elif [ -x /opt/homebrew/bin/swiftlint ]; then
+            /opt/homebrew/bin/swiftlint lint --quiet
+          else
+            echo "warning: SwiftLint absent. Installer avec : brew install swiftlint"
+          fi
     info:
       path: App/Info.plist
       properties:
@@ -96,6 +111,9 @@ targets:
         COMBINE_HIDPI_IMAGES: YES
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
+        # SwiftLint doit lire tout l'arbre de sources, ce que le sandbox de scripts
+        # interdit. On ne le desactive que pour cette cible, pas pour le projet.
+        ENABLE_USER_SCRIPT_SANDBOXING: NO
       configs:
         # Dev local : pas de CloudKit (aucun container iCloud requis, aucune
         # signature d'equipe requise). Le flag SLATE_CLOUDKIT est absent.

@@ -49,6 +49,37 @@ pour les sous-agents : elle est rappelée dans leurs consignes.
 
 ---
 
+## SwiftLint
+
+Installé via Homebrew (`brew install swiftlint`, version 0.65.0). Configuration à la
+racine : `.swiftlint.yml`.
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer   # obligatoire
+swiftlint              # lint
+swiftlint --fix        # corrections automatiques
+```
+
+`DEVELOPER_DIR` est requis ici aussi : SwiftLint charge `sourcekitd` depuis Xcode et
+échoue sinon sur `Loading sourcekitdInProc.framework failed`.
+
+SwiftLint tourne également comme phase de build de la cible `Slate` (après compilation).
+Il n'échoue pas le build s'il n'est pas installé, il émet un avertissement. Deux règles
+sont en **erreur** et non en avertissement, car ce sont des règles dures de `CLAUDE.md`
+§5 : `force_unwrapping` et `implicitly_unwrapped_optional`.
+
+Une règle personnalisée `ascii_punctuation` fait respecter la règle typographique du
+`CLAUDE.md` global dans le code Swift : elle signale les em-dash, guillemets
+typographiques, ellipse, flèches, puces unicode, signe multiplication, espace insécable
+et coches. Les lettres accentuées restent autorisées, elles sont nécessaires aux chaînes
+d'interface françaises.
+
+**Note** : `ENABLE_USER_SCRIPT_SANDBOXING` est à `NO` sur la seule cible `Slate`, parce
+que SwiftLint doit lire tout l'arbre de sources. Le réglage reste à `YES` au niveau du
+projet.
+
+---
+
 ## Génération du projet Xcode
 
 `Slate.xcodeproj` n'est **pas** versionné. La source de vérité est `project.yml` (XcodeGen).
