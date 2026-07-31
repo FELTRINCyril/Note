@@ -5,6 +5,6 @@ import Testing
 struct SlateFeaturesTests {
     @Test("Le module est bien lie")
     func moduleIsLinked() {
-        #expect(SlateFeatures.placeholderVersion == 1)
+        #expect(SlateFeatures.placeholderVersion == 3)
     }
 }

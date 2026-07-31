@@ -5,6 +5,11 @@ import PackageDescription
 // Depend de tous les autres modules.
 let package = Package(
     name: "SlateFeatures",
+    // Langue source du package (CLAUDE.md §5, base FR + EN). Necessaire pour que le
+    // String Catalog du module soit compile : dans un package, `String(localized:)`
+    // resout contre `Bundle.module`, pas contre le bundle de l'app - les chaines de
+    // App/Localizable.xcstrings ne sont donc PAS visibles ici.
+    defaultLocalization: "fr",
     platforms: [.macOS(.v15)],
     products: [
         .library(name: "SlateFeatures", targets: ["SlateFeatures"])
@@ -23,6 +28,9 @@ let package = Package(
                 .product(name: "SlateUI", package: "SlateUI"),
                 .product(name: "SlateEditor", package: "SlateEditor"),
                 .product(name: "SlateServices", package: "SlateServices")
+            ],
+            resources: [
+                .process("Localizable.xcstrings")
             ]
         ),
         .testTarget(name: "SlateFeaturesTests", dependencies: ["SlateFeatures"])

@@ -25,7 +25,7 @@
 - [x] **Phase 2 — Modèle de données (blocs, dossiers, notes, workspaces)** → `docs/02_modele_donnees.md`
 
 ### Jalon v1 — App utilisable
-- [ ] 🎨 **Phase 3 — Coquille app & barre latérale** (dossiers, sous-dossiers, favoris, réglages) → `docs/03_sidebar_navigation.md`
+- [x] 🎨 **Phase 3 — Coquille app & barre latérale** (dossiers, sous-dossiers, favoris, réglages) → `docs/03_sidebar_navigation.md`
 - [ ] 🎨 **Phase 4 — Liste des notes & regroupement par date** (aujourd'hui, hier, 7j, 30j, mois, années) → `docs/04_liste_notes.md`
 - [ ] 🎨 **Phase 5 — Éditeur de blocs (cœur)** (rendu, focus, saisie, navigation clavier) → `docs/05_editeur_blocs.md`
 - [ ] **Phase 6 — Menu de commandes `/`** → `docs/06_slash_commandes.md`

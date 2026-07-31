@@ -1,11 +1,15 @@
 import SwiftUI
 import SwiftData
 import SlateModel
+import SlateFeatures
 
 /// Point d'entree de l'application Slate (macOS).
 ///
-/// Phase 1 : fenetre unique contenant `RootView` (3 colonnes vides), container
-/// SwiftData injecte via `SlateContainer.make()` (docs/01_setup_projet.md, etape 1.3).
+/// Coquille fine : instancie l'`AppState` global (desormais porte par
+/// `SlateFeatures`, voir `docs/03_sidebar_navigation.md` - un package ne peut pas
+/// voir le code de la cible app, la vue racine `MainWindowView` doit donc vivre dans
+/// `SlateFeatures`), cree le container SwiftData, et affiche `MainWindowView`.
+///
 /// La creation du container peut echouer (disque plein, schema incompatible...) :
 /// on ne masque jamais cette erreur avec `try!`, on affiche `ContainerErrorView` a la
 /// place pour rester diagnosticable sans crash.
@@ -24,7 +28,7 @@ struct SlateApp: App {
         WindowGroup {
             switch containerResult {
             case .success(let container):
-                RootView()
+                MainWindowView()
                     .environment(\.appState, appState)
                     .modelContainer(container)
             case .failure(let error):
