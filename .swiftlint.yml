@@ -8,13 +8,15 @@ included:
   - Packages
 
 excluded:
-  - .build
-  - Packages/SlateEditor/.build
-  - Packages/SlateFeatures/.build
-  - Packages/SlateModel/.build
-  - Packages/SlateServices/.build
-  - Packages/SlateUI/.build
+  - "**/.build"
+  - "**/.swiftpm"
   - Slate.xcodeproj
+
+# ATTENTION : lancer swiftlint DEPUIS LA RACINE du depot. SwiftLint ne remonte pas
+# dans les dossiers parents pour trouver sa configuration : invoque depuis
+# Packages/SlateModel par exemple, il utiliserait ses regles par defaut et non
+# celles-ci, avec des seuils differents et sans les exclusions ci-dessus.
+# Depuis un sous-dossier, passer explicitement --config ../../.swiftlint.yml
 
 # Regles activees en plus du jeu par defaut.
 opt_in_rules:

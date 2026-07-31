@@ -110,6 +110,34 @@ compte payant pour lancer l'app. Pour tester la synchronisation, il faut au pré
 
 ---
 
+## Piège n°2 : SwiftData et les propriétés `Codable` à conteneur unkeyed
+
+Constaté en phase 2 en voulant stocker `RichText` (qui encapsule un `AttributedString`)
+directement comme propriété `@Model`. Au premier accès, le process **meurt** sur :
+
+```
+SwiftData/ModelCoders.swift:98: Fatal error: Composite Coder only supports Keyed Container
+```
+
+C'est un `fatalError`, pas une erreur Swift récupérable : aucun `try` ne le rattrape, et
+rien n'apparaît à la compilation.
+
+Cause : le "composite coder" de SwiftData, qui sérialise les propriétés `Codable` d'un
+`@Model`, ne sait descendre que dans des conteneurs **keyed**. L'encodage d'un
+`AttributedString` produit en interne un conteneur **unkeyed** (un tableau de runs). Le
+type de plus haut niveau peut très bien être keyed, comme l'est `RichText` : c'est le
+conteneur imbriqué qui casse.
+
+**Règle** : toute propriété `@Model` dont l'encodage `Codable` contient un conteneur
+unkeyed imbriqué doit être stockée en `Data` (propriété privée) et exposée via un
+accesseur calculé qui encode/décode explicitement en JSON. C'est le motif appliqué à
+`Block.textData` / `Block.text`.
+
+Un `Codable` "plat" comme `BlockAttributes` ne pose aucun problème et peut rester une
+propriété `@Model` normale.
+
+---
+
 ## Contrainte CloudKit à ne jamais oublier (vaut pour la phase 2)
 
 Tout modèle SwiftData synchronisé via CloudKit doit avoir **toutes ses propriétés avec une

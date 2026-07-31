@@ -22,7 +22,7 @@
 ### Jalon v0 — Fondations
 - [x] **Phase 0 — Architecture & structure** → `docs/00_architecture.md` (+ `docs/GLOSSAIRE.md`)
 - [x] **Phase 1 — Setup projet Xcode + SwiftData/CloudKit** → `docs/01_setup_projet.md`
-- [ ] **Phase 2 — Modèle de données (blocs, dossiers, notes, workspaces)** → `docs/02_modele_donnees.md`
+- [x] **Phase 2 — Modèle de données (blocs, dossiers, notes, workspaces)** → `docs/02_modele_donnees.md`
 
 ### Jalon v1 — App utilisable
 - [ ] 🎨 **Phase 3 — Coquille app & barre latérale** (dossiers, sous-dossiers, favoris, réglages) → `docs/03_sidebar_navigation.md`

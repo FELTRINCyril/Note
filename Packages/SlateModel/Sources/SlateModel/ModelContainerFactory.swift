@@ -25,7 +25,7 @@ public enum SlateContainer {
     ///     CloudKit est desactive dans tous les cas, meme si `SLATE_CLOUDKIT` est
     ///     defini : un store de test ne doit jamais tenter de se synchroniser.
     public static func make(inMemory: Bool = false, storeURL: URL? = nil) throws -> ModelContainer {
-        let schema = Schema(SlateSchema.models)
+        let schema = Schema(versionedSchema: SlateSchema.Current.self)
 
         let configuration: ModelConfiguration
         #if SLATE_CLOUDKIT
@@ -53,7 +53,11 @@ public enum SlateContainer {
         )
         #endif
 
-        return try ModelContainer(for: schema, configurations: [configuration])
+        return try ModelContainer(
+            for: schema,
+            migrationPlan: SlateSchemaMigrationPlan.self,
+            configurations: [configuration]
+        )
     }
 
     /// Construit un `ModelConfiguration`, avec ou sans URL de store explicite.
