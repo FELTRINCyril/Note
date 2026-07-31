@@ -1,0 +1,130 @@
+# Source de verite du projet Xcode. Regenerer avec :  xcodegen generate
+# Slate.xcodeproj est gitignore : il est toujours reconstruit depuis ce fichier.
+name: Slate
+
+options:
+  bundleIdPrefix: com.gemaddis
+  # Langue source du projet : francais (CLAUDE.md §5, base FR + EN).
+  developmentLanguage: fr
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+  groupSortPosition: top
+  xcodeVersion: "2600"
+
+# Reglages partages par toutes les cibles du projet.
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY: YES
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    DEAD_CODE_STRIPPING: YES
+    ALWAYS_SEARCH_USER_PATHS: NO
+    # Localisation par String Catalog (App/Localizable.xcstrings), FR source + EN.
+    LOCALIZATION_PREFERS_STRING_CATALOGS: YES
+    SWIFT_EMIT_LOC_STRINGS: YES
+    GCC_WARN_ABOUT_RETURN_TYPE: YES_ERROR
+    CLANG_WARN_DOCUMENTATION_COMMENTS: YES
+    # Signature ad-hoc : l'app se lance en local sans compte developpeur.
+    # Passer DEVELOPMENT_TEAM + CODE_SIGN_STYLE=Automatic quand le container
+    # iCloud reel sera cree (voir docs/01_setup_projet.md, etape 1.4).
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+  configs:
+    # Les Swift Packages locaux ne sont compiles que pour l'architecture active.
+    # Sans ONLY_ACTIVE_ARCH en Debug, la cible app tenterait un build universel
+    # (arm64 + x86_64) et echouerait sur "unable to resolve module dependency" :
+    # les .swiftmodule des packages n'ont pas de tranche x86_64.
+    Debug:
+      ONLY_ACTIVE_ARCH: YES
+    Release:
+      ONLY_ACTIVE_ARCH: NO
+      ARCHS: $(ARCHS_STANDARD)
+
+configs:
+  Debug: debug
+  Release: release
+
+# Les 5 Swift Packages locaux (cf. docs/00_architecture.md).
+packages:
+  SlateModel:
+    path: Packages/SlateModel
+  SlateUI:
+    path: Packages/SlateUI
+  SlateEditor:
+    path: Packages/SlateEditor
+  SlateServices:
+    path: Packages/SlateServices
+  SlateFeatures:
+    path: Packages/SlateFeatures
+
+targets:
+  Slate:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+    dependencies:
+      # L'app ne connait que SlateFeatures et SlateModel (le container SwiftData).
+      # Editor / UI / Services remontent transitivement via SlateFeatures.
+      - package: SlateFeatures
+      - package: SlateModel
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleName: Slate
+        CFBundleDisplayName: Slate
+        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "1"
+        LSMinimumSystemVersion: "15.0"
+        NSHumanReadableCopyright: ""
+        ITSAppUsesNonExemptEncryption: false
+        NSApplicationCategoryType: public.app-category.productivity
+        # Pas de UIBackgroundModes ici : la cle est iOS-only, Xcode la retire du
+        # bundle macOS avec un avertissement. Sur macOS, les push CloudKit passent
+        # par l'entitlement com.apple.developer.aps-environment (App/Slate.entitlements)
+        # et NSApplication.registerForRemoteNotifications(). Voir docs/DEV_ENV.md.
+    settings:
+      base:
+        PRODUCT_NAME: Slate
+        PRODUCT_BUNDLE_IDENTIFIER: com.gemaddis.slate
+        INFOPLIST_KEY_NSHumanReadableCopyright: ""
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_HARDENED_RUNTIME: YES
+        COMBINE_HIDPI_IMAGES: YES
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+      configs:
+        # Dev local : pas de CloudKit (aucun container iCloud requis, aucune
+        # signature d'equipe requise). Le flag SLATE_CLOUDKIT est absent.
+        Debug:
+          CODE_SIGN_ENTITLEMENTS: App/Slate-Local.entitlements
+        # Release : CloudKit actif. Necessite DEVELOPMENT_TEAM et le container
+        # iCloud.com.gemaddis.slate cree dans le portail Apple Developer.
+        Release:
+          CODE_SIGN_ENTITLEMENTS: App/Slate.entitlements
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) SLATE_CLOUDKIT"
+
+schemes:
+  Slate:
+    build:
+      targets:
+        Slate: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - package: SlateModel/SlateModelTests
+        - package: SlateUI/SlateUITests
+        - package: SlateEditor/SlateEditorTests
+        - package: SlateServices/SlateServicesTests
+        - package: SlateFeatures/SlateFeaturesTests
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
