@@ -27,11 +27,27 @@ import SwiftData
 ///
 /// Contrepartie assumee : ces deux champs ne se mettent pas a jour seuls. Toute
 /// creation/modification/suppression de bloc affectant le texte doit etre suivie d'un
-/// appel a `updateDerivedText()` par l'appelant (editeur de blocs ou code de test).
+/// appel a `refreshDerivedText()` par l'appelant (editeur de blocs ou code de test).
 /// SwiftData ne fournit pas d'observation fiable des mutations d'une relation
 /// `to-many` a l'interieur du modele lui-meme (pas d'equivalent `didSet` exploitable
 /// sur une relation `@Model`) : le recalcul est donc explicite plutot qu'automatique et
 /// silencieux.
+///
+/// ## `refreshDerivedText()` : point d'entree UNIQUE de recalcul (decision Cyril, Phase 4)
+///
+/// Ce nom (renomme depuis `updateDerivedText()`) est volontairement descriptif d'un
+/// contrat : c'est LE seul endroit ou `plainText`/`snippetText` sont recalcules, et il
+/// n'existe deliberement **aucun mecanisme d'observation automatique** en face (ni
+/// `didSet`, ni hook de sauvegarde de `ModelContext`, ni notification). Cyril a tranche
+/// que ce calcul reste une projection des donnees du modele (donc porte par
+/// `SlateModel`), mais que son declenchement reste sous la responsabilite de l'appelant.
+///
+/// **A l'attention de l'editeur de blocs (Phase 5, `SlateEditor`)** : l'editeur doit
+/// appeler `refreshDerivedText()` depuis son unique point de sauvegarde (le geste qui
+/// persiste une note apres edition de son contenu), et depuis cet unique point
+/// seulement. L'objectif explicite est d'avoir un seul site d'appel, facile a auditer
+/// et impossible a oublier accidentellement - a l'inverse de multiples appels
+/// disperses a chaque mutation de bloc, faciles a desynchroniser un jour ou l'autre.
 @Model
 public final class Note {
     public var id: UUID = UUID()
@@ -53,11 +69,11 @@ public final class Note {
     public var coverImageData: Data?
 
     /// Apercu texte affiche dans la liste de notes (voir `docs/GLOSSAIRE.md` §4).
-    /// Recalcule par `updateDerivedText()`.
+    /// Recalcule par `refreshDerivedText()`.
     public var snippetText: String = ""
 
     /// Texte brut concatene de tous les blocs texte, dans l'ordre, pour la recherche
-    /// plein texte (Phase 15). Recalcule par `updateDerivedText()`.
+    /// plein texte (Phase 4/15). Recalcule par `refreshDerivedText()`.
     public var plainText: String = ""
 
     /// Dossier porteur. L'inverse est declare du cote `Folder.notes`.
@@ -109,8 +125,9 @@ public final class Note {
 
     /// Recalcule `plainText` et `snippetText` a partir des blocs actuels, tries par
     /// `order`. A appeler explicitement apres toute mutation de `blocks` ou du texte
-    /// d'un bloc (voir la documentation de ce type).
-    public func updateDerivedText() {
+    /// d'un bloc (voir la documentation de ce type) - **point d'entree unique**, voir
+    /// la section dediee plus haut sur ce type.
+    public func refreshDerivedText() {
         let orderedTexts = (blocks ?? [])
             .filter { Self.textBearingTypes.contains($0.type) }
             .sorted { $0.order < $1.order }

@@ -4,7 +4,7 @@ import Testing
 
 @testable import SlateModel
 
-/// Verifie `Note.updateDerivedText()` : concatenation dans l'ordre des blocs texte,
+/// Verifie `Note.refreshDerivedText()` : concatenation dans l'ordre des blocs texte,
 /// filtrage des blocs sans texte (divider, image...), et troncature du snippet.
 @MainActor
 struct NoteDerivedTextTests {
@@ -17,7 +17,7 @@ struct NoteDerivedTextTests {
         let paragraph = Block(order: 2, type: .paragraph, text: RichText(plainText: "Contenu."), note: note)
         note.blocks = [paragraph, divider, heading] // insere volontairement dans le desordre
 
-        note.updateDerivedText()
+        note.refreshDerivedText()
 
         #expect(note.plainText == "Titre\nContenu.")
         #expect(note.snippetText == "Titre\nContenu.")
@@ -31,7 +31,7 @@ struct NoteDerivedTextTests {
         let realParagraph = Block(order: 2, type: .paragraph, text: RichText(plainText: "Seul texte."), note: note)
         note.blocks = [emptyParagraph, image, realParagraph]
 
-        note.updateDerivedText()
+        note.refreshDerivedText()
 
         #expect(note.plainText == "Seul texte.")
     }
@@ -42,7 +42,7 @@ struct NoteDerivedTextTests {
         let longText = String(repeating: "a", count: 500)
         note.blocks = [Block(order: 0, type: .paragraph, text: RichText(plainText: longText), note: note)]
 
-        note.updateDerivedText()
+        note.refreshDerivedText()
 
         #expect(note.plainText.count == 500)
         #expect(note.snippetText.count == 160)
@@ -51,7 +51,7 @@ struct NoteDerivedTextTests {
     @Test
     func derivedTextIsEmptyForNoteWithoutBlocks() {
         let note = Note(title: "Vide")
-        note.updateDerivedText()
+        note.refreshDerivedText()
 
         #expect(note.plainText.isEmpty)
         #expect(note.snippetText.isEmpty)

@@ -1,0 +1,69 @@
+import SwiftUI
+
+/// Valeurs RGB brutes de l'accent par defaut et de ses derives.
+///
+/// Expose separement de `SlateColor` (qui rend des `Color`) parce que les calculs de
+/// contraste (tests, futur `AccentPicker` en Phase 13) ont besoin des composantes brutes,
+/// pas d'un `Color` opaque. `defaultLightRGB` / `defaultDarkRGB` sont amenes a devenir
+/// des parametres (accent choisi par l'utilisateur) plutot que des constantes : le calcul
+/// `selectionFill*` doit rester une regle, pas une valeur figee, pour continuer a
+/// garantir l'AA quel que soit l'accent (voir `ContrastRatio.swift`).
+public enum SlateAccent {
+    public static let defaultLightRGB = SlateRGB(hex: "#007AFF") ?? .black
+    public static let defaultDarkRGB = SlateRGB(hex: "#0A84FF") ?? .black
+
+    /// Premier plan SECONDAIRE pose sur l'aplat de selection (spec E3 : l'extrait de la
+    /// cellule de note, "blanc 95%"). C'est ce premier plan -- pas le principal, opaque --
+    /// qui doit contraindre l'assombrissement : il est strictement plus exigeant (voir
+    /// `ContrastRatio.swift`, section "le piege corrige"). Cible aussi le calcul de
+    /// `selectionFill*` ci-dessous, pour ne pas reproduire le defaut de phase 3 (regle
+    /// calee sur le premier plan le plus facile, blanc opaque).
+    public static let selectionForegroundSecondary = SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.95)
+
+    /// Accent clair assombri jusqu'a 4,5:1 pour le premier plan secondaire (blanc 95%).
+    /// Ordre de grandeur attendu (voir `ContrastRatio.swift`) : proche de `#006DE3`
+    /// (~4,58:1 pour le blanc 95%, ~4,91:1 pour le blanc opaque).
+    public static let selectionFillLightRGB = WCAGContrast.darkening(
+        defaultLightRGB,
+        toReachContrast: 4.5,
+        with: selectionForegroundSecondary
+    )
+
+    /// Accent sombre assombri jusqu'a 4,5:1 pour le premier plan secondaire. Ordre de
+    /// grandeur attendu : proche de `#0870D9` (~4,53:1 pour le blanc 95%, ~4,84:1 pour le
+    /// blanc opaque).
+    public static let selectionFillDarkRGB = WCAGContrast.darkening(
+        defaultDarkRGB,
+        toReachContrast: 4.5,
+        with: selectionForegroundSecondary
+    )
+
+    /// Variante "Increase Contrast" : cible 7:1 au lieu de 4,5:1 (spec E2/E3). Assombrit
+    /// nettement plus (accent clair -> proche de `#0051A8`, ~34% plus sombre) : c'est un
+    /// bleu visiblement different de l'accent par defaut, pas une simple nuance -- voir le
+    /// rapport de livraison pour le jugement sur ce rendu.
+    public static let selectionFillLightRGBIncreasedContrast = WCAGContrast.darkening(
+        defaultLightRGB,
+        toReachContrast: 7.0,
+        with: selectionForegroundSecondary
+    )
+
+    /// Variante sombre "Increase Contrast", cible 7:1.
+    public static let selectionFillDarkRGBIncreasedContrast = WCAGContrast.darkening(
+        defaultDarkRGB,
+        toReachContrast: 7.0,
+        with: selectionForegroundSecondary
+    )
+}
+
+/// Opacites de `text.secondary` (design/tokens.md §2), separees en constantes pures pour
+/// rester testables sans dependre de `NSWorkspace` (voir `SlateAccessibility.swift`).
+public enum SlateTextOpacity {
+    /// `text.secondary` clair, hors Increase Contrast.
+    public static let secondaryLight = 0.50
+    /// `text.secondary` sombre, hors Increase Contrast.
+    public static let secondaryDark = 0.55
+    /// `text.secondary`, LES DEUX themes, quand Increase Contrast est actif (spec E2 :
+    /// "les rangs secondaires passent de 0,50 a 0,72 en Increase Contrast").
+    public static let secondaryIncreasedContrast = 0.72
+}

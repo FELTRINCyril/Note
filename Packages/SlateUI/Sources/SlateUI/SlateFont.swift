@@ -88,6 +88,11 @@ public enum SlateFont {
 
     /// Extrait de note dans la liste. 13 pt Regular.
     public static let listSnippet = SlateTextStyle(size: 13, weight: .regular, relativeTo: .footnote)
+
+    // MARK: - Liste de notes (spec E3)
+
+    /// En-tete de regroupement par date ("Aujourd'hui", "Hier"...). 13 pt Semibold.
+    public static let listDateHeader = SlateTextStyle(size: 13, weight: .semibold, relativeTo: .subheadline)
 }
 
 /// Applique un `SlateTextStyle` via `@ScaledMetric`, pour que la taille de base suive le

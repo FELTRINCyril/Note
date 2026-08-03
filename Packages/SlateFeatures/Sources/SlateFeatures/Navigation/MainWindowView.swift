@@ -38,7 +38,7 @@ public struct MainWindowView: View {
             SidebarView()
                 .slateColumnWidth(NavigationLayout.sidebarWidth)
         } content: {
-            NoteListColumnPlaceholderView(selectedFolder: appState.selectedFolder)
+            NoteListView()
                 .slateColumnWidth(listColumnWidth)
         } detail: {
             NoteDetailColumnPlaceholderView()

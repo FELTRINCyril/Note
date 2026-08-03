@@ -122,7 +122,7 @@ public struct SidebarNavigation {
 
     /// Cree une note vide dans un dossier.
     ///
-    /// Appelle explicitement `updateDerivedText()` : la nouvelle note n'a aucun bloc,
+    /// Appelle explicitement `refreshDerivedText()` : la nouvelle note n'a aucun bloc,
     /// donc `plainText`/`snippetText` restent a `""` (deja la valeur par defaut de
     /// `Note.init`), mais l'appel est fait ici quand meme par discipline plutot que
     /// de compter sur la valeur par defaut - voir la documentation de `Note` sur le
@@ -132,10 +132,18 @@ public struct SidebarNavigation {
     @discardableResult
     public func createNote(titled title: String, in folder: Folder) throws -> Note {
         let note = Note(title: title, folder: folder)
-        note.updateDerivedText()
+        note.refreshDerivedText()
         context.insert(note)
         try context.save()
         return note
+    }
+
+    /// Assigne (ou retire, avec `nil`) la couleur personnalisee d'un dossier. Voir
+    /// `Folder.colorToken` pour la semantique complete (`nil` = repli sur le hachage
+    /// de l'`id` cote UI).
+    public func setColor(_ colorToken: FolderColorToken?, for folder: Folder) throws {
+        folder.colorToken = colorToken
+        try context.save()
     }
 
     /// Reordonne des dossiers freres : `orderedFolders` doit contenir exactement

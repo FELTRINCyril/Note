@@ -130,6 +130,22 @@ public enum WCAGContrast {
     /// exactement la teinte et la saturation HSB (les ratios R/G/B restent identiques,
     /// donc `V = max(R,G,B)` diminue seul) : c'est un assombrissement HSB valide sans
     /// passer par une conversion RGB<->HSB explicite.
+    ///
+    /// ## Le piege corrige (phase 4)
+    /// `label` peut etre TRANSLUCIDE (ex: le premier plan secondaire de la spec E3, blanc
+    /// a 95% d'opacite). Mesurer `ratio(label, candidate)` directement, sans composer
+    /// l'alpha au-dessus de `candidate`, revient a mesurer le contraste de `label` comme
+    /// s'il etait OPAQUE : la boucle s'arrete trop tot, des qu'un `candidate` opaque
+    /// suffirait pour un `label` opaque, alors que le `label` REEL (translucide) y est en
+    /// realite moins contraste (compose, il se rapproche visuellement de `candidate`).
+    /// C'est exactement le defaut trouve en revue de phase 4 : la regle ciblait
+    /// implicitement "blanc opaque >= 4,5:1" (le premier plan LE PLUS FACILE a satisfaire)
+    /// au lieu de "blanc 95% >= 4,5:1" (le premier plan LE PLUS EXIGEANT qui se pose
+    /// reellement sur l'aplat, l'extrait de la cellule de note) -- l'aplat obtenu
+    /// (`#0071ED`) laissait alors le blanc 95% a ~4,26:1, un echec AA silencieux. Composer
+    /// `label` sur `candidate` AVANT de mesurer resout le probleme pour toute opacite,
+    /// y compris 100% (composer un premier plan opaque le laisse inchange : aucune
+    /// regression sur les appels existants avec `label: .white`).
     public static func darkening(
         _ background: SlateRGB,
         toReachContrast target: Double,
@@ -138,7 +154,7 @@ public enum WCAGContrast {
     ) -> SlateRGB {
         var brightness = 1.0
         var candidate = background
-        while ratio(label, candidate) < target, brightness > step {
+        while ratio(compositeOverBackground(label, candidate), candidate) < target, brightness > step {
             brightness -= step
             candidate = SlateRGB(
                 red: background.red * brightness,

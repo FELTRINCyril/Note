@@ -5,41 +5,33 @@ import SwiftUI
 /// `NSColor(name:dynamicProvider:)`. Suit automatiquement l'apparence de la fenetre
 /// (donc aussi "Increase Contrast" si `NSAppearance` bascule sur un des deux cas de
 /// base geres ici -- clair/sombre uniquement, cf. limite documentee sur `SlateColor`).
-private func slateAdaptiveColor(light: SlateRGB, dark: SlateRGB) -> Color {
+/// Lit `SlateAccessibility.shared.isIncreaseContrastEnabled` depuis un contexte non
+/// isole. `SlateAccessibility` est `@MainActor` (elle observe une notification AppKit,
+/// voir `SlateAccessibility.swift`) ; `SlateColor` reste un simple `enum` de constantes
+/// et proprietes calculees, nonisole, car il est lu depuis des contextes tres varies
+/// (corps de vue, previews, tests). `MainActor.assumeIsolated` est sur : ces proprietes
+/// ne sont accedees que pendant le rendu SwiftUI (main thread) ou dans les tests
+/// (main thread egalement, `SlateAccessibility` n'est jamais touchee depuis une tache
+/// en arriere-plan).
+/// Lit `SlateAccessibility.shared.isIncreaseContrastEnabled` depuis un contexte non
+/// isole. `SlateAccessibility` est `@MainActor` (elle observe une notification AppKit,
+/// voir `SlateAccessibility.swift`) ; `SlateColor` reste un simple `enum` de constantes
+/// et proprietes calculees, nonisole, car il est lu depuis des contextes tres varies
+/// (corps de vue, previews, tests). `MainActor.assumeIsolated` est sur : ces proprietes
+/// ne sont accedees que pendant le rendu SwiftUI (main thread) ou dans les tests
+/// (main thread egalement, `SlateAccessibility` n'est jamais touchee depuis une tache
+/// en arriere-plan). Pas `private` : reutilise par `SlateAccent.swift`.
+func slateCurrentlyIncreasesContrast() -> Bool {
+    MainActor.assumeIsolated { SlateAccessibility.shared.isIncreaseContrastEnabled }
+}
+
+/// Pas `private` : reutilise par `SlateAccent.swift` et `SlateFolderColor.swift`.
+func slateAdaptiveColor(light: SlateRGB, dark: SlateRGB) -> Color {
     Color(nsColor: NSColor(name: nil) { appearance in
         let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
         let rgb = isDark ? dark : light
         return NSColor(red: rgb.red, green: rgb.green, blue: rgb.blue, alpha: rgb.alpha)
     })
-}
-
-/// Valeurs RGB brutes de l'accent par defaut et de ses derives.
-///
-/// Expose separement de `SlateColor` (qui rend des `Color`) parce que les calculs de
-/// contraste (tests, futur `AccentPicker` en Phase 13) ont besoin des composantes brutes,
-/// pas d'un `Color` opaque. `defaultLightRGB` / `defaultDarkRGB` sont amenes a devenir
-/// des parametres (accent choisi par l'utilisateur) plutot que des constantes : le calcul
-/// `selectionFill*` doit rester une regle, pas une valeur figee, pour continuer a
-/// garantir l'AA quel que soit l'accent (voir `ContrastRatio.swift`).
-public enum SlateAccent {
-    public static let defaultLightRGB = SlateRGB(hex: "#007AFF") ?? .black
-    public static let defaultDarkRGB = SlateRGB(hex: "#0A84FF") ?? .black
-
-    /// Accent clair assombri jusqu'a 4,5:1 avec un libelle blanc. Ordre de grandeur
-    /// attendu (voir `ContrastRatio.swift`) : proche de `#0071ED` (~4,58:1).
-    public static let selectionFillLightRGB = WCAGContrast.darkening(
-        defaultLightRGB,
-        toReachContrast: 4.5,
-        with: .white
-    )
-
-    /// Accent sombre assombri jusqu'a 4,5:1 avec un libelle blanc. Ordre de grandeur
-    /// attendu : proche de `#0975E3` (~4,50:1).
-    public static let selectionFillDarkRGB = WCAGContrast.darkening(
-        defaultDarkRGB,
-        toReachContrast: 4.5,
-        with: .white
-    )
 }
 
 /// Tokens de couleur semantiques de Slate, alignes sur `design/tokens.md` (§1 a §8) et
@@ -48,11 +40,13 @@ public enum SlateAccent {
 /// Toutes les couleurs sont adaptatives clair/sombre (`NSColor(name:dynamicProvider:)`) :
 /// aucune vue ne doit tester `colorScheme` elle-meme pour choisir une teinte.
 ///
-/// Limite connue : la valeur "Increase Contrast" mentionnee dans la spec ("les rangs
-/// secondaires sont renforces en mode Increase Contrast (0,50 -> 0,72)") n'est pas
-/// encore implementee ici -- `NSAppearance.bestMatch` ne distingue que clair/sombre, pas
-/// le contraste augmente. A traiter si Cyril le demande explicitement (pas dans le
-/// perimetre de cette phase).
+/// "Increase Contrast" (spec E2/E3 : aplat de selection recalcule pour 7:1, `text.
+/// secondary` renforce a 0,72) EST implemente, mais pas via `NSColor(name:
+/// dynamicProvider:)` -- cette API ne se re-declenche pas quand seule cette preference
+/// change (voir la limite documentee dans `SlateAccessibility.swift`). `textSecondary`
+/// et `accentSelectionFill` sont des proprietes CALCULEES qui lisent
+/// `SlateAccessibility.shared` a chaque acces plutot que des `let` figes au premier
+/// rendu.
 public enum SlateColor {
     // MARK: - Fonds & surfaces (design/tokens.md §1)
 
@@ -114,10 +108,34 @@ public enum SlateColor {
     )
 
     /// Texte secondaire (metadonnees). Equivalent `text.secondary`.
-    public static let textSecondary = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.50),
-        dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.55)
-    )
+    ///
+    /// Propriete CALCULEE (pas `let`) : elle doit lire l'etat "Increase Contrast" a
+    /// chaque acces pour rester reactive (voir `SlateAccessibility.swift`, limite
+    /// documentee de `NSColor(name:dynamicProvider:)`). Utilise `textSecondary(increaseContrast:)`
+    /// en interne, qui reste testable independamment de `NSWorkspace`.
+    public static var textSecondary: Color {
+        textSecondary(increaseContrast: slateCurrentlyIncreasesContrast())
+    }
+
+    /// Variante pure de `textSecondary`, parametree explicitement par l'etat Increase
+    /// Contrast plutot que de lire `NSWorkspace` -- permet de tester la regle
+    /// (0,50/0,55 -> 0,72, spec E2) sans dependre de l'environnement systeme reel.
+    public static func textSecondary(increaseContrast: Bool) -> Color {
+        slateAdaptiveColor(
+            light: SlateRGB(
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: increaseContrast ? SlateTextOpacity.secondaryIncreasedContrast : SlateTextOpacity.secondaryLight
+            ),
+            dark: SlateRGB(
+                red: 1,
+                green: 1,
+                blue: 1,
+                alpha: increaseContrast ? SlateTextOpacity.secondaryIncreasedContrast : SlateTextOpacity.secondaryDark
+            )
+        )
+    }
 
     /// Texte discret. Equivalent `text.tertiary`.
     public static let textTertiary = slateAdaptiveColor(
@@ -177,18 +195,30 @@ public enum SlateColor {
         dark: SlateRGB(red: 10.0 / 255, green: 132.0 / 255, blue: 255.0 / 255, alpha: 0.22)
     )
 
-    /// Fond de selection quand la ligne PORTE du texte (ex: libelle de ligne de sidebar).
+    /// Fond de selection quand la ligne PORTE du texte (ex: libelle de ligne de sidebar,
+    /// titre/extrait de cellule de note).
     ///
     /// Token derive, pas une constante : voir la documentation complete dans
     /// `ContrastRatio.swift`. La spec affirmait a tort que `accent.default` atteignait
-    /// 4,5:1 avec un libelle blanc (4,55/4,52 annonces vs 4,02/3,65 reels) ; ce token
-    /// assombrit l'accent jusqu'a atteindre reellement l'AA (~4,58:1 clair, ~4,50:1
-    /// sombre), et le refait automatiquement si l'accent devient personnalisable
-    /// (Phase 13) au lieu de re-introduire le defaut pour chaque nouvel accent.
-    public static let accentSelectionFill = slateAdaptiveColor(
-        light: SlateAccent.selectionFillLightRGB,
-        dark: SlateAccent.selectionFillDarkRGB
-    )
+    /// 4,5:1 avec un libelle blanc (4,55/4,52 annonces vs 3,99/3,65 reels) ; ce token
+    /// assombrit l'accent jusqu'a ce que le premier plan LE PLUS EXIGEANT qui s'y pose
+    /// reellement (le blanc 95% de l'extrait, spec E3) atteigne l'AA, et le refait
+    /// automatiquement si l'accent devient personnalisable (Phase 13) au lieu de
+    /// re-introduire le defaut pour chaque nouvel accent.
+    ///
+    /// Propriete CALCULEE : bascule sur la variante 7:1 quand Increase Contrast est actif
+    /// (spec E2 : "7:1 en mode Increase Contrast"). Voir `SlateAccessibility.swift`.
+    public static var accentSelectionFill: Color {
+        slateCurrentlyIncreasesContrast()
+            ? slateAdaptiveColor(
+                light: SlateAccent.selectionFillLightRGBIncreasedContrast,
+                dark: SlateAccent.selectionFillDarkRGBIncreasedContrast
+            )
+            : slateAdaptiveColor(
+                light: SlateAccent.selectionFillLightRGB,
+                dark: SlateAccent.selectionFillDarkRGB
+            )
+    }
 
     /// Survol generique. Equivalent `state.hover`.
     public static let stateHover = slateAdaptiveColor(
@@ -223,6 +253,17 @@ public enum SlateColor {
     public static let focusRing = slateAdaptiveColor(
         light: SlateRGB(red: 0, green: 122.0 / 255, blue: 255.0 / 255, alpha: 0.60),
         dark: SlateRGB(red: 10.0 / 255, green: 132.0 / 255, blue: 255.0 / 255, alpha: 0.65)
+    )
+
+    // MARK: - Semantiques (design/tokens.md §4)
+
+    /// Avertissement (spec E3 : etoile de favori, `star.fill = semantic.warning`).
+    /// Equivalent `semantic.warning`. Reste 3:1 (seuil glyphe non-textuel), pas 4,5:1 :
+    /// jamais utilise seul pour porter une information (spec E3, "Daltonisme" /
+    /// "Jamais la couleur seule" -- l'etoile a sa propre forme).
+    public static let semanticWarning = slateAdaptiveColor(
+        light: SlateRGB(hex: "#FF9500") ?? .black,
+        dark: SlateRGB(hex: "#FF9F0A") ?? .black
     )
 
     // MARK: - Separateurs & bordures (design/tokens.md §5)
@@ -284,57 +325,18 @@ public enum SlateColor {
     public static func foreground(_ base: Color, onAccentFill isOnAccentFill: Bool) -> Color {
         isOnAccentFill ? foregroundOnAccentFill : base
     }
-}
 
-/// Opacites transverses (design/tokens.md §14).
-public enum SlateOpacity {
-    /// Element desactive.
-    public static let disabled: Double = 0.4
-    /// Survol generique quand exprime en opacite plutot qu'en couleur rgba.
-    public static let hoverOverlay: Double = 0.06
-    /// Aperçu ("ghost") d'une ligne en cours de glissement.
-    public static let dragGhost: Double = 0.6
-}
+    /// Premier plan SECONDAIRE a utiliser sur `accentSelectionFill` (spec E3 : l'extrait
+    /// de la cellule de note, "blanc 95%"). Distinct de `foregroundOnAccentFill` (le
+    /// premier plan PRINCIPAL, blanc opaque) : la spec cree une hierarchie a deux niveaux
+    /// sur la selection, et c'est CE token, le plus exigeant des deux, qui contraint le
+    /// calcul de `accentSelectionFill` (voir `SlateAccent.selectionForegroundSecondary`).
+    public static let foregroundSecondaryOnAccentFill = Color.white.opacity(0.95)
 
-/// Palette d'icones de dossiers/notes (design/tokens.md §7/§8). Reprend les couleurs
-/// d'accent systeme macOS ; le jaune est la couleur de dossier par defaut (façon Notes).
-///
-/// Ce token ne decide PAS la couleur du texte/icone quand la ligne est selectionnee
-/// (passage en blanc) : c'est a l'appelant (`SidebarRow` et ses utilisateurs) de choisir
-/// entre `.color` et `SlateColor.textOnAccent` selon l'etat de selection.
-public enum SlateFolderColor: String, CaseIterable, Sendable {
-    case blue
-    case violet
-    case rose
-    case red
-    case orange
-    case yellow
-    case green
-    case graphite
-
-    private var rgb: (light: SlateRGB, dark: SlateRGB) {
-        switch self {
-        case .blue:
-            (SlateRGB(hex: "#007AFF") ?? .black, SlateRGB(hex: "#0A84FF") ?? .black)
-        case .violet:
-            (SlateRGB(hex: "#AF52DE") ?? .black, SlateRGB(hex: "#BF5AF2") ?? .black)
-        case .rose:
-            (SlateRGB(hex: "#FF2D55") ?? .black, SlateRGB(hex: "#FF375F") ?? .black)
-        case .red:
-            (SlateRGB(hex: "#FF3B30") ?? .black, SlateRGB(hex: "#FF453A") ?? .black)
-        case .orange:
-            (SlateRGB(hex: "#FF9500") ?? .black, SlateRGB(hex: "#FF9F0A") ?? .black)
-        case .yellow:
-            (SlateRGB(hex: "#FFCC00") ?? .black, SlateRGB(hex: "#FFD60A") ?? .black)
-        case .green:
-            (SlateRGB(hex: "#34C759") ?? .black, SlateRGB(hex: "#30D158") ?? .black)
-        case .graphite:
-            (SlateRGB(hex: "#8E8E93") ?? .black, SlateRGB(hex: "#98989D") ?? .black)
-        }
-    }
-
-    /// Couleur adaptative clair/sombre de ce dossier, hors etat de selection.
-    public var color: Color {
-        slateAdaptiveColor(light: rgb.light, dark: rgb.dark)
+    /// Choisit entre `base` et `foregroundSecondaryOnAccentFill` selon
+    /// `EnvironmentValues.slateIsOnAccentFill`. Pendant de `foreground(_:onAccentFill:)`
+    /// pour le contenu SECONDAIRE (extrait, metadonnee) plutot que principal (titre).
+    public static func foregroundSecondary(_ base: Color, onAccentFill isOnAccentFill: Bool) -> Color {
+        isOnAccentFill ? foregroundSecondaryOnAccentFill : base
     }
 }
