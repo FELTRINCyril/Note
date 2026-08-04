@@ -90,3 +90,116 @@ struct RichTextSplittingTests {
         #expect(tailOverflow.isEmpty)
     }
 }
+
+/// `RichText.removingCharacters(in:)` (Phase 6, sous-etape 6.6) : bornes, preservation
+/// des attributs de part et d'autre de la plage retiree, graphemes composes -- voir la
+/// documentation de tete de `RichTextSplitting.swift`. Suite separee de
+/// `RichTextSplittingTests` (type different, meme fichier source) plutot qu'ajoutee au
+/// `@Suite` ci-dessus, pour que le nom du test reflette la fonction testee.
+@Suite("RichText.removingCharacters(in:)")
+struct RichTextRemovingCharactersTests {
+    /// Construit une `RichTextRange` a partir d'offsets de caracteres bruts -- helper
+    /// local, `RichText.range(charactersOffset:)` (utilise par les tests de `split`
+    /// ci-dessus) renvoie un `Range<AttributedString.Index>` de `SlateModel`, un type
+    /// DIFFERENT de `RichTextRange` (propre a `SlateEditor`, consomme par
+    /// `removingCharacters(in:)`) -- jamais interchangeables.
+    private func range(_ offsets: Range<Int>) -> RichTextRange {
+        RichTextRange(
+            lowerBound: RichTextOffset(characters: offsets.lowerBound),
+            upperBound: RichTextOffset(characters: offsets.upperBound)
+        )
+    }
+
+    @Test("Retire exactement les caracteres de la plage, garde le reste")
+    func removesExactRange() {
+        let text = RichText(plainText: "Bonjour le monde")
+
+        let result = text.removingCharacters(in: range(7..<10))
+
+        #expect(result.plainText == "Bonjour monde")
+    }
+
+    @Test("Plage vide (lowerBound == upperBound) : aucun caractere retire")
+    func emptyRangeRemovesNothing() {
+        let text = RichText(plainText: "Bonjour")
+
+        let result = text.removingCharacters(in: range(3..<3))
+
+        #expect(result.plainText == "Bonjour")
+    }
+
+    @Test("Plage couvrant la fin exacte du texte : tout ce qui suit lowerBound disparait")
+    func rangeAtEndRemovesTrailingText() {
+        let text = RichText(plainText: "Bonjour le monde")
+
+        let result = text.removingCharacters(in: range(7..<17))
+
+        #expect(result.plainText == "Bonjour")
+    }
+
+    @Test("Plage couvrant le texte entier : resultat vide")
+    func rangeCoveringWholeTextYieldsEmpty() {
+        let text = RichText(plainText: "Bonjour")
+
+        let result = text.removingCharacters(in: range(0..<7))
+
+        #expect(result.isEmpty)
+    }
+
+    @Test("Bornes hors du texte (au-dela de la longueur) : bornees, jamais un crash")
+    func outOfBoundsUpperBoundIsClamped() {
+        let text = RichText(plainText: "Bonjour")
+
+        let result = text.removingCharacters(
+            in: RichTextRange(lowerBound: RichTextOffset(characters: 3), upperBound: RichTextOffset(characters: 500))
+        )
+
+        #expect(result.plainText == "Bon")
+    }
+
+    @Test("Borne inferieure hors du texte (au-dela de la longueur) : resultat inchange")
+    func outOfBoundsLowerBoundIsClamped() {
+        let text = RichText(plainText: "Bonjour")
+
+        let result = text.removingCharacters(
+            in: RichTextRange(lowerBound: RichTextOffset(characters: 500), upperBound: RichTextOffset(characters: 500))
+        )
+
+        #expect(result.plainText == "Bonjour")
+    }
+
+    @Test("Attributs preserves de PART ET D'AUTRE de la plage retiree, jamais fusionnes")
+    func preservesAttributesOnBothSidesOfRemovedRange() {
+        var text = RichText(plainText: "Bonjour le monde")
+        text.apply(.bold, to: text.range(charactersOffset: 0..<7))
+        text.apply(.italic, to: text.range(charactersOffset: 11..<16))
+
+        let result = text.removingCharacters(in: range(7..<10))
+
+        #expect(result.plainText == "Bonjour monde")
+        let boldRun = result.attributedString.runs.first { $0.inlinePresentationIntent == .stronglyEmphasized }
+        let italicRun = result.attributedString.runs.first { $0.inlinePresentationIntent == .emphasized }
+        #expect(boldRun != nil)
+        #expect(italicRun != nil)
+    }
+
+    @Test("Graphemes composes (emoji drapeau) : le retrait ne coupe jamais un grapheme en deux")
+    func doesNotSplitComposedGraphemeClusters() {
+        // "Bonjour 🇫🇷 monde" -- le drapeau est un SEUL `Character` (grapheme compose de
+        // deux scalaires Unicode), exactement le cas qui a deja fait deraper une
+        // conversion UTF-16/caracteres ailleurs dans ce projet (voir la documentation de
+        // tete de `RichTextSplitting.swift`/`RichTextOffset`).
+        let text = RichText(plainText: "Bonjour 🇫🇷 monde")
+        let flagOffset = 8
+        #expect(Array(text.plainText)[flagOffset] == "🇫🇷")
+
+        let result = text.removingCharacters(
+            in: RichTextRange(
+                lowerBound: RichTextOffset(characters: flagOffset),
+                upperBound: RichTextOffset(characters: flagOffset + 1)
+            )
+        )
+
+        #expect(result.plainText == "Bonjour  monde")
+    }
+}

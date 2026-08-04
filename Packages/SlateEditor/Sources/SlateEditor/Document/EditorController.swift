@@ -79,6 +79,13 @@ public final class EditorController {
     /// `consumePendingCaretRequest(for:)`, jamais lue directement par les vues.
     public internal(set) var pendingCaretRequest: EditorCaretRequest?
 
+    /// Etat du menu de commandes "/" (docs/06_slash_commandes.md, sous-etape 6.3),
+    /// `nil` si aucun menu n'est ouvert. Toute la logique d'ouverture/mise a
+    /// jour/fermeture/execution vit dans `EditorController+SlashMenu.swift` (voir sa
+    /// documentation de tete) -- separe de ce fichier pour rester sous la limite de
+    /// longueur de `CLAUDE.md` §5, meme motif exact que `EditorController+Selection.swift`.
+    public internal(set) var slashMenuState: SlashMenuState?
+
     /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
     /// autre fichier de ce type -- voir sa documentation de tete de fichier).
     let note: Note
@@ -111,11 +118,25 @@ public final class EditorController {
     public func noteBlockDidBeginEditing(_ blockID: UUID) {
         focusedBlockID = blockID
         blockSelectionRange = nil
+        // Menu "/" (sous-etape 6.4, regle de fermeture "perte de focus du bloc") : un
+        // gain de focus AppKit sur un AUTRE bloc que celui vise par le menu le ferme.
+        // Defensif -- `noteBlockDidEndEditing(_:)` ci-dessous ferme deja le menu du bloc
+        // qui PERD le focus dans le cas nominal, cette garde couvre le cas ou l'ancien
+        // `NSTextView` n'a pour une raison quelconque jamais notifie sa propre perte de
+        // focus avant que le nouveau ne notifie son gain.
+        if let slashMenuState, slashMenuState.blockID != blockID {
+            self.slashMenuState = nil
+        }
     }
 
     public func noteBlockDidEndEditing(_ blockID: UUID) {
         guard focusedBlockID == blockID else { return }
         focusedBlockID = nil
+        // Menu "/" (sous-etape 6.4, regle de fermeture "perte de focus du bloc") : voir
+        // la documentation de `noteBlockDidBeginEditing(_:)` ci-dessus.
+        if slashMenuState?.blockID == blockID {
+            slashMenuState = nil
+        }
     }
 
     // MARK: - Entree / Retour arriere (delegue a `BlockLifecycle`)
@@ -305,7 +326,11 @@ public final class EditorController {
 
     // MARK: - Application interne
 
-    private func applyFocus(_ request: EditorCaretRequest) {
+    /// Pas `private` (acces necessaire depuis `EditorController+SlashMenu.swift`, qui
+    /// focalise le bloc converti/nouvellement insere apres l'execution d'une commande
+    /// "/" -- exactement le meme motif que `persistStructuralChange()` juste en
+    /// dessous, deja ouvert pour `EditorController+Selection.swift`).
+    func applyFocus(_ request: EditorCaretRequest) {
         focusedBlockID = request.blockID
         blockSelectionRange = nil
         pendingCaretRequest = request

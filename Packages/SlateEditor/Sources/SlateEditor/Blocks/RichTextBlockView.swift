@@ -200,27 +200,15 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
         /// ## Pourquoi cette situation existe (Perf, `LazyVStack`)
         /// Le focus AppKit ("premier repondant") et le focus logique
         /// (`EditorController.focusedBlockID`) sont deux etats SEPARES (voir la
-        /// documentation de `RichTextEditingTextView.applyCaretPlacement(_:)`, "le focus
-        /// SwiftUI/EditorController n'est qu'une intention"). Avant l'introduction du
-        /// `LazyVStack`, le `NSTextView` d'un bloc restait vivant en permanence : sortir
-        /// de l'ecran ne rompait jamais la relation entre les deux. Avec le
+        /// documentation de `RichTextEditingTextView.applyCaretPlacement(_:)`). Avec le
         /// `LazyVStack`, un bloc EN EDITION qui defile hors de la zone materialisee est
-        /// DEMONTE (`dismantleNSView`, qui sauvegarde -- voir sa documentation -- mais ne
-        /// touche PAS `focusedBlockID`, aucune raison logique de sortir d'edition juste
-        /// parce que la vue disparait de l'ecran) : le focus AppKit part avec le
-        /// `NSTextView` detruit, `focusedBlockID` reste tel quel. S'il revient a l'ecran
-        /// (defilement inverse, `scrollToFocusedBlockIfNeeded(_:proxy:)` de
-        /// `NoteDocumentView`...), `makeNSView` construit une INSTANCE TOTALEMENT
-        /// NOUVELLE de `NSTextView`, qui n'est PREMIER REPONDANT DE RIEN par defaut.
-        ///
-        /// Sans cette methode, l'utilisateur "resterait focalise" visuellement (le
-        /// `BlockContainer` affiche toujours l'etat `.focused`, voir
-        /// `BlockTreeView.blockState`) mais la frappe suivante n'irait NULLE PART -- le
-        /// pire des deux mondes (ni le focus visuel n'est corrige, ni le clavier ne
-        /// fonctionne). Le caret est replace en FIN de contenu (`.end`), pas a sa
-        /// position exacte avant le demontage : cette position n'a pas survecu (rien ne
-        /// la memorisait), un caret en fin de bloc reste le point de reprise le plus
-        /// proche du comportement natif "cliquer a nouveau dans un champ de texte".
+        /// DEMONTE (`dismantleNSView`, qui sauvegarde mais ne touche PAS
+        /// `focusedBlockID`) : le focus AppKit part avec le `NSTextView` detruit. S'il
+        /// revient a l'ecran, `makeNSView` construit une instance TOTALEMENT NOUVELLE,
+        /// qui n'est premier repondant de rien par defaut -- sans cette methode, la
+        /// frappe suivante n'irait nulle part alors que le bloc parait toujours
+        /// focalise. Le caret est replace en FIN de contenu (`.end`), sa position
+        /// exacte avant demontage n'ayant pas survecu.
         func restoreFocusAfterRemountIfNeeded(to textView: RichTextEditingTextView, focusedBlockID: UUID?) {
             defer { hasAttemptedFocusRestorationAfterRemount = true }
             guard !hasAttemptedFocusRestorationAfterRemount, focusedBlockID == block.id else { return }
@@ -272,6 +260,15 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
             flushPendingSave()
         }
 
+        /// Menu "/" (Phase 6) : SEUL point d'entree de son etat, couvre a la fois une
+        /// frappe et un simple deplacement de caret (fleches, clic -- "caret hors de la
+        /// plage de requete" doit fermer le menu meme sans changement de texte).
+        func textViewDidChangeSelection(_ notification: Notification) {
+            guard let textView = notification.object as? NSTextView else { return }
+            let caretOffset = RichTextOffset(utf16Offset: textView.selectedRange().location, in: textView.string)
+            editorController.updateSlashMenuState(for: block, plainText: textView.string, caretOffset: caretOffset)
+        }
+
         // MARK: - RichTextBlockLifecycleDelegate (cycle de vie des blocs, sous-etape 5.3)
         //
         // Chaque methode adapte un evenement clavier generique (`RichTextEditingTextView`)
@@ -306,6 +303,20 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
 
         func richTextViewShouldHandleExtendSelectionDown() -> Bool {
             editorController.extendSelectionVertically(.down, from: block)
+        }
+
+        // MARK: - Menu de commandes "/" (Phase 6, sous-etape 6.4)
+
+        func richTextViewShouldHandleSlashMenuMoveSelection(_ direction: BlockSelectionDirection) -> Bool {
+            editorController.moveSlashMenuSelection(direction, in: block)
+        }
+
+        func richTextViewShouldHandleSlashMenuReturn() -> Bool {
+            editorController.handleSlashMenuReturn(in: block)
+        }
+
+        func richTextViewShouldHandleSlashMenuEscape() -> Bool {
+            editorController.handleSlashMenuEscape(in: block)
         }
 
         // MARK: - Ecriture modele -> vue

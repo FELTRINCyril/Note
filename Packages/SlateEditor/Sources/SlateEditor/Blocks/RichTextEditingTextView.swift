@@ -156,6 +156,10 @@ final class RichTextEditingTextView: NSTextView {
     // MARK: - Interception clavier (sous-etape 5.3)
 
     override func insertNewline(_ sender: Any?) {
+        // Menu "/" (Phase 6) : menu ouvert = Entree valide la commande, jamais le split.
+        if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuReturn() == true {
+            return
+        }
         // Frontiere AppKit -> logique pure (voir la documentation de `RichTextOffset`) :
         // `selectedRange().location` est TOUJOURS en unites UTF-16, jamais transmis
         // sans conversion au-dela de ce point -- defaut le plus grave de la revue
@@ -188,6 +192,11 @@ final class RichTextEditingTextView: NSTextView {
     /// le bloc -- comportement natif, laisse a `super` -- et ne changer de bloc qu'au
     /// franchissement du bord superieur (spec E4).
     override func moveUp(_ sender: Any?) {
+        // Menu "/" (Phase 6) : AVANT `isCaretOnFirstVisualLine` -- menu ouvert = fleche
+        // deplace la selection DANS le menu, depuis n'importe quelle ligne du bloc.
+        if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuMoveSelection(.up) == true {
+            return
+        }
         if isCaretOnFirstVisualLine, let x = currentCaretVisualColumnX,
            blockLifecycleDelegate?.richTextViewShouldHandleMoveUp(visualColumnX: x) == true {
             return
@@ -195,8 +204,12 @@ final class RichTextEditingTextView: NSTextView {
         super.moveUp(sender)
     }
 
-    /// Symmetrique de `moveUp(_:)` pour la DERNIERE ligne visuelle.
+    /// Symmetrique de `moveUp(_:)` pour la DERNIERE ligne visuelle -- meme priorite
+    /// absolue du menu "/" en tete, meme raison.
     override func moveDown(_ sender: Any?) {
+        if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuMoveSelection(.down) == true {
+            return
+        }
         if isCaretOnLastVisualLine, let x = currentCaretVisualColumnX,
            blockLifecycleDelegate?.richTextViewShouldHandleMoveDown(visualColumnX: x) == true {
             return
@@ -230,6 +243,11 @@ final class RichTextEditingTextView: NSTextView {
     /// Selecteur `NSResponder` invoque par Echap dans un `NSTextView` autonome (spec E4 :
     /// "Echap sort de l'edition et selectionne le bloc entier").
     override func cancelOperation(_ sender: Any?) {
+        // Menu "/" (Phase 6) : menu ouvert = Echap ferme le menu SEUL, jamais la
+        // selection du bloc entier de la Phase 5 ci-dessous.
+        if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuEscape() == true {
+            return
+        }
         if blockLifecycleDelegate?.richTextViewShouldHandleCancelEditing() == true {
             return
         }
@@ -365,4 +383,16 @@ protocol RichTextBlockLifecycleDelegate: AnyObject {
 
     /// Symmetrique de ci-dessus pour Maj+fleche bas depuis la DERNIERE ligne visuelle.
     func richTextViewShouldHandleExtendSelectionDown() -> Bool
+
+    // MARK: - Menu "/" (Phase 6, 6.4) : priorite absolue, interrogees en TETE de
+    // `insertNewline`/`moveUp`/`moveDown`/`cancelOperation`. `false` de son propre chef
+    // si aucun menu n'est ouvert pour ce bloc (meme motif que `richTextViewShouldHandleMoveUp`).
+
+    /// Fleche haut/bas menu ouvert : deplace la selection DANS le menu, depuis
+    /// N'IMPORTE QUELLE ligne (contrairement a `richTextViewShouldHandleMoveUp`/`Down`).
+    func richTextViewShouldHandleSlashMenuMoveSelection(_ direction: BlockSelectionDirection) -> Bool
+    /// Entree menu ouvert : valide l'item mis en avant plutot que de scinder le bloc.
+    func richTextViewShouldHandleSlashMenuReturn() -> Bool
+    /// Echap menu ouvert : ferme le menu SEUL, sans selectionner le bloc entier.
+    func richTextViewShouldHandleSlashMenuEscape() -> Bool
 }

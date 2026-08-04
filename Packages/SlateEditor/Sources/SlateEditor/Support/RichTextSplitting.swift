@@ -31,4 +31,31 @@ extension RichText {
             tail: RichText(attributedString: AttributedString(tailSlice))
         )
     }
+
+    /// Retire les caracteres de `range` (offsets de CARACTERES, `RichTextRange` --
+    /// jamais un `Int`/`Range<Int>` nu, voir la documentation de `RichTextOffset`), en
+    /// preservant integralement les attributs inline de part et d'autre de la plage
+    /// retiree (docs/06_slash_commandes.md, sous-etape 6.6 : "retirer `/` + la requete
+    /// du bloc SANS jamais reconstruire le `RichText` depuis une `String`").
+    ///
+    /// Symmetrique de `split(atCharacterOffset:)` ci-dessus : tranche `attributedString`
+    /// en deux moities AVANT et APRES la plage (jamais via `plainText`, qui perdrait le
+    /// formatage des deux cotes), puis les CONCATENE -- c'est cette concatenation, et
+    /// non un troisieme tranchage, qui constitue le "retrait". `range` est borne a
+    /// `[0, longueur]` de chaque cote independamment, jamais d'index invalide possible
+    /// quel que soit l'appelant (menu "/" ferme sur un caret deja deplace, requete plus
+    /// longue que le texte restant apres une suppression concurrente...).
+    func removingCharacters(in range: RichTextRange) -> RichText {
+        let characters = attributedString.characters
+        let count = characters.count
+        let lowerBound = max(0, min(range.lowerBound.characters, count))
+        let upperBound = max(lowerBound, min(range.upperBound.characters, count))
+        let lowerIndex = characters.index(characters.startIndex, offsetBy: lowerBound)
+        let upperIndex = characters.index(characters.startIndex, offsetBy: upperBound)
+
+        var result = AttributedString(attributedString[attributedString.startIndex..<lowerIndex])
+        let tail = AttributedString(attributedString[upperIndex..<attributedString.endIndex])
+        result.append(tail)
+        return RichText(attributedString: result)
+    }
 }

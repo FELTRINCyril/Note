@@ -96,35 +96,54 @@ public struct NoteDocumentView: View {
                         // de defilement peut sauter legerement en remontant dans une tres
                         // longue note -- limitation connue de tout `LazyVStack` a hauteur
                         // de ligne variable, pas un defaut introduit par ce fichier.
-                        LazyVStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
-                            let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
-                            // Calcule UNE SEULE FOIS par rendu complet (sous-etape 5.6, voir
-                            // `EditorController.selectionRangePositions()`), enfile jusqu'a
-                            // chaque `BlockTreeView` -- jamais recalcule bloc par bloc. Reste
-                            // correct avec le `LazyVStack` : cette liste couvre TOUS les
-                            // blocs de la note (materialises ou non), seul l'AFFICHAGE de
-                            // l'aplat de plage est necessairement limite aux blocs
-                            // effectivement rendus a l'ecran.
-                            let rangePositions = editorController.selectionRangePositions()
-                            ForEach(topLevelBlocks, id: \.id) { block in
-                                BlockTreeView(
-                                    block: block,
-                                    siblings: topLevelBlocks,
-                                    indentLevel: 0,
-                                    strings: strings,
-                                    editorController: editorController,
-                                    rangePositions: rangePositions
-                                )
-                                // Ancre requise par `ScrollViewReader.scrollTo(_:anchor:)`
-                                // ci-dessous : DISTINCTE de l'identite `ForEach(id: \.id)`
-                                // (qui pilote le diffing SwiftUI, pas le ciblage du
-                                // scroll-to).
-                                .id(block.id)
+                        // `ZStack(alignment: .topLeading)` plutot qu'un simple `LazyVStack`
+                        // seul (Phase 6, sous-etape 6.4/6.5) : porte le menu "/" en
+                        // SURIMPRESSION du contenu (voir `SlashMenuOverlay`), dans le MEME
+                        // `coordinateSpace` nomme que `EditorController.blockFrames` (deplace
+                        // ici depuis le `LazyVStack` -- voir plus bas) -- necessaire pour que
+                        // `SlashMenuOverlay` ancre sa position aux memes coordonnees que
+                        // celles deja publiees par `BlockFramePreferenceKey`, sans introduire
+                        // une deuxieme cle de preference dediee.
+                        ZStack(alignment: .topLeading) {
+                            LazyVStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
+                                let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
+                                // Calcule UNE SEULE FOIS par rendu complet (sous-etape 5.6, voir
+                                // `EditorController.selectionRangePositions()`), enfile jusqu'a
+                                // chaque `BlockTreeView` -- jamais recalcule bloc par bloc. Reste
+                                // correct avec le `LazyVStack` : cette liste couvre TOUS les
+                                // blocs de la note (materialises ou non), seul l'AFFICHAGE de
+                                // l'aplat de plage est necessairement limite aux blocs
+                                // effectivement rendus a l'ecran.
+                                let rangePositions = editorController.selectionRangePositions()
+                                ForEach(topLevelBlocks, id: \.id) { block in
+                                    BlockTreeView(
+                                        block: block,
+                                        siblings: topLevelBlocks,
+                                        indentLevel: 0,
+                                        strings: strings,
+                                        editorController: editorController,
+                                        rangePositions: rangePositions
+                                    )
+                                    // Ancre requise par `ScrollViewReader.scrollTo(_:anchor:)`
+                                    // ci-dessous : DISTINCTE de l'identite `ForEach(id: \.id)`
+                                    // (qui pilote le diffing SwiftUI, pas le ciblage du
+                                    // scroll-to).
+                                    .id(block.id)
+                                }
+                            }
+
+                            // Menu "/" (Phase 6) : uniquement si un menu est ouvert ET que le
+                            // bloc qu'il vise est resolu (potentiellement imbrique -- item de
+                            // liste -- donc pas necessairement dans `topLevelBlocks`, voir
+                            // `slashMenuBlock`).
+                            if let slashMenuBlock {
+                                SlashMenuOverlay(block: slashMenuBlock, editorController: editorController)
                             }
                         }
                         // Coordonnees partagees pour la resolution "quel bloc est sous le
                         // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
-                        // `BlockFramePreferenceKey`/`EditorController.blockFrames`).
+                        // `BlockFramePreferenceKey`/`EditorController.blockFrames`), ET pour
+                        // l'ancrage du menu "/" (voir ci-dessus).
                         .coordinateSpace(name: Self.blockListCoordinateSpace)
                         .onPreferenceChange(BlockFramePreferenceKey.self) { frames in
                             editorController.updateBlockFrames(frames)
@@ -164,6 +183,14 @@ public struct NoteDocumentView: View {
     private func scrollToFocusedBlockIfNeeded(_ blockID: UUID?, proxy: ScrollViewProxy) {
         guard let blockID else { return }
         proxy.scrollTo(blockID, anchor: nil)
+    }
+
+    /// `Block` vise par `EditorController.slashMenuState`, ou `nil` si aucun menu n'est
+    /// ouvert (Phase 6). `BlockOrdering.flattenedBlocks(of:)`, jamais `topLevelBlocks`
+    /// seul : le bloc peut etre imbrique (item de liste a puces/numerotee/tache).
+    private var slashMenuBlock: Block? {
+        guard let blockID = editorController.slashMenuState?.blockID else { return nil }
+        return BlockOrdering.flattenedBlocks(of: note).first { $0.id == blockID }
     }
 }
 

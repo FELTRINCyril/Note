@@ -64,12 +64,19 @@ enum EditorStrings {
     }
 
     /// Libelle visible d'un `BlockType`, utilise a la fois pour annoncer le type
-    /// courant (`blockMenuConvertCurrentType(_:)`) et pour chaque entree du sous-menu
-    /// "Convertir en..." (`BlockConversion.availableTargets(for:)`). Couvre uniquement
-    /// `BlockConversion.convertibleTypes` : les autres types ne sont jamais passes ici
-    /// par construction (le sous-menu ne les propose pas), le repli sur `rawValue`
-    /// n'est donc qu'un garde-fou de dernier recours, jamais localise volontairement --
-    /// un `BlockType` qui l'atteindrait serait un bug d'appel, pas un cas d'usage.
+    /// courant (`blockMenuConvertCurrentType(_:)`), pour chaque entree du sous-menu
+    /// "Convertir en..." (`BlockConversion.availableTargets(for:)`), et depuis la
+    /// Phase 6 pour le titre de la commande "/" correspondante
+    /// (`SlashCommandRegistry.allCommands`). Couvre `BlockConversion.convertibleTypes`
+    /// PLUS `.divider` (corrige a la Phase 6 -- `.divider` n'appartient pas a
+    /// `convertibleTypes`, absence de `RichText` a transporter, mais a bel et bien un
+    /// rendu reel et est desormais presente a l'utilisateur via le menu "/" : le laisser
+    /// retomber sur `rawValue` non localise etait un vrai trou, pas un garde-fou
+    /// legitime). Les types restants ne sont jamais passes ici par construction (ni le
+    /// sous-menu de conversion ni le registre "/" ne les proposent), le repli sur
+    /// `rawValue` reste donc un garde-fou de dernier recours, jamais localise
+    /// volontairement -- un `BlockType` qui l'atteindrait serait un bug d'appel, pas un
+    /// cas d'usage.
     static func blockTypeLabel(_ type: BlockType) -> String {
         if let headingLabel = headingTypeLabel(type) {
             return headingLabel
@@ -87,8 +94,10 @@ enum EditorStrings {
             return String(localized: "editor.blockType.quote", bundle: .module)
         case .code:
             return String(localized: "editor.blockType.code", bundle: .module)
+        case .divider:
+            return String(localized: "editor.blockType.divider", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .callout, .divider, .image, .file, .table, .columnList, .column,
+             .callout, .image, .file, .table, .columnList, .column,
              .bookmark, .embed, .databaseView, .pageLink:
             return type.rawValue
         }
@@ -148,5 +157,87 @@ enum EditorStrings {
     static func blockMenuDeleteRangeTitle(_ count: Int) -> String {
         let template = String(localized: "editor.blockMenu.delete.rangeTitle", bundle: .module)
         return String(format: template, count)
+    }
+
+    // MARK: - Menu de commandes / (phase 6)
+
+    /// Sous-titre (description courte) de chaque commande "/" -- voir la documentation
+    /// de tete de `SlashCommandRegistry` pour la regle "une vraie phrase utile, jamais
+    /// une paraphrase du titre". Une fonction unique plutot que 13 `static var`
+    /// distinctes : ce switch est exhaustif sur `BlockType` pour beneficier du meme
+    /// garde-fou de COMPILATION que `BlockRenderRouting.kind(for:)` (aucun type de bloc
+    /// ne doit rester silencieusement sans description s'il rejoint un jour le
+    /// registre) -- voir la documentation de tete de `SlashCommandRegistry`, section
+    /// "Types offerts", pour la liste des types qui l'atteignent effectivement
+    /// aujourd'hui.
+    static func slashCommandSubtitle(_ type: BlockType) -> String {
+        if let headingSubtitle = headingSlashCommandSubtitle(type) {
+            return headingSubtitle
+        }
+        switch type {
+        case .paragraph:
+            return String(localized: "editor.slashCommand.subtitle.paragraph", bundle: .module)
+        case .bulletedList:
+            return String(localized: "editor.slashCommand.subtitle.bulletedList", bundle: .module)
+        case .numberedList:
+            return String(localized: "editor.slashCommand.subtitle.numberedList", bundle: .module)
+        case .todo:
+            return String(localized: "editor.slashCommand.subtitle.todo", bundle: .module)
+        case .quote:
+            return String(localized: "editor.slashCommand.subtitle.quote", bundle: .module)
+        case .code:
+            return String(localized: "editor.slashCommand.subtitle.code", bundle: .module)
+        case .divider:
+            return String(localized: "editor.slashCommand.subtitle.divider", bundle: .module)
+        case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
+             .callout, .image, .file, .table, .columnList, .column,
+             .bookmark, .embed, .databaseView, .pageLink:
+            return ""
+        }
+    }
+
+    /// Sous-titres des 6 niveaux de titre, extraits de `slashCommandSubtitle(_:)` pour
+    /// rester sous la limite de complexite cyclomatique de SwiftLint -- meme raison que
+    /// `headingTypeLabel(_:)` ci-dessus.
+    private static func headingSlashCommandSubtitle(_ type: BlockType) -> String? {
+        switch type {
+        case .heading1:
+            String(localized: "editor.slashCommand.subtitle.heading1", bundle: .module)
+        case .heading2:
+            String(localized: "editor.slashCommand.subtitle.heading2", bundle: .module)
+        case .heading3:
+            String(localized: "editor.slashCommand.subtitle.heading3", bundle: .module)
+        case .heading4:
+            String(localized: "editor.slashCommand.subtitle.heading4", bundle: .module)
+        case .heading5:
+            String(localized: "editor.slashCommand.subtitle.heading5", bundle: .module)
+        case .heading6:
+            String(localized: "editor.slashCommand.subtitle.heading6", bundle: .module)
+        default:
+            nil
+        }
+    }
+
+    /// Titre de section du menu "/" (sous-etapes 6.1/6.3/6.5), dans l'ordre de
+    /// `SlashCommandCategory.allCases` -- voir la documentation de tete de
+    /// `SlashCommandRegistry` pour cet ordre. `media` n'a aujourd'hui aucune commande
+    /// (voir sa documentation), mais garde son libelle localise ici : le jour ou une
+    /// commande media rejoindra le registre, aucune chaine a ajouter a retardement.
+    static func slashCommandCategoryTitle(_ category: SlashCommandCategory) -> String {
+        switch category {
+        case .basic:
+            String(localized: "editor.slashCommand.category.basic", bundle: .module)
+        case .media:
+            String(localized: "editor.slashCommand.category.media", bundle: .module)
+        case .advanced:
+            String(localized: "editor.slashCommand.category.advanced", bundle: .module)
+        }
+    }
+
+    /// Message affiche par le menu "/" quand aucune commande ne correspond a la
+    /// requete tapee (sous-etape 6.4 : "aucun resultat ne ferme PAS le menu... on
+    /// affiche le message, l'utilisateur peut corriger sa frappe").
+    static var slashCommandEmptyState: String {
+        String(localized: "editor.slashCommand.emptyState", bundle: .module)
     }
 }

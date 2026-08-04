@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 5.
+**Dernière mise à jour :** fin de la phase 6.
 
 ---
 
 ## En un coup d'œil
 
-**5 / 21 phases terminées.**
+**6 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         ███░░░░░░░  25 %   (3/12)  ⏳ en cours
+App v1         ███░░░░░░░  33 %   (4/12)  ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 5 (éditeur de blocs) validée, la plus complexe du projet. Six sous-étapes 5.1 → 5.6, puis trois défauts bloquants trouvés en revue et corrigés avant validation.
-- **Prochaine étape :** **Phase 6 — Menu de commandes `/`**. Aucun design requis.
-- **Qualité au dernier point (phase 5) :** 315 tests verts · build sans avertissement · 0 violation SwiftLint · commit `964379c`.
+- **Où on en est :** phase 6 (menu de commandes `/`) validée. 13 commandes, filtrage flou FR + EN, navigation clavier complète. Une incohérence entre livraisons parallèles trouvée et corrigée avant la revue (voir Décisions), puis une garde manquante ajoutée après revue.
+- **Prochaine étape :** **Phase 7 — Typographie & formatage**. 🎨 **Design requis** avant de coder l'UI (barre de formatage flottante, styles H1–H6).
+- **Qualité au dernier point (phase 6) :** 370 tests verts (dont 202 sur `SlateEditor`) · build sans avertissement nouveau · 0 violation SwiftLint.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -42,8 +42,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 3 | Coquille app & barre latérale | ✅ | 🎨 ✔️ | `6e924b9` |
 | 4 | Liste des notes & regroupement par date | ✅ | 🎨 ✔️ | `5e9abb3` |
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
-| 6 | Menu de commandes `/` | ⏳ **prochaine** | — | — |
-| 7 | Typographie & formatage | ⬜ | 🎨 à livrer | — |
+| 6 | Menu de commandes `/` | ✅ | — | `056e03f` |
+| 7 | Typographie & formatage | ⏳ **prochaine** | 🎨 à livrer | — |
 | 8 | Blocs spéciaux | ⬜ | — | — |
 | 9 | Médias & pièces jointes | ⬜ | 🎨 à livrer | — |
 | 10 | Glisser-déposer & colonnes | ⬜ | — | — |
@@ -78,10 +78,17 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 5 — Architecture d'édition :** un `RichTextBlockView` par bloc via `NSViewRepresentable` / TextKit 2 (option 2 du doc). Aucun bloquant rencontré. ✅
 - **Phase 5 — Gouttière :** dans le flux, colonne de texte strictement à 720 pt, décalage optique d'environ 24 pt accepté. L'approche flottante a été écartée : sous 48 pt de marge, un overlay serait rogné ou déborderait sur la colonne de liste. ✅
 - **Phase 5 — Offset de caret :** type distinct `RichTextOffset` / `RichTextRange` plutôt qu'une conversion ponctuelle, pour rendre la confusion UTF-16 / graphèmes impossible à la compilation. ✅
+- **Phase 5 — Sous-titre de note :** *aucun champ ajouté au modèle `Note`*. Un sous-titre est un **style de paragraphe**, il relèvera de la phase 7 (typographie & formatage). L'en-tête d'éditeur reste tel quel. ✅ (tranché le 04/08/2026)
+- **Phase 5 — Deux formateurs de date :** **laissés séparés**. Celui de la liste (jamais jour + heure ensemble) et celui de l'en-tête d'éditeur (toujours les deux, exigé par E4) répondent à deux besoins d'affichage réellement différents ; les fusionner créerait un formateur à modes. ✅ (tranché le 04/08/2026)
+
+- **Phase 6 — Ancrage du menu `/` :** overlay SwiftUI positionné par calcul, **pas** un `.popover`. Un popover macOS prend la fenêtre clé, ce qui couperait la frappe : or tout l'intérêt du menu est de se filtrer pendant qu'on tape. L'overlay réutilise `EditorController.blockFrames` (déjà alimenté depuis la 5.6), aucune nouvelle `PreferenceKey`, le `NSTextView` reste premier répondant. ✅
+- **Phase 6 — Espace dans la requête :** ferme le menu **seulement si la requête ne matche plus rien** (et toujours si l'espace suit immédiatement le `/`). La règle initiale "toute espace ferme" rendait morts une vingtaine d'alias multi-mots du registre et les titres eux-mêmes ("Titre 1") : incohérence entre deux livraisons parallèles, trouvée à la relecture croisée. ✅
+- **Phase 6 — Portée du registre :** seuls les types de bloc au rendu **réel** sont proposés (13 commandes). Callout, tableau, image, fichier, colonnes n'y figurent pas tant que leur phase n'est pas faite - même règle d'honnêteté d'interface qu'en 5.4/5.5. Le registre est fait pour qu'une phase ultérieure y ajoute une ligne. ✅
+- **Phase 6 — État après une commande `/` :** le bloc reste **en édition, caret placé**, contrairement au menu de bloc (5.4/5.5) qui laisse le bloc simplement sélectionné. Écart volontaire : ici l'utilisateur est en train de taper, l'interrompre pour le forcer à recliquer serait absurde. ✅
+- **Phase 6 — `divider` :** traité hors `BlockConversion` (qui le refuserait en silence, il ne porte pas de texte et ne peut pas accueillir le caret). Le séparateur prend la place, puis un paragraphe vide focalisé le suit. ✅
 
 ## Décisions en attente
-1. **Sous-titre de note** : la spec E4 en montre un, le modèle `Note` n'a pas ce champ. L'ajouter est une décision produit avec évolution de schéma. Rendu sans sous-titre en attendant.
-2. **Deux formateurs de date** coexistent : celui de la liste (jamais jour + heure ensemble) et celui de l'en-tête d'éditeur (toujours les deux, exigé par E4). *Reco : les laisser séparés*, ils répondent à deux besoins d'affichage réellement différents.
+*(aucune)*
 
 ---
 
@@ -89,9 +96,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Vérification visuelle (thème sombre + comparaison au design)** toujours impossible : autoriser **Switchboard** dans *Réglages Système → Confidentialité et sécurité → Enregistrement de l'écran*, puis le quitter/relancer.
 - **À vérifier à la main dans Xcode** (non testable sans fenêtre) : conservation de la colonne visuelle aux flèches, sélection de bloc par Échap, et sur une note de 500+ blocs le nombre de `NSTextView` réellement vivants (quelques dizaines attendues, pas 500) via Instruments.
 - **Saut de barre de défilement** possible en remontant dans une note très longue : `LazyVStack` doit estimer la hauteur des blocs non matérialisés, or TextKit 2 ne la connaît qu'une fois le bloc monté. Corriger proprement demanderait un cache de hauteurs.
+- **Menu `/` : ancrage au coin du bloc**, pas à la position réelle du caret. Exact pour le cas dominant (`/` en début de bloc vide), approximatif si le `/` est tapé loin dans un bloc déjà multi-lignes. Améliorable en remontant le rectangle du caret depuis TextKit 2, non fait pour l'instant.
+- **Menu `/` : rognage éventuel en bas de la zone de défilement non vérifié** (pas de fenêtre disponible). C'est le risque assumé de l'overlay face au popover. À regarder à la main dans Xcode : ouvrir le menu sur le dernier bloc d'une note longue.
 - **`ModelContext.insert` de SwiftData est non linéaire** (ratio 12,7 mesuré, indépendamment de notre code). Sans effet sur la frappe (0,86 ms par insertion sur une note de 500 blocs), mais l'import en masse d'une phase ultérieure devra utiliser une insertion par lot.
 
 ---
 
 ## Prochaine action concrète
-Lancer la **phase 6 — Menu de commandes `/`** : aucun design à demander, le doc `docs/06_slash_commandes.md` suffit. Les points d'accroche sont déjà en place (le bouton `+` et `insertBlockBelow` de la phase 5.4, et l'opération de conversion pure de la 5.5 que le menu `/` réutilisera).
+La **phase 7 — Typographie & formatage** est marquée 🎨 : il faut le design **avant** de coder l'UI. Ouvrir Claude Design et demander la **barre de formatage flottante** (états, position par rapport à la sélection) et les **styles de texte H1–H6**, puis déposer le livrable dans `design/07_typographie/`. Détail de la demande dans `DESIGN_HANDOFF.md`.
+
+Le sous-titre de note y sera traité comme un **style de paragraphe** (décision ci-dessus), donc à inclure dans la demande de design au même titre que les niveaux de titre.
