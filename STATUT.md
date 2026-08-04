@@ -42,7 +42,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 3 | Coquille app & barre latérale | ✅ | 🎨 ✔️ | `6e924b9` |
 | 4 | Liste des notes & regroupement par date | ✅ | 🎨 ✔️ | `5e9abb3` |
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
-| 6 | Menu de commandes `/` | ✅ | — | `056e03f` |
+| 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
 | 7 | Typographie & formatage | ⏳ **prochaine** | 🎨 à livrer | — |
 | 8 | Blocs spéciaux | ⬜ | — | — |
 | 9 | Médias & pièces jointes | ⬜ | 🎨 à livrer | — |
