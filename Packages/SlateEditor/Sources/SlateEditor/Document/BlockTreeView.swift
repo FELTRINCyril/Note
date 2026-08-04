@@ -131,16 +131,27 @@ struct BlockTreeView: View {
             // l'experience VoiceOver.
             .accessibilityHint(editorController.selectedBlockID == block.id ? EditorStrings.blockMenuAccessibilityHint : "")
 
+            // `LazyVStack` (voir `NoteDocumentView`, meme raison exacte : Perf, revue
+            // finale de Phase 5) : une liste imbriquee (item de liste a puces/numerotee)
+            // peut elle aussi compter des centaines d'enfants directs, chacun capable de
+            // porter son propre `RichTextBlockView`.
             let childBlocks = BlockOrdering.children(of: block)
-            ForEach(childBlocks, id: \.id) { child in
-                BlockTreeView(
-                    block: child,
-                    siblings: childBlocks,
-                    indentLevel: indentLevel + 1,
-                    strings: strings,
-                    editorController: editorController,
-                    rangePositions: rangePositions
-                )
+            LazyVStack(alignment: .leading, spacing: 0) {
+                ForEach(childBlocks, id: \.id) { child in
+                    BlockTreeView(
+                        block: child,
+                        siblings: childBlocks,
+                        indentLevel: indentLevel + 1,
+                        strings: strings,
+                        editorController: editorController,
+                        rangePositions: rangePositions
+                    )
+                    // Meme ancre de scroll-to que `NoteDocumentView` (voir sa
+                    // documentation de `scrollToFocusedBlockIfNeeded(_:proxy:)`) :
+                    // necessaire pour qu'un bloc imbrique non encore materialise reste
+                    // atteignable par la navigation clavier.
+                    .id(child.id)
+                }
             }
         }
     }

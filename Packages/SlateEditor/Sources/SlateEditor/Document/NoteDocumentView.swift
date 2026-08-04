@@ -63,48 +63,107 @@ public struct NoteDocumentView: View {
         // effet observable si la valeur n'a pas change.
         editorController.updateModelContext(modelContext)
 
-        return ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                NoteHeaderView(
-                    note: note,
-                    metadataLine: metadataLine,
-                    strings: strings,
-                    onAddIcon: onAddIcon,
-                    onAddCover: onAddCover
-                )
+        // `ScrollViewReader` est le complement OBLIGATOIRE du `LazyVStack` ci-dessous,
+        // pas une simple amelioration : voir la documentation de tete de
+        // `scrollToFocusedBlockIfNeeded(_:proxy:)` pour la raison precise (navigation
+        // clavier vers un bloc pas encore materialise).
+        return ScrollViewReader { scrollProxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 0) {
+                    NoteHeaderView(
+                        note: note,
+                        metadataLine: metadataLine,
+                        strings: strings,
+                        onAddIcon: onAddIcon,
+                        onAddCover: onAddCover
+                    )
 
-                EditorContentColumn {
-                    VStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
-                        let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
-                        // Calcule UNE SEULE FOIS par rendu complet (sous-etape 5.6, voir
-                        // `EditorController.selectionRangePositions()`), enfile jusqu'a
-                        // chaque `BlockTreeView` -- jamais recalcule bloc par bloc.
-                        let rangePositions = editorController.selectionRangePositions()
-                        ForEach(topLevelBlocks, id: \.id) { block in
-                            BlockTreeView(
-                                block: block,
-                                siblings: topLevelBlocks,
-                                indentLevel: 0,
-                                strings: strings,
-                                editorController: editorController,
-                                rangePositions: rangePositions
-                            )
+                    EditorContentColumn {
+                        // `LazyVStack` (Perf, revue finale de Phase 5 : "recycler/paresser
+                        // le rendu pour les notes longues") remplace le `VStack` de la
+                        // 5.1-5.6 : sur une note de 500 blocs, seuls les blocs proches de
+                        // l'ecran instancient reellement leur `NSViewRepresentable`
+                        // (`RichTextBlockView`), donc leur `NSTextView` TextKit 2 complet.
+                        // Un bloc qui sort de la zone materialisee est DEMONTE
+                        // (`RichTextBlockView.dismantleNSView`) puis RECREE (`makeNSView`)
+                        // s'il revient -- voir la documentation de
+                        // `RichTextEditingRepresentable.updateNSView` pour la consequence
+                        // sur le focus AppKit et sa restauration, et celle de
+                        // `scrollToFocusedBlockIfNeeded(_:proxy:)` pour la consequence sur la
+                        // navigation clavier. Consequence ACCEPTEE, documentee, non
+                        // corrigee ici : sans la hauteur reelle des blocs non materialises
+                        // (variable, TextKit 2 ne la connait qu'une fois monte), la barre
+                        // de defilement peut sauter legerement en remontant dans une tres
+                        // longue note -- limitation connue de tout `LazyVStack` a hauteur
+                        // de ligne variable, pas un defaut introduit par ce fichier.
+                        LazyVStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
+                            let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
+                            // Calcule UNE SEULE FOIS par rendu complet (sous-etape 5.6, voir
+                            // `EditorController.selectionRangePositions()`), enfile jusqu'a
+                            // chaque `BlockTreeView` -- jamais recalcule bloc par bloc. Reste
+                            // correct avec le `LazyVStack` : cette liste couvre TOUS les
+                            // blocs de la note (materialises ou non), seul l'AFFICHAGE de
+                            // l'aplat de plage est necessairement limite aux blocs
+                            // effectivement rendus a l'ecran.
+                            let rangePositions = editorController.selectionRangePositions()
+                            ForEach(topLevelBlocks, id: \.id) { block in
+                                BlockTreeView(
+                                    block: block,
+                                    siblings: topLevelBlocks,
+                                    indentLevel: 0,
+                                    strings: strings,
+                                    editorController: editorController,
+                                    rangePositions: rangePositions
+                                )
+                                // Ancre requise par `ScrollViewReader.scrollTo(_:anchor:)`
+                                // ci-dessous : DISTINCTE de l'identite `ForEach(id: \.id)`
+                                // (qui pilote le diffing SwiftUI, pas le ciblage du
+                                // scroll-to).
+                                .id(block.id)
+                            }
+                        }
+                        // Coordonnees partagees pour la resolution "quel bloc est sous le
+                        // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
+                        // `BlockFramePreferenceKey`/`EditorController.blockFrames`).
+                        .coordinateSpace(name: Self.blockListCoordinateSpace)
+                        .onPreferenceChange(BlockFramePreferenceKey.self) { frames in
+                            editorController.updateBlockFrames(frames)
                         }
                     }
-                    // Coordonnees partagees pour la resolution "quel bloc est sous le
-                    // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
-                    // `BlockFramePreferenceKey`/`EditorController.blockFrames`).
-                    .coordinateSpace(name: Self.blockListCoordinateSpace)
-                    .onPreferenceChange(BlockFramePreferenceKey.self) { frames in
-                        editorController.updateBlockFrames(frames)
-                    }
-                }
 
-                NoteDocumentBottomSpacerView(onTap: editorController.appendTrailingParagraph)
+                    NoteDocumentBottomSpacerView(onTap: editorController.appendTrailingParagraph)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(SlateColor.bgEditor)
+            .onChange(of: editorController.focusedBlockID) { _, newValue in
+                scrollToFocusedBlockIfNeeded(newValue, proxy: scrollProxy)
+            }
         }
-        .background(SlateColor.bgEditor)
+    }
+
+    /// Complement OBLIGATOIRE du `LazyVStack` ci-dessus (pas une simple amelioration) :
+    /// sans lui, deplacer le focus vers un bloc SORTI de la zone materialisee (fleche
+    /// haut/bas en bord de bloc, Entree en fin de note...) mettrait a jour
+    /// `EditorController.focusedBlockID`/`pendingCaretRequest` SANS QUE RIEN NE LES
+    /// CONSOMME -- `RichTextBlockView.updateNSView` (seul endroit qui consomme
+    /// `pendingCaretRequest`, voir sa documentation) n'est jamais appele pour un bloc que
+    /// le `LazyVStack` n'a pas encore instancie. La navigation clavier "s'arreterait"
+    /// silencieusement au bord de l'ecran des que la note depasse une poignee d'ecrans,
+    /// exactement la regression que `docs/05_editeur_blocs.md` interdit ("les fleches
+    /// doivent continuer de traverser tout le document").
+    ///
+    /// `proxy.scrollTo(_:anchor:)` avec `anchor: nil` (jamais anime -- volontairement PAS
+    /// enveloppe dans `withAnimation`, pour un saut instantane plutot qu'un defilement
+    /// anime qui materialiserait/demonterait en rafale tous les blocs intermediaires) :
+    /// - ne fait RIEN si `newValue` est deja visible (comportement documente de
+    ///   `anchor: nil`) ;
+    /// - sinon saute directement a son ancre `.id(block.id)`, ce qui force le
+    ///   `LazyVStack` a materialiser ce bloc -- `RichTextBlockView.updateNSView` est alors
+    ///   appele et consomme enfin `pendingCaretRequest`.
+    private func scrollToFocusedBlockIfNeeded(_ blockID: UUID?, proxy: ScrollViewProxy) {
+        guard let blockID else { return }
+        proxy.scrollTo(blockID, anchor: nil)
     }
 }
 

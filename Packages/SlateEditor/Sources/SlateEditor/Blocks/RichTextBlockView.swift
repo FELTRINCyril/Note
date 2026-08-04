@@ -96,6 +96,14 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
         // `ForEach` recoit bien sa requete au tour de rendu ou elle a ete emise.
         if let request = editorController.consumePendingCaretRequest(for: block.id) {
             nsView.applyCaretPlacement(request.placement)
+        } else {
+            // Perf (`LazyVStack`, voir `NoteDocumentView`) : ce bloc peut etre un
+            // `NSTextView` RECREE apres avoir ete demonte (`dismantleNSView`) pendant
+            // qu'il defilait hors-ecran alors qu'il etait le bloc EN EDITION -- voir
+            // `Coordinator.restoreFocusAfterRemountIfNeeded`.
+            context.coordinator.restoreFocusAfterRemountIfNeeded(
+                to: nsView, focusedBlockID: editorController.focusedBlockID
+            )
         }
     }
 
@@ -139,6 +147,18 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
         /// silencieusement sur ce detail d'implementation AppKit.
         private var isApplyingModelToView = false
 
+        /// `true` une fois qu'une premiere tentative de restauration du focus a ete
+        /// faite pour l'instance ACTUELLE de ce `Coordinator` (une par montage de
+        /// `NSView`, voir `makeCoordinator()` -- un nouveau montage cree un nouveau
+        /// `Coordinator`). Empeche `restoreFocusAfterRemountIfNeeded` de ressaisir le
+        /// focus AppKit a CHAQUE `updateNSView` ulterieur : sans ce garde-fou, un
+        /// `NSTextView` deja focalise normalement (frappe en cours) reprendrait
+        /// premier repondant de force a chaque re-rendu ou `window.firstResponder`
+        /// n'est momentanement PAS ce `NSTextView` pour une raison sans rapport (menu de
+        /// bloc ouvert en `.popover`, changement de fenetre cle...) -- exactement le
+        /// genre de vol de focus intempestif que la tache interdit explicitement.
+        private var hasAttemptedFocusRestorationAfterRemount = false
+
         init(block: Block, editorController: EditorController, modelContext: ModelContext) {
             self.block = block
             self.editorController = editorController
@@ -170,6 +190,42 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
         /// `RichTextBlockView` pour les trois moments ou c'est appele.
         func flushPendingSave() {
             debouncer.flush()
+        }
+
+        /// Reprend le focus AppKit (premier repondant) sur `textView` SI ce bloc est
+        /// toujours designe comme le bloc EN EDITION par l'`EditorController`, mais que
+        /// ce `NSTextView` precis (necessairement RECREE par `makeNSView` -- voir
+        /// `hasAttemptedFocusRestorationAfterRemount`) ne l'est pas encore.
+        ///
+        /// ## Pourquoi cette situation existe (Perf, `LazyVStack`)
+        /// Le focus AppKit ("premier repondant") et le focus logique
+        /// (`EditorController.focusedBlockID`) sont deux etats SEPARES (voir la
+        /// documentation de `RichTextEditingTextView.applyCaretPlacement(_:)`, "le focus
+        /// SwiftUI/EditorController n'est qu'une intention"). Avant l'introduction du
+        /// `LazyVStack`, le `NSTextView` d'un bloc restait vivant en permanence : sortir
+        /// de l'ecran ne rompait jamais la relation entre les deux. Avec le
+        /// `LazyVStack`, un bloc EN EDITION qui defile hors de la zone materialisee est
+        /// DEMONTE (`dismantleNSView`, qui sauvegarde -- voir sa documentation -- mais ne
+        /// touche PAS `focusedBlockID`, aucune raison logique de sortir d'edition juste
+        /// parce que la vue disparait de l'ecran) : le focus AppKit part avec le
+        /// `NSTextView` detruit, `focusedBlockID` reste tel quel. S'il revient a l'ecran
+        /// (defilement inverse, `scrollToFocusedBlockIfNeeded(_:proxy:)` de
+        /// `NoteDocumentView`...), `makeNSView` construit une INSTANCE TOTALEMENT
+        /// NOUVELLE de `NSTextView`, qui n'est PREMIER REPONDANT DE RIEN par defaut.
+        ///
+        /// Sans cette methode, l'utilisateur "resterait focalise" visuellement (le
+        /// `BlockContainer` affiche toujours l'etat `.focused`, voir
+        /// `BlockTreeView.blockState`) mais la frappe suivante n'irait NULLE PART -- le
+        /// pire des deux mondes (ni le focus visuel n'est corrige, ni le clavier ne
+        /// fonctionne). Le caret est replace en FIN de contenu (`.end`), pas a sa
+        /// position exacte avant le demontage : cette position n'a pas survecu (rien ne
+        /// la memorisait), un caret en fin de bloc reste le point de reprise le plus
+        /// proche du comportement natif "cliquer a nouveau dans un champ de texte".
+        func restoreFocusAfterRemountIfNeeded(to textView: RichTextEditingTextView, focusedBlockID: UUID?) {
+            defer { hasAttemptedFocusRestorationAfterRemount = true }
+            guard !hasAttemptedFocusRestorationAfterRemount, focusedBlockID == block.id else { return }
+            guard textView.window?.firstResponder !== textView else { return }
+            textView.applyCaretPlacement(.end)
         }
 
         // MARK: - NSTextViewDelegate

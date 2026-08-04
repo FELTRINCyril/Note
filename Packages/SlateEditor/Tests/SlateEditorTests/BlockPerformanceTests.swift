@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import SlateModel
 import Testing
@@ -221,6 +222,62 @@ struct BlockPerformanceTests {
         // traite tout le lot en UNE seule passe O(n) quand les blocs sont freres directs
         // (le cas de ce test, une plage plate) -- ratio attendu ~4 (lineaire).
         #expect(ratio < 10, "Suppression en lot encore proche de O(n^2) : ratio \(ratio)")
+    }
+
+    // MARK: - Rendu (materialisation d'un `NSTextView` TextKit 2 par bloc paragraphe)
+    //
+    // Les quatre tests ci-dessus mesurent `EditorController`/`BlockOrdering` : de la
+    // logique PURE (voir la documentation de tete de fichier, "testable hors AppKit"),
+    // qui ne dit rien du cout du RENDU proprement dit -- exactement le defaut final de
+    // Phase 5 corrige par ce fichier (`NoteDocumentView`/`BlockTreeView` : `VStack` ->
+    // `LazyVStack`). Ce cout de rendu n'est PAS mesurable ICI de la meme facon : sans
+    // fenetre/`ScrollView` reellement disposee et defilee (`NSApplication` avec boucle
+    // d'evenements, hors de portee d'un test SwiftPM headless), impossible de savoir
+    // COMBIEN de blocs un `LazyVStack` materialise reellement sur un ecran donne, ni de
+    // reproduire un defilement. Ce test mesure honnetement ce qui EST accessible sans
+    // fenetre -- le cout de construction d'un `NSTextView` TextKit 2 SEUL (creation +
+    // premier contenu, exactement `RichTextEditingRepresentable.makeNSView` +
+    // `applyInitialContent`, sans SwiftUI ni ScrollView) -- pour objectiver ce que la
+    // paresse du rendu EVITE de payer sur les blocs hors ecran d'une note longue.
+    @Test("Cout de construction d'un NSTextView TextKit 2 par bloc paragraphe : ce que la paresse du rendu evite")
+    func textKit2InstanceConstructionCost() {
+        let blockCount = 500
+        let texts = (0..<blockCount).map { RichText(plainText: "Paragraphe \($0), un peu de contenu.") }
+
+        let duration = measure {
+            for text in texts {
+                let textView = RichTextEditingTextView.makeTextKit2Instance()
+                // Meme sequence que `RichTextEditingRepresentable.makeNSView` +
+                // `Coordinator.applyInitialContent` : construire le `NSTextView` SEUL,
+                // sans y injecter de contenu, sous-estimerait le cout reel (le pont
+                // `AttributedString` -> `NSAttributedString`, voir `RichTextBlockView.
+                // Coordinator.apply(_:to:)`, fait partie du montage initial d'un bloc).
+                let bridged = try? NSAttributedString(
+                    text.attributedString, including: AttributeScopes.SlateAttributes.self
+                )
+                if let bridged {
+                    textView.textStorage?.setAttributedString(bridged)
+                }
+            }
+        }
+        let ms = durationInMs(duration)
+        let perBlockMs = ms / Double(blockCount)
+
+        let info: Comment = """
+            INFO perf : construire \(blockCount) NSTextView TextKit 2 (avec contenu initial) = \(ms) ms, \
+            soit \(perBlockMs) ms par bloc
+            """
+        Issue.record(info, severity: .warning)
+
+        // Pas de seuil arbitraire ici (voir la documentation de tete de fichier pour la
+        // philosophie de ce fichier) : ce test n'existe pas pour verrouiller un budget,
+        // mais pour DOCUMENTER un chiffre reel. Un cout par bloc largement non nul (et
+        // multiplie par 500 sur une note longue, potentiellement REFAIT a chaque
+        // reconstruction de la hierarchie de vues avant le correctif de paresse) motive
+        // le passage a `LazyVStack` : c'est exactement le travail que celui-ci evite de
+        // refaire pour un bloc qui n'est jamais entre dans le champ visible.
+        let message: Comment = "Construction de \(blockCount) NSTextView : \(ms) ms total, \(perBlockMs) ms/bloc"
+        #expect(ms >= 0, message)
     }
 
     private func durationInMs(_ duration: Duration) -> Double {
