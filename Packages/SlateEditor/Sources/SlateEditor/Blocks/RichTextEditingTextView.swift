@@ -156,7 +156,12 @@ final class RichTextEditingTextView: NSTextView {
     // MARK: - Interception clavier (sous-etape 5.3)
 
     override func insertNewline(_ sender: Any?) {
-        let caretOffset = selectedRange().location
+        // Frontiere AppKit -> logique pure (voir la documentation de `RichTextOffset`) :
+        // `selectedRange().location` est TOUJOURS en unites UTF-16, jamais transmis
+        // sans conversion au-dela de ce point -- defaut le plus grave de la revue
+        // finale de Phase 5 (un emoji/drapeau avant le caret faisait scinder le bloc au
+        // mauvais endroit, silencieusement).
+        let caretOffset = RichTextOffset(utf16Offset: selectedRange().location, in: string)
         if blockLifecycleDelegate?.richTextViewShouldHandleReturn(caretOffset: caretOffset) == true {
             return
         }
@@ -244,7 +249,11 @@ final class RichTextEditingTextView: NSTextView {
         let targetLocation: Int
         switch placement {
         case let .offset(offset):
-            targetLocation = max(0, min(offset, length))
+            // Frontiere logique pure -> AppKit (voir la documentation de
+            // `RichTextOffset`) : `offset` est un compte de CARACTERES, `setSelectedRange`
+            // (ci-dessous) attend un `NSRange` en UTF-16 -- conversion explicite, jamais
+            // un simple passage direct de l'un a l'autre.
+            targetLocation = max(0, min(offset.utf16Offset(in: string), length))
         case .end:
             targetLocation = length
         case let .visualColumn(x, edge):
@@ -325,10 +334,11 @@ final class RichTextEditingTextView: NSTextView {
 /// `RichTextBlockView.Coordinator`, qui adapte ces appels vers `EditorController`.
 @MainActor
 protocol RichTextBlockLifecycleDelegate: AnyObject {
-    /// Entree pressee. `caretOffset` : position du caret (0-based, en CARACTERES) au
-    /// moment de l'appui. Retourne `true` si le cycle de vie a pris la main (le retour
-    /// a la ligne natif ne doit alors PAS s'executer par-dessus).
-    func richTextViewShouldHandleReturn(caretOffset: Int) -> Bool
+    /// Entree pressee. `caretOffset` : position du caret (0-based, en CARACTERES,
+    /// `RichTextOffset` -- voir sa documentation) au moment de l'appui. Retourne `true`
+    /// si le cycle de vie a pris la main (le retour a la ligne natif ne doit alors PAS
+    /// s'executer par-dessus).
+    func richTextViewShouldHandleReturn(caretOffset: RichTextOffset) -> Bool
 
     /// Retour arriere presse alors que le caret est EXACTEMENT en debut de bloc (aucune
     /// selection) -- precondition deja verifiee par l'appelant. Retourne `true` si le

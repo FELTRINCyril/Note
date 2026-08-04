@@ -223,7 +223,7 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
         // vie n'est decidee ICI, uniquement dans `EditorController`/`BlockLifecycle` (voir
         // leur documentation, "testable hors AppKit").
 
-        func richTextViewShouldHandleReturn(caretOffset: Int) -> Bool {
+        func richTextViewShouldHandleReturn(caretOffset: RichTextOffset) -> Bool {
             editorController.handleEnter(in: block, caretOffset: caretOffset)
         }
 

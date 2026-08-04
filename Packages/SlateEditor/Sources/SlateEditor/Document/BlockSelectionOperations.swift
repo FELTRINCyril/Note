@@ -129,9 +129,12 @@ public enum BlockSelectionOperations {
     /// lot (voir la documentation de tete de fichier).
     public static func deleteRange(_ range: BlockSelectionRange, in note: Note) {
         let blocksToDelete = orderedBlocks(of: range, in: note)
-        for block in blocksToDelete {
-            BlockOrdering.remove(block)
-        }
+        // `removeAll` traite tout le lot en une seule passe quand les blocs sont freres
+        // directs (le cas courant d'une plage plate, voir sa documentation) plutot que
+        // de recalculer la fratrie entiere a CHAQUE bloc retire -- suppression de m
+        // blocs sur n = O(m*n) autrement, mesure par `BlockPerformanceTests.
+        // deleteSelectionRangeScaling` (revue finale de Phase 5).
+        BlockOrdering.removeAll(blocksToDelete)
         guard (note.blocks ?? []).isEmpty else { return }
         let fallback = Block(type: .paragraph, text: RichText())
         fallback.note = note
@@ -181,6 +184,11 @@ public enum BlockSelectionOperations {
         for (newOrder, sibling) in siblings.enumerated() {
             sibling.order = newOrder
         }
+        // Meme raison que `BlockOperations.move(_:by:)` : `order` est mute directement,
+        // sans passer par `BlockOrdering.insert`/`remove` -- le cache de l'ordre aplati
+        // doit etre invalide EXPLICITEMENT, sinon la navigation suivante lirait un ordre
+        // perime.
+        BlockOrdering.invalidateCache(for: note)
         return true
     }
 

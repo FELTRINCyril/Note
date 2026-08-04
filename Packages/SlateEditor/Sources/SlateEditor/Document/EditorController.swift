@@ -124,7 +124,7 @@ public final class EditorController {
     ///   par le cycle de vie de bloc en 5.3 (plus jamais le retour a la ligne natif dans
     ///   le contenu -- comportement de la 5.2, remplace ici).
     @discardableResult
-    public func handleEnter(in block: Block, caretOffset: Int) -> Bool {
+    public func handleEnter(in block: Block, caretOffset: RichTextOffset) -> Bool {
         let request = BlockLifecycle.handleEnter(in: block, caretOffset: caretOffset)
         applyFocus(request)
         persistStructuralChange()
@@ -203,15 +203,25 @@ public final class EditorController {
     /// Ajoute un paragraphe vide a la fin de la note et lui donne le focus. Fonctionne
     /// meme sur une note sans aucun bloc (cree le tout premier).
     public func appendTrailingParagraph() {
-        let newBlock = Block(type: .paragraph, text: RichText())
+        let emptyText = RichText()
+        let newBlock = Block(type: .paragraph, text: emptyText)
         if let last = BlockOrdering.flattenedBlocks(of: note).last {
             BlockOrdering.insert(newBlock, after: last)
         } else {
             newBlock.note = note
             note.blocks = [newBlock]
+            // `flattenedBlocks(of:)` ci-dessus a DEJA construit et mis en cache l'ordre
+            // aplati de `note` (vide, puisque la branche `else` signifie "aucun bloc
+            // avant celui-ci") : cette affectation directe de `note.blocks` contourne
+            // `BlockOrdering.insert` (qui invaliderait normalement le cache lui-meme),
+            // donc SANS cet appel explicite le cache resterait perime a "note vide" pour
+            // toujours -- exactement le bloc fantome que la documentation du cache mise
+            // en garde contre (regression reelle detectee par
+            // `EditorControllerTests.appendTrailingParagraphOnEmptyNote`).
+            BlockOrdering.invalidateCache(for: note)
         }
         applyFocus(EditorCaretRequest(blockID: newBlock.id, placement: .offset(0)))
-        persistStructuralChange()
+        persistEmptyBlockInsertion(emptyText)
     }
 
     // MARK: - Menu de bloc (sous-etape 5.4 : poignee -> bouton "+" et menu)
@@ -222,10 +232,11 @@ public final class EditorController {
     /// menu sur le bloc nouvellement insere -- cette methode restera l'unique chemin de
     /// creation, seul ce qui se passe APRES l'insertion changera.
     public func insertBlockBelow(_ block: Block) {
-        let newBlock = Block(type: .paragraph, text: RichText())
+        let emptyText = RichText()
+        let newBlock = Block(type: .paragraph, text: emptyText)
         BlockOrdering.insert(newBlock, after: block)
         applyFocus(EditorCaretRequest(blockID: newBlock.id, placement: .offset(0)))
-        persistStructuralChange()
+        persistEmptyBlockInsertion(emptyText)
     }
 
     /// Action "Dupliquer" du menu de bloc (voir `BlockOperations.duplicate(_:)` pour la
@@ -311,6 +322,21 @@ public final class EditorController {
     /// documentation de tete de fichier).
     func persistStructuralChange() {
         BlockTextCommit.flush(note: note)
+        try? modelContext?.save()
+    }
+
+    /// Variante de `persistStructuralChange()` pour les DEUX SEULS appelants qui
+    /// inserent un bloc de texte VIDE et rien d'autre (`appendTrailingParagraph`,
+    /// `insertBlockBelow`) : voir `BlockTextCommit.flushWithoutRefreshingDerivedText(
+    /// note:insertedText:)` pour la justification complete (recalculer `plainText`/
+    /// `snippetText` est PROUVABLEMENT inutile ici -- un bloc vide est filtre par
+    /// `Note.refreshDerivedText()`, il ne peut pas changer sa sortie). `modifiedAt` est
+    /// mis a jour normalement, exactement comme `persistStructuralChange()` ; seul le
+    /// recalcul du texte derive est evite. `emptyText` : le `RichText` QUI VIENT D'ETRE
+    /// INSERE par l'appelant, transmis pour que l'assertion defensive de
+    /// `flushWithoutRefreshingDerivedText` puisse verifier qu'il est bien vide.
+    private func persistEmptyBlockInsertion(_ emptyText: RichText) {
+        BlockTextCommit.flushWithoutRefreshingDerivedText(note: note, insertedText: emptyText)
         try? modelContext?.save()
     }
 }

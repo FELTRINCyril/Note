@@ -44,9 +44,13 @@ import SlateModel
 public enum BlockLifecycle {
     // MARK: - Entree
 
-    /// `caretOffset` : position du caret au moment de l'appui, en offset de
-    /// CARACTERES (pas UTF-16/octets) dans `block.text`.
-    public static func handleEnter(in block: Block, caretOffset: Int) -> EditorCaretRequest {
+    /// `caretOffset` : position du caret au moment de l'appui, en offset de CARACTERES
+    /// (`RichTextOffset`, jamais un `Int` nu -- voir sa documentation) dans `block.text`.
+    /// L'appelant AppKit (`RichTextEditingTextView`) est responsable de convertir
+    /// `selectedRange().location` (UTF-16) via `RichTextOffset(utf16Offset:in:)` AVANT
+    /// d'appeler cette fonction -- c'est la SEULE frontiere ou cette conversion doit
+    /// avoir lieu (revue finale de Phase 5).
+    public static func handleEnter(in block: Block, caretOffset: RichTextOffset) -> EditorCaretRequest {
         let text = block.text ?? RichText()
         let length = text.attributedString.characters.count
 
@@ -59,7 +63,7 @@ public enum BlockLifecycle {
             return EditorCaretRequest(blockID: block.id, placement: .offset(0))
         }
 
-        let clampedOffset = max(0, min(caretOffset, length))
+        let clampedOffset = max(0, min(caretOffset.characters, length))
 
         if clampedOffset == 0 {
             let above = Block(type: continuationType(of: block.type), text: RichText())
@@ -73,7 +77,7 @@ public enum BlockLifecycle {
             return EditorCaretRequest(blockID: below.id, placement: .offset(0))
         }
 
-        let (head, tail) = text.split(atCharacterOffset: clampedOffset)
+        let (head, tail) = text.split(atCharacterOffset: RichTextOffset(characters: clampedOffset))
         block.text = head
         let below = Block(type: block.type, text: tail, attributes: block.attributes)
         BlockOrdering.insert(below, after: block)
@@ -99,7 +103,7 @@ public enum BlockLifecycle {
         if currentText.isEmpty {
             let previousLength = (previous.text ?? RichText()).attributedString.characters.count
             BlockOrdering.remove(block)
-            return EditorCaretRequest(blockID: previous.id, placement: .offset(previousLength))
+            return EditorCaretRequest(blockID: previous.id, placement: .offset(RichTextOffset(characters: previousLength)))
         }
 
         let previousText = previous.text ?? RichText()
@@ -109,7 +113,7 @@ public enum BlockLifecycle {
         previous.text = RichText(attributedString: merged)
 
         BlockOrdering.remove(block)
-        return EditorCaretRequest(blockID: previous.id, placement: .offset(joinOffset))
+        return EditorCaretRequest(blockID: previous.id, placement: .offset(RichTextOffset(characters: joinOffset)))
     }
 
     // MARK: - Types

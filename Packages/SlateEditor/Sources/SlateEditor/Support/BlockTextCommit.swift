@@ -43,4 +43,39 @@ public enum BlockTextCommit {
         note.modifiedAt = now
         note.refreshDerivedText()
     }
+
+    /// Variante de `flush(note:now:)` qui met a jour `Note.modifiedAt` SANS recalculer
+    /// `plainText`/`snippetText` -- reservee AUX SEULS appelants qui viennent d'inserer
+    /// un bloc de texte VIDE et RIEN d'autre (voir `EditorController.
+    /// appendTrailingParagraph`/`insertBlockBelow`, les deux SEULS sites d'appel).
+    ///
+    /// ## Pourquoi c'est correct, pas un raccourci qui masque un probleme
+    /// `Note.refreshDerivedText()` filtre deja les blocs vides de son calcul
+    /// (`.filter { !$0.isEmpty }`, voir `SlateModel/Note.swift`) : ajouter un bloc VIDE
+    /// ne peut donc, PAR CONSTRUCTION, jamais changer `plainText`/`snippetText`. Les
+    /// recalculer serait un travail prouvablement inutile -- pourtant paye a CHAQUE
+    /// insertion avant cette optimisation : n insertions successives en fin de note (une
+    /// frappe d'Entree tenue) recalculaient `plainText` sur la TOTALITE des blocs a
+    /// chaque fois, un cout cumule quadratique mesure par
+    /// `BlockPerformanceTests.appendTrailingParagraphScaling` (revue finale de Phase 5) --
+    /// la seule cause residuelle une fois `BlockOrdering` lui-meme rendu lineaire (voir
+    /// sa documentation de tete de fichier).
+    ///
+    /// `modifiedAt` reste mis a jour NORMALEMENT : la note EST modifiee structurellement,
+    /// seul le texte DERIVE ne peut pas avoir change. `assert` (compile a vide en
+    /// Release, cout nul en production) : si `appendTrailingParagraph`/`insertBlockBelow`
+    /// inseraient un jour du texte non vide, cette fonction ne doit PLUS etre appelee a
+    /// leur place -- le crash en debug/tests le signalerait immediatement plutot que de
+    /// laisser `plainText` silencieusement perime.
+    ///
+    /// - Parameter insertedText: le texte du bloc QUI VIENT D'ETRE INSERE par l'appelant
+    ///   -- verifie explicitement qu'il est bien vide, pour que cette fonction ne
+    ///   puisse jamais etre invoquee par erreur sur un chemin qui, lui, doit recalculer.
+    public static func flushWithoutRefreshingDerivedText(note: Note, insertedText: RichText, now: Date = .now) {
+        assert(
+            insertedText.isEmpty,
+            "flushWithoutRefreshingDerivedText suppose un bloc INSERE VIDE -- utiliser flush(note:) sinon"
+        )
+        note.modifiedAt = now
+    }
 }

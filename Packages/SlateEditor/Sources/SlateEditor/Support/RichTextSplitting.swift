@@ -14,13 +14,13 @@ import SlateModel
 /// formatage (docs/05_editeur_blocs.md, sous-etape 5.3 : "le split doit preserver les
 /// ATTRIBUTS inline de chaque moitie").
 extension RichText {
-    /// Scinde ce texte riche a l'offset de CARACTERES donne (`Character`, pas
-    /// octets/UTF-16) : `head` porte `[0, offset)`, `tail` porte `[offset, longueur)`.
-    /// `offset` est borne a `[0, longueur]` : aucun index invalide possible, quel que
-    /// soit l'appelant.
-    func split(atCharacterOffset offset: Int) -> (head: RichText, tail: RichText) {
+    /// Scinde ce texte riche a l'offset de CARACTERES donne (`RichTextOffset`, jamais un
+    /// `Int` nu -- voir sa documentation) : `head` porte `[0, offset)`, `tail` porte
+    /// `[offset, longueur)`. `offset` est borne a `[0, longueur]` : aucun index invalide
+    /// possible, quel que soit l'appelant.
+    func split(atCharacterOffset offset: RichTextOffset) -> (head: RichText, tail: RichText) {
         let characters = attributedString.characters
-        let clamped = max(0, min(offset, characters.count))
+        let clamped = max(0, min(offset.characters, characters.count))
         let splitIndex = characters.index(characters.startIndex, offsetBy: clamped)
 
         let headSlice = attributedString[attributedString.startIndex..<splitIndex]

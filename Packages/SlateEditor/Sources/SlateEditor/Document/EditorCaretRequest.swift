@@ -12,8 +12,10 @@ public struct EditorCaretRequest: Equatable, Sendable {
     /// Position visee au sein du bloc `blockID`.
     public enum Placement: Equatable, Sendable {
         /// Offset de caracteres exact (ex: jointure d'une fusion, debut d'un bloc
-        /// nouvellement scinde).
-        case offset(Int)
+        /// nouvellement scinde). `RichTextOffset`, jamais un `Int` nu -- voir sa
+        /// documentation (revue finale de Phase 5 : la confusion UTF-16/Characters sur
+        /// exactement cette valeur etait le defaut le plus grave signale).
+        case offset(RichTextOffset)
         /// Fin du contenu du bloc (ex: "Entree" pour rentrer en edition d'un bloc
         /// selectionne -- spec E4 : "Echap sort de l'edition ... Entree y rentre").
         case end

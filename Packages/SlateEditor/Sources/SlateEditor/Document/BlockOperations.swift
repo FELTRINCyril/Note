@@ -100,6 +100,12 @@ public enum BlockOperations {
         for (newOrder, sibling) in siblings.enumerated() {
             sibling.order = newOrder
         }
+        // Mute `order` DIRECTEMENT, sans passer par `BlockOrdering.insert`/`remove` (portee
+        // volontairement restreinte aux freres de meme niveau, voir la documentation de
+        // tete de fichier) : le cache de l'ordre aplati de `BlockOrdering` doit donc etre
+        // invalide EXPLICITEMENT ici, sinon la navigation clavier suivante lirait un ordre
+        // perime (bloc fantome silencieux, voir la documentation du cache).
+        BlockOrdering.invalidateCache(for: block.note)
         return true
     }
 }
