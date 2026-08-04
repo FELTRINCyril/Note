@@ -156,6 +156,67 @@ public final class EditorController {
         persistStructuralChange()
     }
 
+    // MARK: - Menu de bloc (sous-etape 5.4 : poignee -> bouton "+" et menu)
+
+    /// Bouton "+" du chrome de bloc (spec E4) : insere un paragraphe vide juste apres
+    /// `block` et lui donne le focus. POINT D'ACCROCHE POUR LA PHASE 6 : le menu `/`
+    /// remplacera alors la focalisation directe d'un bloc vide par l'ouverture de ce
+    /// menu sur le bloc nouvellement insere -- cette methode restera l'unique chemin de
+    /// creation, seul ce qui se passe APRES l'insertion changera.
+    public func insertBlockBelow(_ block: Block) {
+        let newBlock = Block(type: .paragraph, text: RichText())
+        BlockOrdering.insert(newBlock, after: block)
+        applyFocus(EditorCaretRequest(blockID: newBlock.id, placement: .offset(0)))
+        persistStructuralChange()
+    }
+
+    /// Action "Dupliquer" du menu de bloc (voir `BlockOperations.duplicate(_:)` pour la
+    /// copie profonde). Le double est SELECTIONNE (pas focalise en edition) : c'est
+    /// l'etat le plus proche du geste "je viens d'agir sur ce bloc precis" sans
+    /// pretendre y avoir deja tape du texte.
+    public func duplicateBlock(_ block: Block) {
+        let copy = BlockOperations.duplicate(block)
+        focusedBlockID = nil
+        selectedBlockID = copy.id
+        pendingCaretRequest = nil
+        persistStructuralChange()
+    }
+
+    /// Action "Supprimer" du menu de bloc (voir `BlockOperations.remove(_:from:)` pour
+    /// le sort des enfants et la garantie de non-vacuite de la note). Selectionne le
+    /// bloc voisin le plus proche (suivant, sinon precedent, sinon le premier bloc
+    /// restant -- necessairement le paragraphe de secours si `block` etait le dernier)
+    /// pour que l'utilisateur retrouve immediatement un point d'ancrage clavier.
+    public func deleteBlock(_ block: Block) {
+        guard let note = block.note else { return }
+        let neighborID = BlockOrdering.block(after: block)?.id ?? BlockOrdering.block(before: block)?.id
+
+        BlockOperations.remove(block, from: note)
+
+        if focusedBlockID == block.id { focusedBlockID = nil }
+        selectedBlockID = neighborID ?? BlockOrdering.flattenedBlocks(of: note).first?.id
+        pendingCaretRequest = nil
+        persistStructuralChange()
+    }
+
+    /// Action "Deplacer vers le haut" du menu de bloc (voir `BlockOperations.moveUp(_:)`
+    /// pour la portee -- freres de meme niveau uniquement). `false` sans effet si
+    /// `block` est deja en tete de sa fratrie.
+    @discardableResult
+    public func moveBlockUp(_ block: Block) -> Bool {
+        guard BlockOperations.moveUp(block) else { return false }
+        persistStructuralChange()
+        return true
+    }
+
+    /// Symmetrique de `moveBlockUp(_:)` : un cran vers le bas.
+    @discardableResult
+    public func moveBlockDown(_ block: Block) -> Bool {
+        guard BlockOperations.moveDown(block) else { return false }
+        persistStructuralChange()
+        return true
+    }
+
     // MARK: - Application interne
 
     private func applyFocus(_ request: EditorCaretRequest) {

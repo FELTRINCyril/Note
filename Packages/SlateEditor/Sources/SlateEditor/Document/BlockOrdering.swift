@@ -171,6 +171,15 @@ public enum BlockOrdering {
         writeBack(siblings, parent: anchor.parent, note: anchor.note)
     }
 
+    /// Freres directs de `block` (memes `note`/`parent`), tries par `order`. Version
+    /// PUBLIQUE, en LECTURE, de `siblingsCollection(of:)` ci-dessous -- pour les
+    /// operations de menu (`BlockOperations`, sous-etape 5.4) qui doivent lire une
+    /// fratrie sans la muter (`insert`/`remove` restent le seul chemin de mutation
+    /// structurelle passant par cette fratrie).
+    public static func siblings(of block: Block) -> [Block] {
+        siblingsCollection(of: block)
+    }
+
     /// Freres directs de `block` (memes `note`/`parent`), tries par `order` -- lit
     /// indifferemment `parent.children` (bloc imbrique) ou les blocs RACINE de `note`
     /// (bloc racine). Pour un bloc racine, reutilise `topLevelBlocks(of:)` -- PAS

@@ -27,4 +27,41 @@ enum EditorStrings {
     static var appendBlockAccessibilityLabel: String {
         String(localized: "editor.appendBlock.accessibilityLabel", bundle: .module)
     }
+
+    // MARK: - Menu de bloc (sous-etape 5.4)
+
+    /// Libelle d'accessibilite du bouton "Options du bloc" de `BlockHandle`, complete
+    /// par cet ecran-ci (`BlockHandle` porte deja un libelle generique dans `SlateUI`) :
+    /// annonce aussi le moyen clavier d'y acceder pour les utilisateurs VoiceOver qui
+    /// ne survolent jamais a la souris.
+    static var blockMenuAccessibilityHint: String {
+        String(localized: "editor.blockMenu.accessibilityHint", bundle: .module)
+    }
+
+    static var blockMenuConvertTitle: String {
+        String(localized: "editor.blockMenu.convert.title", bundle: .module)
+    }
+
+    /// Explique POURQUOI l'entree "Convertir en..." est desactivee en 5.4 (regle
+    /// d'honnetete d'interface du projet : jamais un controle qui a l'air actionnable
+    /// sans agir, toujours une explication s'il est desactive).
+    static var blockMenuConvertDisabledHelp: String {
+        String(localized: "editor.blockMenu.convert.disabledHelp", bundle: .module)
+    }
+
+    static var blockMenuDuplicateTitle: String {
+        String(localized: "editor.blockMenu.duplicate.title", bundle: .module)
+    }
+
+    static var blockMenuMoveUpTitle: String {
+        String(localized: "editor.blockMenu.moveUp.title", bundle: .module)
+    }
+
+    static var blockMenuMoveDownTitle: String {
+        String(localized: "editor.blockMenu.moveDown.title", bundle: .module)
+    }
+
+    static var blockMenuDeleteTitle: String {
+        String(localized: "editor.blockMenu.delete.title", bundle: .module)
+    }
 }

@@ -26,10 +26,14 @@ struct BlockTreeView: View {
     let editorController: EditorController
 
     /// Focus clavier SwiftUI (distinct du focus AppKit du `NSTextView`, voir
-    /// `RichTextEditingTextView`) : necessaire uniquement pour capter Entree sur un
-    /// bloc SELECTIONNE (pas en edition), ou aucun `NSTextView` n'est premier
-    /// repondant -- voir `.onKeyPress(.return)` ci-dessous.
+    /// `RichTextEditingTextView`) : necessaire uniquement pour capter Entree/Espace sur
+    /// un bloc SELECTIONNE (pas en edition), ou aucun `NSTextView` n'est premier
+    /// repondant -- voir `.onKeyPress` ci-dessous.
     @FocusState private var isSelectionKeyCaptureFocused: Bool
+
+    /// Menu de bloc ouvert par la poignee (sous-etape 5.4) : au CLIC souris (via
+    /// `BlockHandle.onMenu`) ou au CLAVIER (voir "Acces clavier" ci-dessous).
+    @State private var isBlockMenuPresented = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -38,18 +42,46 @@ struct BlockTreeView: View {
                 isEmpty: block.text?.isEmpty ?? true,
                 placeholder: EditorStrings.paragraphPlaceholder,
                 firstLineHeight: firstLineHeight,
-                blockID: block.id.uuidString
-            ) {
-                BlockContentRouterView(
-                    block: block,
-                    numberedRank: numberedRank,
-                    strings: strings,
-                    editorController: editorController
+                blockID: block.id.uuidString,
+                onInsert: { editorController.insertBlockBelow(block) },
+                onMenu: { isBlockMenuPresented = true },
+                content: {
+                    BlockContentRouterView(
+                        block: block,
+                        numberedRank: numberedRank,
+                        strings: strings,
+                        editorController: editorController
+                    )
+                }
+            )
+            .padding(.leading, CGFloat(indentLevel) * Self.indentStep)
+            .popover(isPresented: $isBlockMenuPresented) {
+                BlockMenuView(
+                    canMoveUp: BlockOrdering.siblings(of: block).first?.id != block.id,
+                    canMoveDown: BlockOrdering.siblings(of: block).last?.id != block.id,
+                    onDuplicate: { isBlockMenuPresented = false; editorController.duplicateBlock(block) },
+                    onMoveUp: { isBlockMenuPresented = false; editorController.moveBlockUp(block) },
+                    onMoveDown: { isBlockMenuPresented = false; editorController.moveBlockDown(block) },
+                    onDelete: { isBlockMenuPresented = false; editorController.deleteBlock(block) }
                 )
             }
-            .padding(.leading, CGFloat(indentLevel) * Self.indentStep)
             .focusable(block.type == .paragraph)
             .focused($isSelectionKeyCaptureFocused)
+            // Acces clavier au menu de bloc (point 5 de la sous-etape 5.4) : une fois
+            // qu'un bloc est SELECTIONNE (Tab jusqu'a son texte puis Echap -- geste
+            // deja pose en 5.3), Espace ouvre EXACTEMENT le meme menu que la poignee
+            // souris, dont chaque entree reste ensuite atteignable au clavier/VoiceOver
+            // (boutons natifs dans un `.popover`). LIMITE ASSUMEE : `selectedBlockID`
+            // reste restreint aux blocs `.paragraph` depuis la 5.3 (seul type
+            // reellement editable a ce stade de la Phase 5) -- les autres types
+            // (titre, citation, code, separateur...) ne sont donc accessibles au menu
+            // qu'au survol souris jusqu'a ce que la selection soit generalisee (prevu
+            // en 5.6, "Selection multi-blocs").
+            .onKeyPress(.space) {
+                guard editorController.selectedBlockID == block.id else { return .ignored }
+                isBlockMenuPresented = true
+                return .handled
+            }
             .onKeyPress(.return) {
                 guard editorController.selectedBlockID == block.id else { return .ignored }
                 editorController.handleEnterOnSelectedBlock()
@@ -58,6 +90,11 @@ struct BlockTreeView: View {
             .onChange(of: editorController.selectedBlockID) { _, newValue in
                 isSelectionKeyCaptureFocused = block.type == .paragraph && newValue == block.id
             }
+            // Annonce le raccourci Espace UNIQUEMENT quand il devient reellement
+            // actionnable (bloc selectionne) : repeter cette indication sur chaque
+            // bloc lu en survol/navigation ordinaire alourdirait inutilement
+            // l'experience VoiceOver (voir la limite documentee ci-dessus).
+            .accessibilityHint(editorController.selectedBlockID == block.id ? EditorStrings.blockMenuAccessibilityHint : "")
 
             let childBlocks = BlockOrdering.children(of: block)
             ForEach(childBlocks, id: \.id) { child in

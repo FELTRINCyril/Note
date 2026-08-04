@@ -188,4 +188,83 @@ struct EditorControllerTests {
         #expect(blocks.count == 1)
         #expect(controller.focusedBlockID == blocks.first?.id)
     }
+
+    // MARK: - Menu de bloc (sous-etape 5.4)
+
+    @Test("insertBlockBelow insere un paragraphe vide juste apres le bloc et lui donne le focus")
+    func insertBlockBelowInsertsAndFocuses() {
+        let note = Note(title: "Test")
+        let block = Block(order: 0, type: .paragraph, text: RichText(plainText: "Un"), note: note)
+        note.blocks = [block]
+        let controller = EditorController(note: note)
+
+        controller.insertBlockBelow(block)
+
+        let blocks = BlockOrdering.topLevelBlocks(of: note)
+        #expect(blocks.count == 2)
+        #expect(blocks[1].text?.isEmpty == true)
+        #expect(controller.focusedBlockID == blocks[1].id)
+        #expect(controller.consumePendingCaretRequest(for: blocks[1].id) != nil)
+    }
+
+    @Test("duplicateBlock selectionne le double (pas de focus d'edition)")
+    func duplicateBlockSelectsCopy() {
+        let note = Note(title: "Test")
+        let block = Block(order: 0, type: .paragraph, text: RichText(plainText: "Un"), note: note)
+        note.blocks = [block]
+        let controller = EditorController(note: note)
+
+        controller.duplicateBlock(block)
+
+        let blocks = BlockOrdering.topLevelBlocks(of: note)
+        #expect(blocks.count == 2)
+        #expect(controller.focusedBlockID == nil)
+        #expect(controller.selectedBlockID == blocks[1].id)
+    }
+
+    @Test("deleteBlock selectionne le voisin suivant apres suppression")
+    func deleteBlockSelectsNextNeighbor() {
+        let note = Note(title: "Test")
+        let first = Block(order: 0, type: .paragraph, text: RichText(plainText: "Un"), note: note)
+        let second = Block(order: 1, type: .paragraph, text: RichText(plainText: "Deux"), note: note)
+        note.blocks = [first, second]
+        let controller = EditorController(note: note)
+
+        controller.deleteBlock(first)
+
+        #expect(BlockOrdering.topLevelBlocks(of: note).map(\.id) == [second.id])
+        #expect(controller.selectedBlockID == second.id)
+    }
+
+    @Test("deleteBlock sur le dernier bloc de la note garde la note editable et selectionne le paragraphe de secours")
+    func deleteBlockOnLastBlockKeepsNoteEditable() {
+        let note = Note(title: "Test")
+        let only = Block(order: 0, type: .paragraph, text: RichText(plainText: "Seul"), note: note)
+        note.blocks = [only]
+        let controller = EditorController(note: note)
+
+        controller.deleteBlock(only)
+
+        let blocks = BlockOrdering.topLevelBlocks(of: note)
+        #expect(blocks.count == 1)
+        #expect(blocks[0].id != only.id)
+        #expect(controller.selectedBlockID == blocks[0].id)
+    }
+
+    @Test("moveBlockUp/moveBlockDown recalculent order et retournent false aux bords")
+    func moveBlockUpDownAtBoundaries() {
+        let note = Note(title: "Test")
+        let first = Block(order: 0, type: .paragraph, text: RichText(plainText: "Un"), note: note)
+        let second = Block(order: 1, type: .paragraph, text: RichText(plainText: "Deux"), note: note)
+        note.blocks = [first, second]
+        let controller = EditorController(note: note)
+
+        #expect(controller.moveBlockUp(first) == false)
+        #expect(controller.moveBlockDown(second) == false)
+
+        #expect(controller.moveBlockDown(first) == true)
+        let blocks = BlockOrdering.topLevelBlocks(of: note)
+        #expect(blocks.map { $0.text?.plainText } == ["Deux", "Un"])
+        #expect(blocks.map(\.order) == [0, 1])
+    }
 }
