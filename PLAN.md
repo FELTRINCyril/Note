@@ -27,7 +27,7 @@
 ### Jalon v1 — App utilisable
 - [x] 🎨 **Phase 3 — Coquille app & barre latérale** (dossiers, sous-dossiers, favoris, réglages) → `docs/03_sidebar_navigation.md`
 - [x] 🎨 **Phase 4 — Liste des notes & regroupement par date** (aujourd'hui, hier, 7j, 30j, mois, années) → `docs/04_liste_notes.md`
-- [ ] 🎨 **Phase 5 — Éditeur de blocs (cœur)** (rendu, focus, saisie, navigation clavier) → `docs/05_editeur_blocs.md`
+- [x] 🎨 **Phase 5 — Éditeur de blocs (cœur)** (rendu, focus, saisie, navigation clavier) → `docs/05_editeur_blocs.md`
 - [ ] **Phase 6 — Menu de commandes `/`** → `docs/06_slash_commandes.md`
 - [ ] 🎨 **Phase 7 — Typographie & formatage** (gras, italique, souligné, barré, code inline, surlignage, liens, H1–H6) → `docs/07_typographie_formatage.md`
 - [ ] **Phase 8 — Blocs spéciaux** (code, citation, listes puces/numéros/tâches, tableaux, callout) → `docs/08_blocs_speciaux.md`
