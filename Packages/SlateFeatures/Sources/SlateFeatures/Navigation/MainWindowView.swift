@@ -6,8 +6,8 @@ import SlateUI
 /// Coquille a 3 colonnes de l'application (`docs/03_sidebar_navigation.md`,
 /// `design/03_sidebar/Slate_E1-E2_coquille-sidebar.html` section E1).
 ///
-/// Assemble `SidebarView` (barre laterale, fonctionnelle), et deux placeholders
-/// explicites pour la liste de notes (Phase 4) et l'editeur (Phase 5). Porte la
+/// Assemble `SidebarView` (barre laterale, fonctionnelle), `NoteListView` (Phase 4) et
+/// `NoteDetailColumnView` (bascule placeholder / rendu de note, Phase 5.1). Porte la
 /// bascule des 3 etats de colonnes de la spec (voir `ColumnLayoutState`) et l'amorce
 /// du workspace par defaut (voir `WorkspaceBootstrap`).
 public struct MainWindowView: View {
@@ -41,7 +41,7 @@ public struct MainWindowView: View {
             NoteListView()
                 .slateColumnWidth(listColumnWidth)
         } detail: {
-            NoteDetailColumnPlaceholderView()
+            NoteDetailColumnView()
         }
         .navigationSplitViewStyle(.balanced)
         .toolbar(removing: .sidebarToggle)
