@@ -1,10 +1,13 @@
 import SlateModel
 import SlateUI
+import SwiftData
 import SwiftUI
 
 /// Rendu complet d'une note : en-tete (`NoteHeaderView`) + corps de blocs, tries par
-/// `order` et imbriques selon `parent`/`children` (`BlockOrdering`), en LECTURE SEULE
-/// (Phase 5.1). Seul le titre est editable, voir `NoteHeaderView`.
+/// `order` et imbriques selon `parent`/`children` (`BlockOrdering`). Le titre
+/// (`NoteHeaderView`) et les blocs paragraphe (`RichTextBlockView`, Phase 5.2) sont
+/// editables ; les autres types de bloc restent en lecture seule jusqu'a leurs phases
+/// respectives (5.5 conversion, 6-8 blocs riches).
 ///
 /// ## Point d'entree unique de la Phase 5.1
 /// C'est cette vue que `SlateFeatures` doit instancier a la place du placeholder de
@@ -25,6 +28,15 @@ public struct NoteDocumentView: View {
     private let onAddIcon: () -> Void
     private let onAddCover: () -> Void
 
+    /// Source UNIQUE du cycle de vie des blocs pour toute la note (focus d'edition,
+    /// selection, insertion/fusion/split/suppression, navigation -- voir
+    /// `EditorController`). Remplace le simple `UUID?` local de la 5.2 : la coordination
+    /// clavier complete vit desormais ici, sans changer la structure de vues en aval
+    /// (`BlockTreeView`/`BlockContentRouterView` recoivent directement `editorController`).
+    @State private var editorController: EditorController
+
+    @Environment(\.modelContext) private var modelContext
+
     public init(
         note: Note,
         metadataLine: String,
@@ -37,10 +49,16 @@ public struct NoteDocumentView: View {
         self.strings = strings
         self.onAddIcon = onAddIcon
         self.onAddCover = onAddCover
+        self._editorController = State(initialValue: EditorController(note: note))
     }
 
     public var body: some View {
-        ScrollView {
+        // Le `ModelContext` reel n'est disponible que via `@Environment`, jamais a
+        // l'`init` (voir `EditorController.updateModelContext`) : idempotent, sans
+        // effet observable si la valeur n'a pas change.
+        editorController.updateModelContext(modelContext)
+
+        return ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 NoteHeaderView(
                     note: note,
@@ -54,12 +72,18 @@ public struct NoteDocumentView: View {
                     VStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
                         let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
                         ForEach(topLevelBlocks, id: \.id) { block in
-                            BlockTreeView(block: block, siblings: topLevelBlocks, indentLevel: 0, strings: strings)
+                            BlockTreeView(
+                                block: block,
+                                siblings: topLevelBlocks,
+                                indentLevel: 0,
+                                strings: strings,
+                                editorController: editorController
+                            )
                         }
                     }
                 }
 
-                NoteDocumentBottomSpacerView()
+                NoteDocumentBottomSpacerView(onTap: editorController.appendTrailingParagraph)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -67,15 +91,31 @@ public struct NoteDocumentView: View {
     }
 }
 
-#Preview("NoteDocumentView - clair") {
-    NoteDocumentView(note: .previewSample, metadataLine: "Modifiee aujourd'hui a 14:22 - 6 mots")
+/// Conteneur SwiftData en memoire pour les previews : `RichTextBlockView` (Phase 5.2)
+/// lit `@Environment(\.modelContext)`, contrairement aux previews en lecture seule de
+/// la Phase 5.1. Pas de `try!` (CLAUDE.md §5) : repli sur un texte de diagnostic si la
+/// creation echoue, plutot qu'un crash de preview.
+private struct NoteDocumentPreviewHost: View {
+    var body: some View {
+        Group {
+            if let container = try? SlateContainer.make(inMemory: true) {
+                NoteDocumentView(note: .previewSample, metadataLine: "Modifiee aujourd'hui a 14:22 - 6 mots")
+                    .modelContainer(container)
+            } else {
+                Text("Conteneur SwiftData indisponible pour cette preview")
+            }
+        }
         .frame(width: 900, height: 700)
+    }
+}
+
+#Preview("NoteDocumentView - clair") {
+    NoteDocumentPreviewHost()
         .environment(\.colorScheme, .light)
 }
 
 #Preview("NoteDocumentView - sombre") {
-    NoteDocumentView(note: .previewSample, metadataLine: "Modifiee aujourd'hui a 14:22 - 6 mots")
-        .frame(width: 900, height: 700)
+    NoteDocumentPreviewHost()
         .environment(\.colorScheme, .dark)
 }
 

@@ -10,22 +10,25 @@ import SwiftUI
 /// empeche d'oublier un cas si `BlockRenderKind` gagne un cas plus tard.
 ///
 /// ## Continuite avec l'edition (5.2)
-/// Ce routeur ne connait PAS le concept de focus/edition : il ne fait que choisir un
-/// `Content*View` en lecture seule a partir du type. Quand la 5.2 introduira
-/// `RichTextBlockView` (TextKit 2), le remplacement se fera ICI, cas par cas
-/// (`.paragraph`, `.heading`... deviendront editables un a un), sans toucher a
-/// `BlockTreeView` ni `NoteDocumentView` qui l'appellent : c'est le point d'extension
-/// prevu par l'architecture demandee par Cyril (SlateEditor, decision d'architecture
-/// d'edition, option 2 -- `RichTextBlockView` par bloc).
+/// Seul `.paragraph` est desormais EDITABLE (`RichTextBlockView`, TextKit 2) : c'est le
+/// seul type demande par la sous-etape 5.2 (docs/05_editeur_blocs.md). Tous les autres
+/// cas restent en lecture seule -- la 5.5 (conversion de type) et les phases
+/// ulterieures des blocs riches remplaceront les autres cas au meme endroit, un a un,
+/// sans toucher a `BlockTreeView` ni `NoteDocumentView` qui appellent ce routeur.
 struct BlockContentRouterView: View {
     let block: Block
     let numberedRank: Int
     let strings: NoteEditorStrings
+    /// Coordinateur de cycle de vie des blocs (sous-etape 5.3). Transite simplement
+    /// jusqu'a `RichTextBlockView` (seul type qui en a besoin, pour piloter
+    /// focus/caret/insertion/fusion) : ignore par tous les autres cas, encore en
+    /// lecture seule a ce stade de la Phase 5.
+    let editorController: EditorController
 
     var body: some View {
         switch BlockRenderRouting.kind(for: block.type) {
         case .paragraph:
-            ParagraphBlockContentView(text: block.text)
+            RichTextBlockView(block: block, editorController: editorController)
         case let .heading(level):
             HeadingBlockContentView(text: block.text, level: level)
         case .divider:

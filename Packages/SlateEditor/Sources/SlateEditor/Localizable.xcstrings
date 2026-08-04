@@ -1,7 +1,40 @@
 {
   "sourceLanguage" : "fr",
   "strings" : {
-
+    "block.paragraph.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type / for commands"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tapez / pour les commandes"
+          }
+        }
+      }
+    },
+    "editor.appendBlock.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a block at the end of the note"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter un bloc à la fin de la note"
+          }
+        }
+      }
+    }
   },
   "version" : "1.0"
 }
