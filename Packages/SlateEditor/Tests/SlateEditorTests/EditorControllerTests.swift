@@ -251,6 +251,42 @@ struct EditorControllerTests {
         #expect(controller.selectedBlockID == blocks[0].id)
     }
 
+    // MARK: - Conversion de type (sous-etape 5.5)
+
+    @Test("convertBlock delegue a BlockConversion, selectionne le bloc converti et persiste")
+    func convertBlockDelegatesSelectsAndPersists() {
+        let note = Note(title: "Test", modifiedAt: .distantPast)
+        let block = Block(order: 0, type: .paragraph, text: RichText(plainText: "Bonjour"), note: note)
+        note.blocks = [block]
+        let controller = EditorController(note: note)
+
+        controller.convertBlock(block, to: .heading1)
+
+        #expect(block.type == .heading1)
+        #expect(block.text?.plainText == "Bonjour")
+        #expect(controller.focusedBlockID == nil)
+        #expect(controller.selectedBlockID == block.id)
+    }
+
+    @Test("convertBlock met a jour Note.modifiedAt et recalcule le texte derive")
+    func convertBlockPersistsThroughNote() {
+        let note = Note(title: "Test", modifiedAt: .distantPast)
+        let paragraph = Block(order: 0, type: .paragraph, text: RichText(plainText: "Bonjour"), note: note)
+        let divider = Block(order: 1, type: .divider, note: note)
+        note.blocks = [paragraph, divider]
+        note.refreshDerivedText()
+        #expect(note.plainText == "Bonjour")
+        let controller = EditorController(note: note)
+
+        // Conversion vers un type non porteur de texte derive (`divider` n'est pas
+        // convertible -- ici on verifie le recalcul via une conversion NEUTRE en texte
+        // mais qui doit tout de meme repasser par le point de sauvegarde unique).
+        controller.convertBlock(paragraph, to: .quote)
+
+        #expect(note.modifiedAt != .distantPast)
+        #expect(note.plainText == "Bonjour") // meme texte, la citation reste porteuse de texte derive
+    }
+
     @Test("moveBlockUp/moveBlockDown recalculent order et retournent false aux bords")
     func moveBlockUpDownAtBoundaries() {
         let note = Note(title: "Test")

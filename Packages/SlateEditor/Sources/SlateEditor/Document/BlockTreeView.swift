@@ -57,8 +57,14 @@ struct BlockTreeView: View {
             .padding(.leading, CGFloat(indentLevel) * Self.indentStep)
             .popover(isPresented: $isBlockMenuPresented) {
                 BlockMenuView(
+                    currentTypeLabel: EditorStrings.blockTypeLabel(block.type),
+                    availableConversionTargets: BlockConversion.availableTargets(for: block),
                     canMoveUp: BlockOrdering.siblings(of: block).first?.id != block.id,
                     canMoveDown: BlockOrdering.siblings(of: block).last?.id != block.id,
+                    onConvert: { newType in
+                        isBlockMenuPresented = false
+                        editorController.convertBlock(block, to: newType)
+                    },
                     onDuplicate: { isBlockMenuPresented = false; editorController.duplicateBlock(block) },
                     onMoveUp: { isBlockMenuPresented = false; editorController.moveBlockUp(block) },
                     onMoveDown: { isBlockMenuPresented = false; editorController.moveBlockDown(block) },

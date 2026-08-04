@@ -199,6 +199,22 @@ public final class EditorController {
         persistStructuralChange()
     }
 
+    /// Action "Convertir en..." du menu de bloc (sous-etape 5.5, voir `BlockConversion`
+    /// pour la regle de conservation/abandon des `BlockAttributes`, le texte riche
+    /// inchange, et le sort des enfants). Sans effet si `newType` ne fait pas partie de
+    /// `BlockConversion.availableTargets(for: block)` -- l'appelant (menu) ne devrait de
+    /// toute facon jamais proposer un type hors de cette liste. Le bloc reste
+    /// SELECTIONNE apres conversion (pas focalise en edition) : coherent avec
+    /// `duplicateBlock(_:)`, la meme action de menu qui ne pretend pas avoir ete
+    /// declenchee par une frappe dans le contenu.
+    public func convertBlock(_ block: Block, to newType: BlockType) {
+        BlockConversion.convert(block, to: newType)
+        focusedBlockID = nil
+        selectedBlockID = block.id
+        pendingCaretRequest = nil
+        persistStructuralChange()
+    }
+
     /// Action "Deplacer vers le haut" du menu de bloc (voir `BlockOperations.moveUp(_:)`
     /// pour la portee -- freres de meme niveau uniquement). `false` sans effet si
     /// `block` est deja en tete de sa fratrie.
