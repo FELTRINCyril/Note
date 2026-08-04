@@ -106,4 +106,25 @@ public extension SlateGeometry {
 
     /// Epaisseur de la ligne d'insertion affichee pendant un glisser-depose de bloc.
     static let editorDropIndicatorHeight: CGFloat = 2
+
+    // MARK: - Listes
+
+    /// Indentation appliquee par niveau de profondeur a une liste de l'editeur.
+    /// Equivalent `editor.listIndentStep` (design/tokens.md §16, ajoute en Phase 5 pour
+    /// combler le gap signale par l'agent 5.1 -- `Spacing.lg`, 16 pt, etait reutilise en
+    /// attendant). Egal a `Spacing.xl` : alias nomme pour la tracabilite avec la spec,
+    /// pas une nouvelle valeur.
+    static let editorListIndentStep: CGFloat = Spacing.xl
+
+    /// Diametre de la puce DESSINEE d'un item de liste a puces. Equivalent
+    /// `list.bulletSize` (design/tokens.md §16, ajoute en Phase 5 pour combler le gap
+    /// signale par l'agent 5.1 -- `sidebarBadgeIconSize`, 11 pt, etait reutilise en
+    /// attendant).
+    ///
+    /// Valeur de FORME dessinee (un `Circle()`), PAS une taille de police de glyphe SF
+    /// Symbol : a mettre a l'echelle Dynamic Type via `@ScaledMetric` directement sur le
+    /// `frame` de la forme (voir `BulletedListItemContentView`), jamais via
+    /// `View.slateIconFont(_:)` (reserve aux glyphes `Image(systemName:)`, dont la boite
+    /// de dessin interne ne correspond pas au diametre visuel demande par la spec).
+    static let listBulletSize: CGFloat = 6
 }

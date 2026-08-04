@@ -71,6 +71,18 @@ public enum SlateFont {
     /// Sous-titre. 17 pt Regular.
     public static let subtitle = SlateTextStyle(size: 17, weight: .regular, relativeTo: .headline)
 
+    /// Titre de niveau 4 (`h4`, design/tokens.md §9). 17 pt Semibold. Ajoute en Phase 5
+    /// pour combler le gap signale par l'agent 5.1 : `HeadingStyle` (SlateEditor)
+    /// retombait sur `bodyEmphasis` pour les niveaux 4 a 6, faute de token dedie -- la
+    /// spec definit bien les 6 niveaux, ce token les rend enfin distinguables entre eux.
+    public static let h4 = SlateTextStyle(size: 17, weight: .semibold, relativeTo: .headline)
+
+    /// Titre de niveau 5 (`h5`, design/tokens.md §9). 15 pt Semibold. Voir `h4`.
+    public static let h5 = SlateTextStyle(size: 15, weight: .semibold, relativeTo: .body)
+
+    /// Titre de niveau 6 (`h6`, design/tokens.md §9). 13 pt Semibold. Voir `h4`.
+    public static let h6 = SlateTextStyle(size: 13, weight: .semibold, relativeTo: .footnote)
+
     /// Corps de texte. 15 pt Regular.
     public static let body = SlateTextStyle(size: 15, weight: .regular, relativeTo: .body)
 

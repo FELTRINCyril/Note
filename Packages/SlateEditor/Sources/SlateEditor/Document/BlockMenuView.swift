@@ -10,11 +10,21 @@ import SwiftUI
 /// clic, deplace au glisser"), ce qui exclut d'attacher directement un `Menu` SwiftUI a
 /// ce bouton (son geste de presentation entrerait en conflit avec `.draggable`).
 ///
-/// GAP DE TOKEN SIGNALE (voir rapport de livraison) : la spec E4 ne definit aucune
-/// geometrie ni etat de survol dedies au CONTENU du menu de bloc (seule la poignee qui
-/// l'ouvre y est specifiee) -- ce composant reutilise donc uniquement des tokens
-/// EXISTANTS (`Spacing`, `SlateColor.textPrimary/textSecondary`), sans rien inventer,
-/// en attendant un passage dedie de `design-integrator`.
+/// GAP DE TOKEN SIGNALE ET TRANCHE EN PHASE 5 (voir rapport de livraison de l'agent
+/// 5.4) : la spec E4 ne definit aucune geometrie ni etat de survol dedies au CONTENU du
+/// menu de bloc (seule la poignee qui l'ouvre y est specifiee). Les deux menus
+/// comparables du projet n'apportent pas de troisieme style a copier tel quel : le menu
+/// contextuel de sidebar (`FolderRow`) est un `Menu`/`.contextMenu` NATIF qui se
+/// survole lui-meme sans aucun token ; `FolderIconPickerSheet` (grille de choix
+/// d'icone), seul autre menu "custom" du projet, ne porte pas non plus d'etat de
+/// survol dedie (seulement un etat "selectionne" statique). Ce composant-ci n'est PAS
+/// un `Menu` natif (voir la doc ci-dessus sur le conflit clic/glisser de `BlockHandle`)
+/// : ses lignes ont donc besoin d'un retour de survol explicite pour rester utilisables
+/// a la souris, comme n'importe quelle ligne cliquable de l'app -- `BlockMenuRow`
+/// reutilise donc le MEME token et le MEME motif deja etablis pour CE besoin ailleurs
+/// dans `SlateUI` (`SlateColor.stateHover`, fond anime en `SlateMotion.durationFast`,
+/// exactement comme `SidebarRow`/`ListCell`), plutot que d'inventer une troisieme
+/// convention de survol.
 struct BlockMenuView: View {
     /// Type courant de `block`, deja resolu en libelle localise (`EditorStrings.blockTypeLabel(_:)`)
     /// par l'appelant. Reste visible meme quand le sous-menu "Convertir en..." n'est
@@ -144,6 +154,24 @@ struct BlockMenuView: View {
     }
 
     private func row(title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        BlockMenuRow(title: title, systemImage: systemImage, action: action)
+    }
+}
+
+/// Ligne d'action du menu de bloc (voir la doc de `BlockMenuView` sur le choix de son
+/// etat de survol). Type dedie (plutot qu'une simple fonction, voir l'ancienne version)
+/// pour porter son propre `@State` de survol, sur le meme principe que `SidebarRow`/
+/// `ListCell` (`SlateUI`).
+private struct BlockMenuRow: View {
+    let title: String
+    let systemImage: String
+    let action: () -> Void
+
+    @State private var isHovering = false
+    @Environment(\.isEnabled) private var isEnabled
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
         Button(action: action) {
             Label(title, systemImage: systemImage)
                 .foregroundStyle(SlateColor.textPrimary)
@@ -152,7 +180,26 @@ struct BlockMenuView: View {
         .buttonStyle(.plain)
         .padding(.vertical, Spacing.xs)
         .padding(.horizontal, Spacing.sm)
+        .background(rowBackground)
+        .clipShape(RoundedRectangle(cornerRadius: SlateGeometry.radiusSmall, style: .continuous))
         .contentShape(Rectangle())
+        .onHover { hovering in
+            guard isEnabled else { return }
+            isHovering = hovering
+        }
+        .animation(
+            SlateMotion.animation(duration: SlateMotion.durationFast, reduceMotion: reduceMotion),
+            value: isHovering
+        )
+    }
+
+    @ViewBuilder
+    private var rowBackground: some View {
+        if isHovering {
+            SlateColor.stateHover
+        } else {
+            Color.clear
+        }
     }
 }
 

@@ -256,9 +256,9 @@ struct BlockTreeView: View {
         }
     }
 
-    /// GAP DE TOKEN SIGNALE (voir rapport de livraison) : pas de pas d'indentation
-    /// dedie a l'editeur dans `SlateGeometry`. `Spacing.lg` (16 pt) est reutilise en
-    /// attendant, sur le meme principe que `sidebarIndentStep` (aussi 16 pt) pour la
-    /// sidebar -- une valeur d'espacement EXISTANTE, pas une constante inventee.
-    private static let indentStep = Spacing.lg
+    /// Pas d'indentation par niveau de liste dans l'editeur. Equivalent
+    /// `SlateGeometry.editorListIndentStep` (design/tokens.md §16 : `editor.listIndentStep`,
+    /// 24 pt), ajoute en Phase 5 pour combler le gap signale par l'agent 5.1 -- ce site
+    /// reutilisait `Spacing.lg` (16 pt) en attendant.
+    private static let indentStep = SlateGeometry.editorListIndentStep
 }

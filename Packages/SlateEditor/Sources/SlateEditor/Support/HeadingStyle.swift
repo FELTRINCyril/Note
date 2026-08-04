@@ -3,19 +3,22 @@ import SlateUI
 
 /// Style typographique et hauteur de ligne d'un titre, pour un niveau 1 a 6.
 ///
-/// GAP DE TOKENS SIGNALE (voir rapport de livraison 5.1) : `SlateFont` (SlateUI) ne
-/// porte que 3 paliers de titre (`titleNote` 28, `titleSecondary` 22, `subtitle` 17),
-/// pas 6. En attendant un token dedie par `design-integrator`, les niveaux 4 a 6
-/// retombent tous sur `SlateFont.bodyEmphasis` (15 Semibold) : ils restent
-/// visuellement DISTINCTS d'un paragraphe (gras) mais pas les uns des autres. Aucune
-/// taille brute n'est inventee ici : uniquement des tokens `SlateFont` existants.
+/// Les niveaux 1 a 3 reutilisent les paliers generaux existants de `SlateFont`
+/// (`titleNote`, `titleSecondary`, `subtitle`), choix fait avant la spec de titres
+/// dediee et inchange ici (hors perimetre du comblement de gap de Phase 5). Les niveaux
+/// 4 a 6 utilisaient `SlateFont.bodyEmphasis` (15 Semibold) en attendant : ils
+/// restaient visuellement DISTINCTS d'un paragraphe (gras) mais pas les uns des autres.
+/// `SlateFont.h4`/`h5`/`h6` (design/tokens.md §9), ajoutes en Phase 5, comblent ce gap
+/// signale par l'agent 5.1.
 enum HeadingStyle {
     static func font(forLevel level: Int) -> SlateTextStyle {
         switch level {
         case 1: SlateFont.titleNote
         case 2: SlateFont.titleSecondary
         case 3: SlateFont.subtitle
-        default: SlateFont.bodyEmphasis
+        case 4: SlateFont.h4
+        case 5: SlateFont.h5
+        default: SlateFont.h6
         }
     }
 
