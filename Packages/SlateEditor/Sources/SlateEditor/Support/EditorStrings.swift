@@ -131,4 +131,22 @@ enum EditorStrings {
     static var blockMenuDeleteTitle: String {
         String(localized: "editor.blockMenu.delete.title", bundle: .module)
     }
+
+    // MARK: - Menu de bloc en lot (sous-etape 5.6, selection multi-blocs)
+
+    /// Bandeau de synthese en tete du menu quand il agit sur une PLAGE de plusieurs
+    /// blocs (docs/05_editeur_blocs.md, sous-etape 5.6, point explicite : "le menu de
+    /// bloc doit refleter qu'on agit sur une plage").
+    static func blockMenuSelectionSummary(_ count: Int) -> String {
+        let template = String(localized: "editor.blockMenu.selection.summary", bundle: .module)
+        return String(format: template, count)
+    }
+
+    /// "Supprimer" pluralise avec le NOMBRE de blocs de la plage -- jamais un simple
+    /// "Supprimer" qui laisserait ignorer combien de blocs disparaissent (voir la
+    /// documentation de tete de fichier).
+    static func blockMenuDeleteRangeTitle(_ count: Int) -> String {
+        let template = String(localized: "editor.blockMenu.delete.rangeTitle", bundle: .module)
+        return String(format: template, count)
+    }
 }

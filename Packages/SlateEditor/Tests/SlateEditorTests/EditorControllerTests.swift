@@ -287,6 +287,10 @@ struct EditorControllerTests {
         #expect(note.plainText == "Bonjour") // meme texte, la citation reste porteuse de texte derive
     }
 
+    // MARK: - Selection multi-blocs (sous-etape 5.6) : voir `EditorControllerSelectionTests`
+    // (extraite dans son propre fichier pour rester sous la limite de longueur de
+    // fichier de `CLAUDE.md` §5).
+
     @Test("moveBlockUp/moveBlockDown recalculent order et retournent false aux bords")
     func moveBlockUpDownAtBoundaries() {
         let note = Note(title: "Test")

@@ -244,6 +244,14 @@ private struct RichTextEditingRepresentable: NSViewRepresentable {
             return true
         }
 
+        func richTextViewShouldHandleExtendSelectionUp() -> Bool {
+            editorController.extendSelectionVertically(.up, from: block)
+        }
+
+        func richTextViewShouldHandleExtendSelectionDown() -> Bool {
+            editorController.extendSelectionVertically(.down, from: block)
+        }
+
         // MARK: - Ecriture modele -> vue
 
         /// Logger dedie a ce pont AppKit <-> `AttributedString` (voir `apply(_:to:)` et

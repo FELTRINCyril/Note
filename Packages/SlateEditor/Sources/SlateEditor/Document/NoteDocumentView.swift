@@ -22,6 +22,11 @@ import SwiftUI
 /// `Note.plainText`) : c'est une pure derivation du modele, pas une decision de
 /// presentation liee a la locale.
 public struct NoteDocumentView: View {
+    /// Nom de la `coordinateSpace` partagee par tous les blocs de la colonne de texte
+    /// (sous-etape 5.6, glisser de selection) -- voir `BlockFramePreferenceKey` et
+    /// `EditorController.blockFrames`.
+    static let blockListCoordinateSpace = "slate.editor.blockList"
+
     private let note: Note
     private let metadataLine: String
     private let strings: NoteEditorStrings
@@ -71,15 +76,27 @@ public struct NoteDocumentView: View {
                 EditorContentColumn {
                     VStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
                         let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
+                        // Calcule UNE SEULE FOIS par rendu complet (sous-etape 5.6, voir
+                        // `EditorController.selectionRangePositions()`), enfile jusqu'a
+                        // chaque `BlockTreeView` -- jamais recalcule bloc par bloc.
+                        let rangePositions = editorController.selectionRangePositions()
                         ForEach(topLevelBlocks, id: \.id) { block in
                             BlockTreeView(
                                 block: block,
                                 siblings: topLevelBlocks,
                                 indentLevel: 0,
                                 strings: strings,
-                                editorController: editorController
+                                editorController: editorController,
+                                rangePositions: rangePositions
                             )
                         }
+                    }
+                    // Coordonnees partagees pour la resolution "quel bloc est sous le
+                    // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
+                    // `BlockFramePreferenceKey`/`EditorController.blockFrames`).
+                    .coordinateSpace(name: Self.blockListCoordinateSpace)
+                    .onPreferenceChange(BlockFramePreferenceKey.self) { frames in
+                        editorController.updateBlockFrames(frames)
                     }
                 }
 
@@ -116,6 +133,73 @@ private struct NoteDocumentPreviewHost: View {
 
 #Preview("NoteDocumentView - sombre") {
     NoteDocumentPreviewHost()
+        .environment(\.colorScheme, .dark)
+}
+
+/// Plage de selection multi-blocs (sous-etape 5.6) : trois blocs consecutifs
+/// selectionnes via `EditorController.selectBlock(_:)`/`extendSelection(to:)` -- exige
+/// par la tache ("Preview a jour montrant une plage selectionnee de trois blocs").
+/// Contourne `NoteDocumentView` (qui construit toujours son PROPRE `EditorController`,
+/// non injectable depuis l'exterieur) pour rendre directement `BlockTreeView` avec un
+/// controleur PRE-configure, sur le meme schema (`EditorContentColumn`, `VStack`,
+/// `ForEach`) que le corps de `NoteDocumentView`.
+private struct NoteDocumentSelectionRangePreviewHost: View {
+    var body: some View {
+        Group {
+            if let container = try? SlateContainer.make(inMemory: true) {
+                content.modelContainer(container)
+            } else {
+                Text("Conteneur SwiftData indisponible pour cette preview")
+            }
+        }
+        .frame(width: 900, height: 500)
+        .background(SlateColor.bgEditor)
+    }
+
+    private var content: some View {
+        let note = Note(title: "Feuille de route Q3")
+        let first = Block(order: 0, type: .heading2, text: RichText(plainText: "Chantiers Q3"), note: note)
+        let second = Block(
+            order: 1, type: .paragraph, text: RichText(plainText: "Edition, sync, verrouillage."), note: note
+        )
+        let third = Block(order: 2, type: .quote, text: RichText(plainText: "Le premier passe devant."), note: note)
+        let fourth = Block(order: 3, type: .paragraph, text: RichText(plainText: "Reste hors de la plage."), note: note)
+        note.blocks = [first, second, third, fourth]
+        note.refreshDerivedText()
+
+        let editorController = EditorController(note: note)
+        editorController.selectBlock(first)
+        editorController.extendSelection(to: third)
+        let rangePositions = editorController.selectionRangePositions()
+
+        return ScrollView {
+            EditorContentColumn {
+                VStack(alignment: .leading, spacing: SlateGeometry.editorBlockSpacing) {
+                    let topLevelBlocks = BlockOrdering.topLevelBlocks(of: note)
+                    ForEach(topLevelBlocks, id: \.id) { block in
+                        BlockTreeView(
+                            block: block,
+                            siblings: topLevelBlocks,
+                            indentLevel: 0,
+                            strings: NoteEditorStrings(),
+                            editorController: editorController,
+                            rangePositions: rangePositions
+                        )
+                    }
+                }
+            }
+            .padding(.vertical, Spacing.lg)
+        }
+    }
+}
+
+#Preview("NoteDocumentView - plage de 3 blocs selectionnes, clair") {
+    NoteDocumentSelectionRangePreviewHost()
+        .environment(\.colorScheme, .light)
+}
+
+#Preview("NoteDocumentView - plage de 3 blocs selectionnes, sombre") {
+    NoteDocumentSelectionRangePreviewHost()
         .environment(\.colorScheme, .dark)
 }
 

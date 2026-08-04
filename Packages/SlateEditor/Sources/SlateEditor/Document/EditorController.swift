@@ -1,6 +1,7 @@
 import CoreGraphics
 import Foundation
 import SlateModel
+import SlateUI
 import SwiftData
 
 /// Coordinateur `@Observable` du cycle de vie des blocs au clavier (docs/05_editeur_blocs.md,
@@ -25,21 +26,62 @@ import SwiftData
 public final class EditorController {
     /// Bloc actuellement en EDITION (caret dans son `NSTextView`). `nil` si aucun bloc
     /// n'est en cours d'edition.
-    public private(set) var focusedBlockID: UUID?
+    public internal(set) var focusedBlockID: UUID?
 
-    /// Bloc SELECTIONNE en entier (spec E4 : "Echap sort de l'edition et selectionne le
-    /// bloc entier"), hors edition. Mutuellement exclusif avec `focusedBlockID` --
-    /// restreint aux blocs `.paragraph`, seul type reellement editable a ce stade de la
-    /// Phase 5 (voir `BlockContentRouterView`) : selectionner un bloc dont l'edition
-    /// n'existe pas encore n'aurait pas de geste "Entree" cible a offrir.
-    public private(set) var selectedBlockID: UUID?
+    /// Plage de blocs SELECTIONNES (sous-etape 5.6), hors edition -- mutuellement
+    /// exclusive avec `focusedBlockID`. Generalise `selectedBlockID` (5.3) : un bloc
+    /// seul selectionne (Echap, poignee, clic) EST une plage de taille 1
+    /// (`BlockSelectionRange.isSingleBlock`), le geste supplementaire (clic + Maj,
+    /// glisser, Maj + fleche -- voir `extendSelection(to:)`/`extendSelectionVertically`)
+    /// l'etend a plusieurs. Source UNIQUE de la selection multi-blocs : `BlockTreeView`
+    /// resout `SlateBlockRangePosition` pour CHAQUE bloc via
+    /// `BlockSelectionOperations.rangePositions(forOrderedIDs:)`, jamais en inspectant
+    /// directement cette propriete bloc par bloc (couteux -- voir sa documentation).
+    ///
+    /// Depuis cette sous-etape, N'EST PLUS restreint aux blocs `.paragraph` : point 3
+    /// de la tache 5.6, "trou d'accessibilite" signale par l'agent de la 5.4 (le menu de
+    /// bloc n'etait atteignable au clavier que sur un paragraphe). `BlockTreeView` rend
+    /// desormais l'etat `.selected`/le focus clavier pour TOUT type de bloc rendu.
+    public internal(set) var blockSelectionRange: BlockSelectionRange?
+
+    /// Convenance retro-compatible (sous-etape 5.3) : le bloc selectionne SEUL, ou
+    /// `nil` si aucune selection n'est active ou si elle couvre plusieurs blocs. Calcule
+    /// depuis `blockSelectionRange`, jamais stocke separement -- une seule source de
+    /// verite. Conserve ce nom et ce type EXACTS pour ne pas casser les appelants/tests
+    /// des sous-etapes 5.3 a 5.5 qui ne connaissent qu'une selection d'UN bloc.
+    public var selectedBlockID: UUID? {
+        guard let blockSelectionRange, blockSelectionRange.isSingleBlock else { return nil }
+        return blockSelectionRange.anchorBlockID
+    }
+
+    /// Cadres (memes coordonnees que la `coordinateSpace` nommee partagee par
+    /// `NoteDocumentView`/`BlockTreeView`) des blocs actuellement rendus a l'ecran,
+    /// alimentes par une `PreferenceKey` (`BlockFramePreferenceKey`) a chaque
+    /// changement de mise en page. Type PUR (`CGRect`, pas de SwiftUI) : sert
+    /// uniquement a resoudre "quel bloc est sous le pointeur" pendant un glisser de
+    /// selection (`continueBlockRangeDrag(pointerLocation:)`) -- ce dictionnaire est
+    /// une simple donnee d'ENTREE, aucune geometrie n'est calculee ici.
+    public internal(set) var blockFrames: [UUID: CGRect] = [:]
+
+    /// Bloc ou un glisser de selection a COMMENCE (`beginBlockRangeDrag(at:)`), tant que
+    /// le geste est en cours -- distinct de `blockSelectionRange.anchorBlockID` : ce
+    /// dernier n'est ecrit qu'une fois la frontiere de bloc reellement franchie (spec
+    /// E4, voir `continueBlockRangeDrag(pointerLocation:)`), pour que dessiner-selectionner
+    /// DANS un seul bloc (selection de texte native) ne declenche jamais l'aplat de
+    /// plage tant que le glisser n'en est pas sorti. Pas `private` (acces necessaire
+    /// depuis l'extension `EditorController+Selection.swift`, ou vit toute la logique
+    /// de selection multi-blocs -- voir sa documentation de tete de fichier pour
+    /// pourquoi ce fichier est separe).
+    var dragRangeAnchorBlockID: UUID?
 
     /// Requete de positionnement de caret en attente pour le PROCHAIN rendu du bloc
     /// `EditorCaretRequest.blockID`. Consommee une seule fois via
     /// `consumePendingCaretRequest(for:)`, jamais lue directement par les vues.
-    public private(set) var pendingCaretRequest: EditorCaretRequest?
+    public internal(set) var pendingCaretRequest: EditorCaretRequest?
 
-    private let note: Note
+    /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
+    /// autre fichier de ce type -- voir sa documentation de tete de fichier).
+    let note: Note
     private var modelContext: ModelContext?
 
     public init(note: Note, modelContext: ModelContext? = nil) {
@@ -68,7 +110,7 @@ public final class EditorController {
 
     public func noteBlockDidBeginEditing(_ blockID: UUID) {
         focusedBlockID = blockID
-        selectedBlockID = nil
+        blockSelectionRange = nil
     }
 
     public func noteBlockDidEndEditing(_ blockID: UUID) {
@@ -125,16 +167,32 @@ public final class EditorController {
     // MARK: - Echap / Entree hors edition (spec E4, "Caret, selection, depot")
 
     /// Echap en cours d'edition : sort de l'edition, selectionne `block` en entier.
+    /// Delegue a `selectBlock(_:)` (sous-etape 5.6) : meme effet EXACT qu'avant (un seul
+    /// bloc selectionne), desormais expose comme le geste GENERIQUE de selection d'un
+    /// bloc unique (aussi reutilise par le clic simple hors edition, voir `BlockTreeView`).
     public func handleEscape(in block: Block) {
-        focusedBlockID = nil
-        selectedBlockID = block.id
+        selectBlock(block)
     }
 
-    /// Entree alors qu'un bloc est SELECTIONNE (pas en edition) : y rentre, caret en
-    /// fin de contenu (comportement usuel d'un clic dans un bloc existant).
+    /// Selectionne `block` SEUL (plage de taille 1), hors edition -- geste generique
+    /// derriere `handleEscape(in:)` (sortie d'edition) ET le clic simple sur un bloc non
+    /// editable (titre, citation, item de liste, separateur -- sous-etape 5.6, point 3 :
+    /// "generaliser la selection a tous les types de bloc rendus", ces types n'ayant pas
+    /// de NSTextView pour offrir un geste "Echap" equivalent).
+    public func selectBlock(_ block: Block) {
+        focusedBlockID = nil
+        blockSelectionRange = BlockSelectionRange(single: block.id)
+        pendingCaretRequest = nil
+    }
+
+    /// Entree alors qu'un bloc est SELECTIONNE SEUL (pas en edition) : y rentre, caret en
+    /// fin de contenu (comportement usuel d'un clic dans un bloc existant). Sans effet
+    /// si plusieurs blocs sont selectionnes (`selectedBlockID` vaut alors `nil` --
+    /// "rentrer en edition" n'a pas de sens pour une plage, voir la documentation de
+    /// `blockSelectionRange`).
     public func handleEnterOnSelectedBlock() {
         guard let blockID = selectedBlockID else { return }
-        selectedBlockID = nil
+        blockSelectionRange = nil
         let request = EditorCaretRequest(blockID: blockID, placement: .end)
         applyFocus(request)
     }
@@ -177,7 +235,7 @@ public final class EditorController {
     public func duplicateBlock(_ block: Block) {
         let copy = BlockOperations.duplicate(block)
         focusedBlockID = nil
-        selectedBlockID = copy.id
+        blockSelectionRange = BlockSelectionRange(single: copy.id)
         pendingCaretRequest = nil
         persistStructuralChange()
     }
@@ -194,7 +252,8 @@ public final class EditorController {
         BlockOperations.remove(block, from: note)
 
         if focusedBlockID == block.id { focusedBlockID = nil }
-        selectedBlockID = neighborID ?? BlockOrdering.flattenedBlocks(of: note).first?.id
+        let fallbackID = neighborID ?? BlockOrdering.flattenedBlocks(of: note).first?.id
+        blockSelectionRange = fallbackID.map { BlockSelectionRange(single: $0) }
         pendingCaretRequest = nil
         persistStructuralChange()
     }
@@ -210,7 +269,7 @@ public final class EditorController {
     public func convertBlock(_ block: Block, to newType: BlockType) {
         BlockConversion.convert(block, to: newType)
         focusedBlockID = nil
-        selectedBlockID = block.id
+        blockSelectionRange = BlockSelectionRange(single: block.id)
         pendingCaretRequest = nil
         persistStructuralChange()
     }
@@ -237,7 +296,7 @@ public final class EditorController {
 
     private func applyFocus(_ request: EditorCaretRequest) {
         focusedBlockID = request.blockID
-        selectedBlockID = nil
+        blockSelectionRange = nil
         pendingCaretRequest = request
     }
 
@@ -246,8 +305,11 @@ public final class EditorController {
     /// qu'il n'existe jamais un second chemin d'ecriture concurrent. Appele
     /// SYNCHRONEMENT (pas de debounce ici) : une insertion/fusion/split n'arrive jamais
     /// a la cadence d'une frappe de caractere, contrairement a l'ecriture de
-    /// `Block.text` que `RichTextBlockView.Coordinator` debounce deja.
-    private func persistStructuralChange() {
+    /// `Block.text` que `RichTextBlockView.Coordinator` debounce deja. Pas `private`
+    /// (acces necessaire depuis `EditorController+Selection.swift`, dont chaque
+    /// operation en lot persiste UNE SEULE FOIS pour tout le lot -- voir sa
+    /// documentation de tete de fichier).
+    func persistStructuralChange() {
         BlockTextCommit.flush(note: note)
         try? modelContext?.save()
     }

@@ -19,13 +19,25 @@ struct BlockMenuView: View {
     /// Type courant de `block`, deja resolu en libelle localise (`EditorStrings.blockTypeLabel(_:)`)
     /// par l'appelant. Reste visible meme quand le sous-menu "Convertir en..." n'est
     /// pas ouvert (sous-etape 5.5, point explicite de la tache : "le libelle du type
-    /// courant doit etre visible pour que l'utilisateur sache d'ou il part").
+    /// courant doit etre visible pour que l'utilisateur sache d'ou il part"). Ignore
+    /// quand `selectionCount` n'est pas `nil` (voir sa documentation) : une plage
+    /// heterogene n'a pas de "type courant" unique a annoncer.
     let currentTypeLabel: String
-    /// Types cibles proposes par `BlockConversion.availableTargets(for:)`. Vide pour
-    /// un type qui n'a pas de rendu textuel reel aujourd'hui (`divider`, `image`...) ou
-    /// reserve a une phase ulterieure -- voir la documentation de `BlockConversion`.
+    /// `nil` (par defaut) pour le menu d'un bloc UNIQUE (sous-etapes 5.4/5.5,
+    /// comportement inchange). Non-`nil` -- le NOMBRE de blocs de la plage -- quand ce
+    /// menu agit sur une SELECTION MULTIPLE (sous-etape 5.6, point explicite de la
+    /// tache : "le menu de bloc doit refleter qu'on agit sur une plage... libelles au
+    /// pluriel ou nombre de blocs, pour que l'utilisateur sache sur quoi il agit").
+    /// Affiche un bandeau de synthese en tete de menu et pluralise "Supprimer" ; masque
+    /// "Dupliquer", qui n'a pas d'equivalent en lot dans cette sous-etape (base).
+    let selectionCount: Int?
+    /// Types cibles proposes par `BlockConversion.availableTargets(for:)` (bloc unique)
+    /// ou `BlockConversion.convertibleTypes` (plage, voir `EditorController.
+    /// availableConversionTargetsForSelectionRange()`). Vide pour un type/une plage sans
+    /// aucun bloc convertible aujourd'hui -- voir la documentation de `BlockConversion`.
     let availableConversionTargets: [BlockType]
-    /// `false` si `block` est deja le premier de sa fratrie (voir `BlockOperations.moveUp(_:)`) :
+    /// `false` si `block` (ou la plage entiere) est deja en tete de sa fratrie (voir
+    /// `BlockOperations.moveUp(_:)`/`BlockSelectionOperations.canMoveRange(_:in:by:)`) :
     /// l'entree correspondante est desactivee plutot que masquee, pour que sa PRESENCE
     /// reste previsible d'un bloc a l'autre.
     let canMoveUp: Bool
@@ -37,15 +49,53 @@ struct BlockMenuView: View {
     let onMoveDown: () -> Void
     let onDelete: () -> Void
 
+    init(
+        currentTypeLabel: String,
+        selectionCount: Int? = nil,
+        availableConversionTargets: [BlockType],
+        canMoveUp: Bool,
+        canMoveDown: Bool,
+        onConvert: @escaping (BlockType) -> Void,
+        onDuplicate: @escaping () -> Void,
+        onMoveUp: @escaping () -> Void,
+        onMoveDown: @escaping () -> Void,
+        onDelete: @escaping () -> Void
+    ) {
+        self.currentTypeLabel = currentTypeLabel
+        self.selectionCount = selectionCount
+        self.availableConversionTargets = availableConversionTargets
+        self.canMoveUp = canMoveUp
+        self.canMoveDown = canMoveDown
+        self.onConvert = onConvert
+        self.onDuplicate = onDuplicate
+        self.onMoveUp = onMoveUp
+        self.onMoveDown = onMoveDown
+        self.onDelete = onDelete
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
+            if let selectionCount {
+                Text(EditorStrings.blockMenuSelectionSummary(selectionCount))
+                    .slateFont(SlateFont.caption)
+                    .foregroundStyle(SlateColor.textSecondary)
+                    .padding(.vertical, Spacing.xs)
+                    .padding(.horizontal, Spacing.sm)
+                Divider()
+            }
+
             convertRow
 
             Divider()
 
-            row(title: EditorStrings.blockMenuDuplicateTitle, systemImage: "plus.square.on.square", action: onDuplicate)
-
-            Divider()
+            if selectionCount == nil {
+                row(
+                    title: EditorStrings.blockMenuDuplicateTitle,
+                    systemImage: "plus.square.on.square",
+                    action: onDuplicate
+                )
+                Divider()
+            }
 
             row(title: EditorStrings.blockMenuMoveUpTitle, systemImage: "arrow.up", action: onMoveUp)
                 .disabled(!canMoveUp)
@@ -54,10 +104,16 @@ struct BlockMenuView: View {
 
             Divider()
 
-            row(title: EditorStrings.blockMenuDeleteTitle, systemImage: "trash", action: onDelete)
+            row(title: deleteTitle, systemImage: "trash", action: onDelete)
         }
         .padding(Spacing.xs)
         .frame(minWidth: 200)
+    }
+
+    /// "Supprimer" pluralise avec le nombre de blocs en mode plage (voir la
+    /// documentation de `selectionCount`) -- inchange ("Supprimer") pour un bloc unique.
+    private var deleteTitle: String {
+        selectionCount.map(EditorStrings.blockMenuDeleteRangeTitle) ?? EditorStrings.blockMenuDeleteTitle
     }
 
     /// "Convertir en..." (sous-etape 5.5) : un sous-menu listant `availableConversionTargets`

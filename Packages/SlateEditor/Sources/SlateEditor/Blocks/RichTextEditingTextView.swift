@@ -199,6 +199,29 @@ final class RichTextEditingTextView: NSTextView {
         super.moveDown(sender)
     }
 
+    /// Selecteur `NSResponder` invoque par Maj+fleche haut (sous-etape 5.6, spec E4
+    /// "Accessibilite" : extension de la selection multi-blocs au clavier). Meme regle
+    /// de frontiere que `moveUp(_:)` : n'intercepte que depuis la PREMIERE ligne
+    /// visuelle -- a l'interieur d'un bloc multi-lignes, Maj+fleche haut doit d'abord
+    /// etendre la selection de TEXTE native (comportement natif, laisse a `super`).
+    override func moveUpAndModifySelection(_ sender: Any?) {
+        if isCaretOnFirstVisualLine,
+           blockLifecycleDelegate?.richTextViewShouldHandleExtendSelectionUp() == true {
+            return
+        }
+        super.moveUpAndModifySelection(sender)
+    }
+
+    /// Symmetrique de `moveUpAndModifySelection(_:)` pour la DERNIERE ligne visuelle
+    /// (Maj+fleche bas).
+    override func moveDownAndModifySelection(_ sender: Any?) {
+        if isCaretOnLastVisualLine,
+           blockLifecycleDelegate?.richTextViewShouldHandleExtendSelectionDown() == true {
+            return
+        }
+        super.moveDownAndModifySelection(sender)
+    }
+
     /// Selecteur `NSResponder` invoque par Echap dans un `NSTextView` autonome (spec E4 :
     /// "Echap sort de l'edition et selectionne le bloc entier").
     override func cancelOperation(_ sender: Any?) {
@@ -324,4 +347,12 @@ protocol RichTextBlockLifecycleDelegate: AnyObject {
     /// Echap presse en cours d'edition : sort de l'edition, selectionne le bloc entier.
     /// Retourne `true` (toujours pris en charge par le cycle de vie de bloc).
     func richTextViewShouldHandleCancelEditing() -> Bool
+
+    /// Maj+fleche haut alors que le caret est deja sur la PREMIERE ligne visuelle du
+    /// bloc (sous-etape 5.6, accessibilite clavier de la selection multi-blocs).
+    /// Retourne `true` si l'extension de selection inter-bloc a pris la main.
+    func richTextViewShouldHandleExtendSelectionUp() -> Bool
+
+    /// Symmetrique de ci-dessus pour Maj+fleche bas depuis la DERNIERE ligne visuelle.
+    func richTextViewShouldHandleExtendSelectionDown() -> Bool
 }
