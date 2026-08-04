@@ -15,12 +15,14 @@ import Foundation
 /// - `deltaDays <= 0` (aujourd'hui, ou une note "du futur" par securite) -> heure seule
 ///   ("14:22").
 /// - `deltaDays == 1` -> "Hier" + heure ("Hier 09:10").
-/// - `deltaDays` dans `2...6` -> nom du jour de la semaine seul ("Lundi"). Borne
-///   volontairement DIFFERENTE de celle de `NoteDateGrouper.previous7Days` (qui va
-///   jusqu'a J-7 inclus) : au-dela de 6 jours, afficher seulement un nom de jour
-///   redevient ambigu (quel lundi ?), la cellule bascule donc plus tot vers une date
-///   explicite jour+mois.
-/// - `deltaDays >= 7` et meme annee que `now` -> jour + mois abrege ("14 juil.").
+/// - `deltaDays` dans `2...7` -> nom du jour de la semaine seul ("Lundi"). Cette borne
+///   est ALIGNEE sur `NoteDateGrouper.previous7Days`, qui va aussi jusqu'a J-7 inclus :
+///   arbitrage de Cyril en fin de phase 4. Une borne a J-6 laissait la derniere note du
+///   groupe "7 jours precedents" afficher une date jour+mois ("27 juil.") alors que
+///   toutes ses voisines du meme groupe affichaient un nom de jour ("Lundi"), ce qui se
+///   voyait. L'uniformite du groupe primait sur la levee d'ambiguite du nom de jour.
+///   Toute evolution de la borne du groupeur doit etre repercutee ici.
+/// - `deltaDays >= 8` et meme annee que `now` -> jour + mois abrege ("14 juil.").
 /// - sinon (annee differente) -> jour + mois abrege + annee ("18 nov. 2025").
 public enum NoteRelativeDateFormatter {
     public static func string(
@@ -44,7 +46,7 @@ public enum NoteRelativeDateFormatter {
             let template = String(localized: "noteList.cell.date.yesterday", bundle: .module, locale: locale)
             return String(format: template, timeString(date, calendar: calendar, locale: locale))
         }
-        if deltaDays <= 6 {
+        if deltaDays <= 7 {
             return weekdayString(date, calendar: calendar, locale: locale)
         }
         if calendar.component(.year, from: date) == calendar.component(.year, from: now) {

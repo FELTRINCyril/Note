@@ -98,9 +98,14 @@ struct NoteRelativeDateFormatterTests {
         #expect(!result.contains(":"))
     }
 
-    @Test("J-7 bascule sur jour+mois plutot que le nom du jour")
-    func sevenDaysAgoShowsDayAndMonthNotWeekday() throws {
+    /// Arbitrage de Cyril en fin de phase 4 : la borne du formateur est ALIGNEE sur
+    /// celle du groupeur (J-7 inclus). Avant, J-7 basculait sur "3 aout" alors que la
+    /// note restait dans le groupe "7 jours precedents" avec des voisines affichant un
+    /// nom de jour : l'incoherence se voyait. Ce test verrouille l'alignement.
+    @Test("J-7, derniere borne du groupe 7 jours, affiche encore le nom du jour")
+    func sevenDaysAgoStillShowsWeekdayNameToMatchItsDateGroup() throws {
         let calendar = parisCalendar()
+        // 2026-08-10 est un lundi, donc 2026-08-03 est le lundi precedent.
         let now = try makeDate(year: 2026, month: 8, day: 10, hour: 12, calendar: calendar)
         let date = try makeDate(year: 2026, month: 8, day: 3, hour: 9, calendar: calendar)
 
@@ -111,7 +116,26 @@ struct NoteRelativeDateFormatterTests {
             now: now
         )
 
-        #expect(result.contains("3"))
+        #expect(result.localizedCaseInsensitiveContains("lundi"))
+        #expect(!result.contains(":"))
+    }
+
+    /// La bascule vers une date explicite se fait donc a J-8, premier jour qui n'est
+    /// plus dans le groupe "7 jours precedents" du `NoteDateGrouper`.
+    @Test("J-8, premier jour hors du groupe 7 jours, bascule sur jour+mois")
+    func eightDaysAgoShowsDayAndMonthNotWeekday() throws {
+        let calendar = parisCalendar()
+        let now = try makeDate(year: 2026, month: 8, day: 10, hour: 12, calendar: calendar)
+        let date = try makeDate(year: 2026, month: 8, day: 2, hour: 9, calendar: calendar)
+
+        let result = NoteRelativeDateFormatter.string(
+            for: date,
+            calendar: calendar,
+            locale: Locale(identifier: "fr_FR"),
+            now: now
+        )
+
+        #expect(result.contains("2"))
         #expect(!result.contains(":"))
         // Pas un nom de jour de semaine : verifie l'absence des jours francais usuels.
         for weekday in ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"] {
