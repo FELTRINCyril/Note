@@ -1,0 +1,61 @@
+/* ============================================================
+   GemAddis — Color tokens
+   Primary: #F96514 (orange GemAddis) · Secondary: #495458 (slate)
+   Industrial, white-dominant. Orange used sparingly as accent.
+   ============================================================ */
+:root {
+  /* --- Brand: orange --- */
+  --gem-orange: #F96514;        /* primary brand orange */
+  --gem-orange-600: #E2540C;    /* hover / pressed */
+  --gem-orange-700: #C2470A;    /* deep, text on light */
+  --gem-orange-200: #FCD2B6;    /* subtle fill border */
+  --gem-orange-100: #FDE6D5;    /* tint surface */
+  --gem-orange-50:  #FFF3EB;    /* faint wash */
+
+  /* --- Brand: slate (secondary / structural gray) --- */
+  --gem-slate-900: #2A3134;     /* near-black headings on light */
+  --gem-slate-700: #495458;     /* secondary brand gray */
+  --gem-slate-500: #6B7679;     /* muted text */
+  --gem-slate-300: #AEB5B7;     /* borders on dark, disabled text */
+  --gem-slate-200: #D5D9DA;     /* hairline dividers */
+  --gem-slate-100: #E8EBEB;     /* subtle surfaces */
+  --gem-slate-50:  #F4F6F6;     /* page tint */
+
+  /* --- Ink + paper --- */
+  --gem-ink:    #1A1A1A;        /* logo "DDIS" black — strongest text */
+  --gem-white:  #FFFFFF;
+  --gem-black:  #000000;
+
+  /* --- Semantic status (industrial, muted) --- */
+  --gem-success: #2E7D5B;
+  --gem-warning: #C77800;
+  --gem-danger:  #C0392B;
+  --gem-info:    #2A6F9E;
+
+  /* ============================================================
+     Semantic aliases — reference these in components
+     ============================================================ */
+  --color-accent:           var(--gem-orange);
+  --color-accent-hover:      var(--gem-orange-600);
+  --color-accent-active:     var(--gem-orange-700);
+  --color-accent-contrast:   var(--gem-white);
+
+  --text-strong:   var(--gem-ink);
+  --text-heading:  var(--gem-slate-900);
+  --text-body:     var(--gem-slate-700);
+  --text-muted:    var(--gem-slate-500);
+  --text-on-dark:  var(--gem-white);
+  --text-on-accent:var(--gem-white);
+
+  --surface-page:    var(--gem-white);
+  --surface-tint:    var(--gem-slate-50);
+  --surface-card:    var(--gem-white);
+  --surface-inverse: var(--gem-slate-900);
+  --surface-accent:  var(--gem-orange);
+
+  --border-default:  var(--gem-slate-200);
+  --border-strong:   var(--gem-slate-300);
+  --border-accent:   var(--gem-orange);
+
+  --focus-ring: var(--gem-orange);
+}

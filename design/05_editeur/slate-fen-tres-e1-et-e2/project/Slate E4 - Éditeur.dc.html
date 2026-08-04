@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:13px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+  @keyframes slateCaret{0%,45%{opacity:1}55%,100%{opacity:0}}
+</style>
+</helmet>
+
+<section id="3a" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:32px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1180px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">3a</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">E4 — Éditeur de note</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:860px;text-wrap:pretty;">Troisième colonne de la coquille <a href="#1a">1a</a>. Coquille de l'éditeur et chrome des blocs uniquement : la barre flottante de formatage et H1–H6 (E6), le code, les tableaux et les callouts (E7) ne sont pas ici. Code : <code>EditorTokens</code> · <code>BlockHandle</code> · <code>BlockContainer</code> · <code>NoteHeaderView</code> · <code>EditorView</code>.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:860px;text-wrap:pretty;"><b>Principe.</b> Le chrome de bloc vit dans une gouttière de 48 pt à gauche de la colonne : il apparaît et disparaît sans jamais déplacer le texte. Le titre, le sous-titre et les blocs partagent la même marge de gauche — la colonne de texte fait 720 pt (<code>editor.maxContentWidth</code>), la gouttière est en plus.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:860px;text-wrap:pretty;"><b>Mesure de contraste.</b> Le contour de focus clavier (<code>focusRing</code>, 3 pt) vaut 3,08:1 sur <code>bg.editor</code> clair et 3,21:1 sur <code>bg.editor</code> sombre : au-dessus du minimum 3:1 pour un élément non textuel, mais de peu. Il est donc doublé d'un liseré 1 pt en <code>accent.default</code> opaque, et <code>block.selected.bg</code> passe de 12 % à 22 % (clair) / 20 % à 32 % (sombre) sous « Augmenter le contraste ».</div>
+    </div>
+  </div>
+
+  <!-- ÉCRANS COMPLETS -->
+  <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+    <!-- CLAIR -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · couverture + icône · survol d'un bloc · bloc vide en édition</div>
+      <div style="width:900px;height:740px;background:#FFFFFF;border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;">
+
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;background:#FFFFFF;border-bottom:1px solid rgba(0,0,0,0.10);">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Produit</div>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Feuille de route Q3</div>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="display:flex;gap:2px;">
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M12 16V4m0 0L8 8m4-4l4 4"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(0,0,0,0.50)"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></div>
+          </div>
+        </div>
+
+        <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+          <!-- couverture 200 pt -->
+          <div style="height:200px;flex:none;position:relative;background:repeating-linear-gradient(135deg,#E5E5EA 0 12px,#DEDEE3 12px 24px);display:flex;align-items:flex-end;justify-content:flex-end;">
+            <div style="position:absolute;left:16px;top:12px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Image de couverture · 200 pt · pleine largeur</div>
+            <div style="display:flex;gap:4px;padding:12px;">
+              <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Repositionner</div>
+              <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Changer</div>
+              <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.92);border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Supprimer</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:center;">
+            <div style="width:768px;display:flex;flex-direction:column;">
+
+              <!-- en-tête -->
+              <div style="padding-left:48px;display:flex;flex-direction:column;">
+                <div style="position:relative;z-index:1;width:64px;height:64px;margin-top:-32px;font-size:46px;line-height:1;display:flex;align-items:center;">🧭</div>
+                <div style="height:22px;display:flex;align-items:center;gap:12px;margin-top:8px;">
+                  <div style="display:flex;align-items:center;gap:4px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 15l5-4 4 3 3-2 6 4"></path></svg>Changer la couverture</div>
+                </div>
+                <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;color:rgba(0,0,0,0.85);margin-top:8px;">Feuille de route Q3</div>
+                <div style="font:400 17px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);margin-top:8px;max-width:720px;text-wrap:pretty;">Ce que l'on livre avant septembre, et ce que l'on assume de reporter.</div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);margin-top:12px;">Modifiée aujourd'hui à 14:22 · 428 mots</div>
+              </div>
+
+              <!-- corps : 24 pt de respiration après l'en-tête -->
+              <div style="margin-top:24px;display:flex;flex-direction:column;">
+
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                  <div style="width:40px;height:22px;flex:none;"></div>
+                  <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;">L'éditeur de blocs est le cœur de la version 1 : tant qu'écrire n'est pas fluide, le reste ne compte pas. Tout ce qui suit — bases, IA, partage — s'appuie dessus.</div>
+                </div>
+
+                <!-- survol : chrome visible, aucun aplat -->
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                  <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+                    <div style="width:18px;height:18px;border-radius:6px;background:rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+                    <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+                  </div>
+                  <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;">Trois chantiers en parallèle — édition, synchronisation, verrouillage. Le premier passe devant en cas d'arbitrage.</div>
+                </div>
+
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                  <div style="width:40px;height:22px;flex:none;"></div>
+                  <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;">La sélection de texte reste locale au bloc : <span style="background:rgba(0,122,255,0.28);">tant qu'elle ne franchit pas la frontière</span>, on garde le surlignage caractère par caractère.</div>
+                </div>
+
+                <!-- bloc vide en édition : caret + placeholder -->
+                <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                  <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+                    <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+                    <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+                  </div>
+                  <div style="flex:1;padding:2px 8px;display:flex;align-items:center;">
+                    <div style="width:2px;height:22px;background:#007AFF;animation:slateCaret 1.06s steps(1,end) infinite;"></div>
+                    <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.25);margin-left:2px;">Tapez / pour les commandes</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOMBRE -->
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · sans couverture · sélection multi-blocs · focus clavier · dépôt de drag</div>
+      <div style="width:900px;height:740px;background:#1C1C1E;border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;">
+
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;background:#1C1C1E;border-bottom:1px solid rgba(255,255,255,0.15);">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Produit</div>
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Architecture de l'éditeur</div>
+          </div>
+          <div style="flex:1;"></div>
+          <div style="display:flex;gap:2px;">
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><path d="M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><path d="M12 16V4m0 0L8 8m4-4l4 4"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg></div>
+            <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.55)"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></div>
+          </div>
+        </div>
+
+        <div style="flex:1;overflow:hidden;display:flex;justify-content:center;">
+          <div style="width:768px;display:flex;flex-direction:column;">
+
+            <!-- en-tête sans couverture : 32 pt en haut, pas d'icône -->
+            <div style="padding-left:48px;display:flex;flex-direction:column;margin-top:32px;">
+              <div style="height:22px;display:flex;align-items:center;gap:12px;">
+                <div style="display:flex;align-items:center;gap:4px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><circle cx="12" cy="12" r="8"></circle><path d="M9 14c1 1.2 4.2 1.2 5.4 0"></path><circle cx="9.5" cy="10" r="0.9" fill="rgba(255,255,255,0.55)"></circle><circle cx="14.5" cy="10" r="0.9" fill="rgba(255,255,255,0.55)"></circle></svg>Ajouter une icône</div>
+                <div style="display:flex;align-items:center;gap:4px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 15l5-4 4 3 3-2 6 4"></path></svg>Ajouter une couverture</div>
+              </div>
+              <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;color:rgba(255,255,255,0.85);margin-top:8px;">Architecture de l'éditeur</div>
+              <div style="font:400 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.25);margin-top:8px;">Ajouter un sous-titre</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);margin-top:12px;">Modifiée lundi à 09:12 · 1 204 mots</div>
+            </div>
+
+            <div style="margin-top:24px;display:flex;flex-direction:column;">
+
+              <!-- sélection multi-blocs : aplat continu, coins arrondis aux extrémités -->
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                <div style="width:40px;height:22px;flex:none;"></div>
+                <div style="flex:1;padding:2px 8px;background:rgba(10,132,255,0.20);border-radius:8px 8px 0 0;margin-bottom:-4px;padding-bottom:6px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Un bloc = un nœud. Le modèle porte le type, la vue ne décide de rien.</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+                  <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+                  <div style="width:18px;height:18px;border-radius:6px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.55)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+                </div>
+                <div style="flex:1;padding:2px 8px;background:rgba(10,132,255,0.20);border-radius:0 0 8px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Dès que la sélection franchit une frontière de bloc, le surlignage caractère par caractère cède la place à l'aplat de bloc : une seule zone continue, sans trou de 4 pt.</div>
+              </div>
+
+              <!-- focus clavier : contour, jamais d'aplat -->
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+                <div style="width:40px;height:22px;flex:none;"></div>
+                <div style="flex:1;padding:2px 8px;border-radius:8px;box-shadow:0 0 0 1px #0A84FF,0 0 0 4px rgba(10,132,255,0.65);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le focus clavier se lit comme un contour, la sélection comme un aplat : les deux ne se confondent jamais, même en monochrome.</div>
+              </div>
+
+              <!-- ligne d'insertion de drag -->
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;position:relative;">
+                <div style="width:40px;height:22px;flex:none;"></div>
+                <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Pendant un glisser-déposer, une ligne de 2 pt en <code style="background:rgba(255,255,255,0.10);color:#FF7B72;">block.dropIndicator</code> marque le point d'insertion, alignée sur la colonne de texte.</div>
+                <div style="position:absolute;left:48px;right:0;bottom:-1px;height:2px;border-radius:999px;background:#0A84FF;"></div>
+              </div>
+
+              <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;margin-top:6px;">
+                <div style="width:40px;height:22px;flex:none;"></div>
+                <div style="flex:1;padding:2px 8px;display:flex;align-items:center;gap:8px;">
+                  <div style="width:220px;height:28px;border-radius:8px;background:#2A2A2C;opacity:0.6;box-shadow:0 10px 15px rgba(0,0,0,0.55);display:flex;align-items:center;padding:0 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);overflow:hidden;">Bloc en cours de déplacement</div>
+                  <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);">fantôme de drag · opacity.dragGhost 0,6 · elevation.high</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALERIE D'ÉTATS -->
+  <sc-if value="{{ showStatesGallery }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">États d'un bloc · <code style="background:rgba(255,255,255,0.14);color:#FFFFFF;">BlockContainer</code> + <code style="background:rgba(255,255,255,0.14);color:#FFFFFF;">BlockHandle</code></div>
+
+    <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="background:#FFFFFF;border-radius:12px;padding:20px 24px;width:860px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+        <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);margin-bottom:8px;">Thème clair</div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Normal — aucun chrome, aucun aplat.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">état par défaut</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Survol — le chrome apparaît en 120 ms, le texte ne bouge pas.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">glyphes <code>text.tertiary</code></div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;background:rgba(0,0,0,0.05);display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Survol du bouton + — fond <code>state.hover</code>, glyphe <code>text.secondary</code>.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">18 pt visuels, cible 24 pt</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;display:flex;align-items:center;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Focus (édition) — caret dans le bloc<div style="width:2px;height:22px;background:#007AFF;animation:slateCaret 1.06s steps(1,end) infinite;margin-left:1px;"></div></div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">caret 2 pt <code>accent.default</code></div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;display:flex;align-items:center;"><div style="width:2px;height:22px;background:#007AFF;animation:slateCaret 1.06s steps(1,end) infinite;"></div><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.25);margin-left:2px;">Tapez / pour les commandes</div></div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">bloc vide, focalisé</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;background:rgba(0,122,255,0.12);border-radius:8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Sélectionné — aplat <code>block.selected.bg</code>, radius 8.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">texte 12,4:1 sur l'aplat</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0 2px;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;border-radius:8px;box-shadow:0 0 0 1px #007AFF,0 0 0 4px rgba(0,122,255,0.60);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Focus clavier — contour 3 pt + liseré 1 pt, aucun aplat.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);flex:none;">3,08:1 sur <code>bg.editor</code></div>
+        </div>
+      </div>
+
+      <div style="background:#1C1C1E;border-radius:12px;padding:20px 24px;width:860px;display:flex;flex-direction:column;gap:4px;box-shadow:0 4px 12px rgba(0,0,0,0.40);">
+        <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);margin-bottom:8px;">Thème sombre</div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Normal.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">état par défaut</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Survol.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">glyphes <code style="background:rgba(255,255,255,0.10);color:#FF7B72;">text.tertiary</code></div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+            <div style="width:18px;height:18px;border-radius:6px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+            <div style="width:18px;height:18px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg></div>
+          </div>
+          <div style="flex:1;padding:2px 8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Survol du bouton +.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">fond <code style="background:rgba(255,255,255,0.10);color:#FF7B72;">state.hover</code></div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;display:flex;align-items:center;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Focus (édition)<div style="width:2px;height:22px;background:#0A84FF;animation:slateCaret 1.06s steps(1,end) infinite;margin-left:1px;"></div></div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">caret 2 pt</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;display:flex;align-items:center;"><div style="width:2px;height:22px;background:#0A84FF;animation:slateCaret 1.06s steps(1,end) infinite;"></div><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.25);margin-left:2px;">Tapez / pour les commandes</div></div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">bloc vide, focalisé</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 0;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;background:rgba(10,132,255,0.20);border-radius:8px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Sélectionné.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">texte 9,6:1 sur l'aplat</div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0 2px;">
+          <div style="width:40px;height:22px;flex:none;"></div>
+          <div style="flex:1;padding:2px 8px;border-radius:8px;box-shadow:0 0 0 1px #0A84FF,0 0 0 4px rgba(10,132,255,0.65);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Focus clavier.</div>
+          <div style="width:210px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.26);flex:none;">3,21:1 sur <code style="background:rgba(255,255,255,0.10);color:#FF7B72;">bg.editor</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- SPECS -->
+  <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}">
+  <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+
+    <div style="background:#FFFFFF;border-radius:12px;padding:24px 28px;width:560px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+      <div style="font:700 17px/1.3 -apple-system,sans-serif;">Géométrie &amp; respiration</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font:400 14px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">
+        <div>Colonne de texte <b>720 pt</b> (<code>editor.maxContentWidth</code>), centrée ; gouttière de chrome <b>48 pt</b> à gauche, hors des 720 pt = 2 × <code>handle.size</code> (18) + <code>space.xs</code> + <code>space.s</code>.</div>
+        <div>Entre blocs <b>4 pt</b> (<code>editor.blockSpacing</code>) : 2 pt de padding haut + 2 pt bas par bloc, pour que l'aplat de sélection couvre sa propre gouttière.</div>
+        <div>Corps 15 pt, interligne <b>1,5</b> (<code>editor.paragraphLineHeight</code>) → ligne de 22,5 pt, hauteur de référence de la poignée.</div>
+        <div>Débord de l'aplat : <b>8 pt</b> de chaque côté du texte (<code>space.s</code>), radius <code>radius.m</code> (8).</div>
+        <div>En-tête → corps : <b>24 pt</b> (<code>space.xl</code>). Haut de colonne sans couverture : <b>32 pt</b> (<code>space.2xl</code>). Couverture <b>200 pt</b>, icône <b>64 pt</b> chevauchant de <b>32 pt</b>.</div>
+        <div>Bas de document : <b>240 pt</b> de zone cliquable « écrire à la suite » — un clic y crée un bloc vide focalisé.</div>
+        <div>Chrome haut de colonne : <b>44 pt</b> (<code>control.height.l</code> + <code>space.s</code>), séparateur <code>separator</code>.</div>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border-radius:12px;padding:24px 28px;width:560px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+      <div style="font:700 17px/1.3 -apple-system,sans-serif;">Caret, sélection, dépôt</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font:400 14px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">
+        <div><b>Caret.</b> 2 pt, <code>accent.default</code> (= <code>insertionPoint</code> macOS), hauteur = interligne du bloc. Clignotement 1,06 s ; figé si « Réduire les animations ».</div>
+        <div><b>Entre blocs.</b> Le caret vit toujours <i>dans</i> un bloc : passer de l'un à l'autre au clavier ne dessine aucune ligne intermédiaire. ↑/↓ conservent la colonne visuelle ; ⌫ en tête de bloc fusionne avec le précédent et place le caret à la jointure.</div>
+        <div><b>Sélection de texte.</b> <code>state.selectedText</code>, caractère par caractère, tant qu'elle reste dans un bloc.</div>
+        <div><b>Multi-blocs.</b> Dès la frontière franchie, bascule sur <code>block.selected.bg</code> : aplat continu, coins arrondis seulement aux extrémités de la plage, les 4 pt intermédiaires sont comblés.</div>
+        <div><b>Dépôt.</b> Ligne 2 pt <code>block.dropIndicator</code> alignée sur la colonne de texte (pas sur la gouttière) ; fantôme à <code>opacity.dragGhost</code> avec <code>elevation.high</code>.</div>
+        <div><b>Échap</b> sort de l'édition et sélectionne le bloc entier ; <b>Entrée</b> y rentre. La poignée ⋮⋮ ouvre le menu au clic, déplace au glisser.</div>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border-radius:12px;padding:24px 28px;width:560px;display:flex;flex-direction:column;gap:12px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+      <div style="font:700 17px/1.3 -apple-system,sans-serif;">Accessibilité</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font:400 14px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">
+        <div><b>Contraste mesuré.</b> Texte sur <code>block.selected.bg</code> : 12,4:1 (clair) / 9,6:1 (sombre). Contour de focus : 3,08:1 / 3,21:1 — juste au-dessus de 3:1, d'où le liseré 1 pt opaque en renfort.</div>
+        <div><b>Increase Contrast.</b> <code>block.selected.bg</code> monte à 22 % / 32 %, <code>text.placeholder</code> à 0,52 / 0,58 — le placeholder passe alors AA (4,6:1).</div>
+        <div><b>Focus ≠ sélection.</b> Contour pour la navigation clavier, aplat pour la sélection de contenu : discernables sans couleur.</div>
+        <div><b>Dynamic Type.</b> Corps et titre en échelle relative (<code>body</code>, <code>largeTitle</code>) ; la hauteur de la poignée suit l'interligne réel, la gouttière reste à 48 pt.</div>
+        <div><b>Reduce Motion.</b> Apparition du chrome en fondu seul ; caret figé. <b>Reduce Transparency.</b> Boutons de couverture en aplat <code>surface.primary</code> au lieu du matériau.</div>
+        <div><b>Accent personnalisable.</b> Caret, ligne d'insertion et focus dérivent de <code>accent.*</code> ; le jaune bascule sur <code>onAccent</code> sombre — vérifié sur Bleu, Jaune et Graphite.</div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showStatesGallery&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenu de la planche&quot;},&quot;showSpecs&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenu de la planche&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showStatesGallery: this.props.showStatesGallery ?? true,
+      showSpecs: this.props.showSpecs ?? true
+    };
+  }
+}
+
+</script>
+</body>
+</html>

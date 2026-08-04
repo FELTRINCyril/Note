@@ -32,4 +32,11 @@ public enum SlateMotion {
     public static func animation(duration: Double, reduceMotion: Bool) -> Animation? {
         reduceMotion ? nil : .easeInOut(duration: duration)
     }
+
+    /// Demi-cycle de clignotement du caret d'edition (Phase 5, E4) : opacite 1 -> 0 en
+    /// `caretBlinkHalfCycle`, puis 0 -> 1 sur la meme duree via `.repeatForever
+    /// (autoreverses: true)`, pour un cycle complet de 1,06 s (spec E4 : "Clignotement
+    /// 1,06 s"). Sans rapport avec `easingStandard`/`easingEmphasis` (ni fondu ni
+    /// deplacement, juste une pulsation lineaire) : reste une constante a part.
+    public static let caretBlinkHalfCycle: Double = 0.53
 }

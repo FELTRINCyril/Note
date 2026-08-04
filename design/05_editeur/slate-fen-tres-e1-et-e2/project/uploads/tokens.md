@@ -186,8 +186,6 @@
 | `editor.maxContentWidth` | 720 pt | — | Largeur max colonne de texte |
 | `editor.blockSpacing` | 4 pt | — | Espace vertical entre blocs |
 | `editor.paragraphLineHeight` | 1.5 | — | Interligne du corps |
-| `editor.listIndentStep` | 24 pt | — | Indentation par niveau de liste (dans l'éditeur) |
-| `list.bulletSize` | 6 pt | — | Diamètre de la puce de liste |
 | `code.block.bg` | #F5F5F7 | #2A2A2C | Fond bloc de code |
 | `code.inline.bg` | rgba(0,0,0,0.06) | rgba(255,255,255,0.10) | Fond code en ligne |
 | `code.inline.text` | #BF2600 | #FF7B72 | Texte code en ligne |

@@ -25,11 +25,39 @@ func slateCurrentlyIncreasesContrast() -> Bool {
     MainActor.assumeIsolated { SlateAccessibility.shared.isIncreaseContrastEnabled }
 }
 
-/// Pas `private` : reutilise par `SlateAccent.swift` et `SlateFolderColor.swift`.
-func slateAdaptiveColor(light: SlateRGB, dark: SlateRGB) -> Color {
-    Color(nsColor: NSColor(name: nil) { appearance in
+/// Pas `private` : reutilise par `SlateAccent.swift`, `SlateFolderColor.swift` et
+/// `Editor/EditorColors.swift`.
+///
+/// `lightHC`/`darkHC` (Phase 5, E4) portent les variantes "Augmenter le contraste" DANS
+/// le constructeur de couleur, plutot que de dupliquer un `if slateCurrentlyIncreasesContrast()`
+/// dans chaque token qui en a besoin (idee reprise du helper `Color.slate(light:dark:
+/// lightHC:darkHC:)` propose par Claude Design en Phase 5). Uniquement optionnelles :
+/// un appel qui ne les fournit pas (tous les tokens des phases 1 a 4) reste identique
+/// bit a bit a l'ancien comportement -- y compris l'absence d'appel a
+/// `slateCurrentlyIncreasesContrast()`, pour ne pas imposer de nouvelle exigence
+/// "premier acces sur le thread principal" a des tokens qui n'en avaient pas besoin
+/// (voir la mise en garde de `SlateAccessibility.swift` : cette lecture doit rester
+/// cantonnee au rendu SwiftUI/tests sur le thread principal). Les tokens qui ONT
+/// besoin d'une variante HC (ex: `SlateColor.textPlaceholder`,
+/// `SlateColor.blockSelectedBackground`) restent des proprietes CALCULEES (pas `let`),
+/// pour la meme raison que `textSecondary`/`accentSelectionFill` : re-invoquer cette
+/// fonction a chaque acces est ce qui les rend reactives au changement de preference
+/// (voir la limite de `NSColor(name:dynamicProvider:)` documentee dans
+/// `SlateAccessibility.swift`).
+func slateAdaptiveColor(
+    light: SlateRGB,
+    dark: SlateRGB,
+    lightHC: SlateRGB? = nil,
+    darkHC: SlateRGB? = nil
+) -> Color {
+    // Ne lit "Increase Contrast" que si une variante HC est reellement fournie : les
+    // appels existants (sans HC) ne changent pas de comportement.
+    let increasesContrast = (lightHC != nil || darkHC != nil) && slateCurrentlyIncreasesContrast()
+    let resolvedLight = increasesContrast ? (lightHC ?? light) : light
+    let resolvedDark = increasesContrast ? (darkHC ?? dark) : dark
+    return Color(nsColor: NSColor(name: nil) { appearance in
         let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-        let rgb = isDark ? dark : light
+        let rgb = isDark ? resolvedDark : resolvedLight
         return NSColor(red: rgb.red, green: rgb.green, blue: rgb.blue, alpha: rgb.alpha)
     })
 }
@@ -144,10 +172,24 @@ public enum SlateColor {
     )
 
     /// Placeholder. Equivalent `text.placeholder`.
-    public static let textPlaceholder = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.25),
-        dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.25)
-    )
+    ///
+    /// Propriete CALCULEE (pas `let`) depuis la Phase 5 (E4) : passe de 0,25 a
+    /// 0,52/0,55 -- 0,52 clair / 0,58 sombre -- sous "Increase Contrast" (spec E4
+    /// "Accessibilite" : "text.placeholder a 0,52/0,58 -- le placeholder passe alors
+    /// AA (4,6:1)"). **Ce dernier chiffre est en partie faux**, verifie par calcul
+    /// (`EditorAccessibilityTests`) : compose sur `bg.editor`, le clair (0,52) mesure
+    /// ~4,27:1 -- SOUS le seuil AA de 4,5:1 pour un texte 15 pt Regular, pas "4,6:1" ;
+    /// seul le sombre (0,58) l'atteint reellement (~6,48:1). Implemente ici avec les
+    /// valeurs LITTERALES demandees (0,52/0,58) plutot que corrigees unilateralement :
+    /// voir le rapport de livraison de Phase 5 pour la discussion.
+    public static var textPlaceholder: Color {
+        slateAdaptiveColor(
+            light: SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLight),
+            dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: SlateTextOpacity.placeholderDark),
+            lightHC: SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLightIncreasedContrast),
+            darkHC: SlateRGB(red: 1, green: 1, blue: 1, alpha: SlateTextOpacity.placeholderDarkIncreasedContrast)
+        )
+    }
 
     /// Texte desactive. Equivalent `text.disabled`.
     public static let textDisabled = slateAdaptiveColor(

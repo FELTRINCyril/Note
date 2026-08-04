@@ -1,0 +1,47 @@
+/* ============================================================
+   GemAddis — Typography tokens
+   Typeface: Arial (system) — industrial, neutral, no flourish.
+   Fallbacks: Helvetica Neue / Helvetica / sans-serif.
+   ============================================================ */
+:root {
+  /* --- Families --- */
+  --font-sans: Arial, "Helvetica Neue", Helvetica, "Liberation Sans", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  /* --- Weights (Arial = Regular / Bold) --- */
+  --fw-regular: 400; /* @kind other */
+  --fw-bold:    700; /* @kind other */
+
+  /* --- Type scale (industrial, tight, functional) --- */
+  --fs-display:  56px;  /* hero / slide titles */
+  --fs-h1:       40px;
+  --fs-h2:       30px;
+  --fs-h3:       22px;
+  --fs-h4:       18px;
+  --fs-body-lg:  18px;
+  --fs-body:     16px;
+  --fs-body-sm:  14px;
+  --fs-caption:  12px;
+  --fs-overline: 12px;  /* uppercase labels */
+
+  /* --- Line heights --- */
+  --lh-tight:   1.1;  /* @kind other */
+  --lh-snug:    1.25; /* @kind other */
+  --lh-normal:  1.5;  /* @kind other */
+  --lh-relaxed: 1.65; /* @kind other */
+
+  /* --- Letter spacing --- */
+  --ls-tight:    -0.01em; /* @kind other */
+  --ls-normal:   0;       /* @kind other */
+  --ls-overline: 0.12em;  /* @kind other */ /* uppercase technical labels */
+  --ls-wide:     0.04em;  /* @kind other */
+
+  /* --- Semantic roles --- */
+  --text-display-size: var(--fs-display);
+  --text-display-weight: var(--fw-bold);
+  --text-display-lh: var(--lh-tight);
+
+  --text-heading-weight: var(--fw-bold);
+  --text-body-weight: var(--fw-regular);
+  --text-body-lh: var(--lh-relaxed);
+}

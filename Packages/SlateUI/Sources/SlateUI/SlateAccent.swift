@@ -66,4 +66,22 @@ public enum SlateTextOpacity {
     /// `text.secondary`, LES DEUX themes, quand Increase Contrast est actif (spec E2 :
     /// "les rangs secondaires passent de 0,50 a 0,72 en Increase Contrast").
     public static let secondaryIncreasedContrast = 0.72
+
+    /// `text.placeholder` clair, hors Increase Contrast (Phase 5, E4).
+    public static let placeholderLight = 0.25
+    /// `text.placeholder` sombre, hors Increase Contrast (Phase 5, E4).
+    public static let placeholderDark = 0.25
+    /// `text.placeholder` clair sous Increase Contrast.
+    ///
+    /// ECART ASSUME PAR RAPPORT A LA LETTRE DE LA SPEC E4, valide par Cyril. La spec
+    /// ecrit "0,52" mais annonce dans la meme phrase l'objectif "le placeholder passe
+    /// alors AA (4,6:1)". Or 0,52 compose sur `bg.editor` clair ne donne que 4,27:1,
+    /// donc rate l'AA et rate l'objectif annonce. 0,54 donne 4,59:1, soit exactement la
+    /// valeur que la spec annonce : le designer a vraisemblablement calcule 0,54 et
+    /// ecrit 0,52. On suit donc l'INTENTION mesuree plutot que le chiffre, comme pour
+    /// l'aplat d'accent de la phase 3. Verifie par `EditorAccessibilityTests`.
+    public static let placeholderLightIncreasedContrast = 0.54
+    /// `text.placeholder` sombre sous Increase Contrast (spec E4). Mesure reelle
+    /// ~6,48:1 sur `bg.editor` : celui-ci atteint bien l'AA (et presque l'AAA).
+    public static let placeholderDarkIncreasedContrast = 0.58
 }
