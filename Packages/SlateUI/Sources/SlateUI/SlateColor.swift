@@ -173,15 +173,15 @@ public enum SlateColor {
 
     /// Placeholder. Equivalent `text.placeholder`.
     ///
-    /// Propriete CALCULEE (pas `let`) depuis la Phase 5 (E4) : passe de 0,25 a
-    /// 0,52/0,55 -- 0,52 clair / 0,58 sombre -- sous "Increase Contrast" (spec E4
-    /// "Accessibilite" : "text.placeholder a 0,52/0,58 -- le placeholder passe alors
-    /// AA (4,6:1)"). **Ce dernier chiffre est en partie faux**, verifie par calcul
-    /// (`EditorAccessibilityTests`) : compose sur `bg.editor`, le clair (0,52) mesure
-    /// ~4,27:1 -- SOUS le seuil AA de 4,5:1 pour un texte 15 pt Regular, pas "4,6:1" ;
-    /// seul le sombre (0,58) l'atteint reellement (~6,48:1). Implemente ici avec les
-    /// valeurs LITTERALES demandees (0,52/0,58) plutot que corrigees unilateralement :
-    /// voir le rapport de livraison de Phase 5 pour la discussion.
+    /// Propriete CALCULEE (pas `let`) : reste reactive a "Increase Contrast" comme
+    /// `textSecondary`/`blockSelectedBackground`.
+    ///
+    /// CORRIGE en Phase 7 (design/tokens.md §2, artboard P1-K) : 0,25 (valeur des
+    /// Phases 1-6) ne composait qu'a 1,83:1 sur `bg.editor` clair, tres sous l'AA --
+    /// contrairement a `text.disabled` (reste a 0,25), un placeholder porte une
+    /// consigne et doit rester lisible. Nouvelles valeurs 0,55 clair / 0,60 sombre
+    /// (4,76:1 / ~6,85:1), 0,70/0,78 sous Increase Contrast (~8,52:1 / ~10,71:1).
+    /// Verifie par calcul dans `EditorAccessibilityTests`.
     public static var textPlaceholder: Color {
         slateAdaptiveColor(
             light: SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLight),

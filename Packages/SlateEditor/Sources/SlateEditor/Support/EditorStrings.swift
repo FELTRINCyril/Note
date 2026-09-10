@@ -240,4 +240,114 @@ enum EditorStrings {
     static var slashCommandEmptyState: String {
         String(localized: "editor.slashCommand.emptyState", bundle: .module)
     }
+
+    // MARK: - Barre de formatage flottante (Phase 7, artboard P1 A)
+
+    static var formatBarBoldLabel: String { String(localized: "editor.formatBar.bold", bundle: .module) }
+    static var formatBarItalicLabel: String { String(localized: "editor.formatBar.italic", bundle: .module) }
+    static var formatBarUnderlineLabel: String { String(localized: "editor.formatBar.underline", bundle: .module) }
+    static var formatBarStrikethroughLabel: String {
+        String(localized: "editor.formatBar.strikethrough", bundle: .module)
+    }
+    static var formatBarInlineCodeLabel: String { String(localized: "editor.formatBar.inlineCode", bundle: .module) }
+    static var formatBarHighlightLabel: String { String(localized: "editor.formatBar.highlight", bundle: .module) }
+    static var formatBarLinkLabel: String { String(localized: "editor.formatBar.link", bundle: .module) }
+
+    /// `accessibilityValue` d'un bouton de la barre a l'etat ACTIF (docs/07, "Etats des
+    /// boutons" : "l'etat ne doit pas etre porte par la seule couleur").
+    static var formatBarActiveValue: String { String(localized: "editor.formatBar.activeValue", bundle: .module) }
+
+    static var formatBarStyleParagraph: String {
+        String(localized: "editor.formatBar.style.paragraph", bundle: .module)
+    }
+
+    /// Libelle du style COURANT affiche dans le menu de style (docs/07 : "le libelle
+    /// montre le style courant : Texte, Titre 2..."), ou du choix propose dans son
+    /// sous-menu pour `level` (1 a 6). Meme fonction pour les deux usages : le libelle
+    /// d'un type de titre ne varie pas selon qu'il est affiche ou propose.
+    static func formatBarStyleHeading(_ level: Int) -> String {
+        // Meme motif que `blockMenuSelectionSummary(_:)`/`blockMenuDeleteRangeTitle(_:)`
+        // ci-dessus : la cle du catalogue porte un `%lld` FIXE, jamais `\(level)` bake
+        // dans `defaultValue` -- ce dernier motif (utilise un temps ici, corrige a la
+        // revue de Phase 7) produit une cle ABSENTE du catalogue (`Localizable.xcstrings`
+        // n'extrait que la cle CONSTANTE, pas sa valeur par defaut interpolee), donc
+        // aucune traduction anglaise possible : le francais "Titre 2" restait affiche
+        // meme sous une session en anglais, sans avertissement.
+        let template = String(localized: "editor.formatBar.style.heading", bundle: .module)
+        return String(format: template, level)
+    }
+
+    // MARK: - Palette surlignage / couleur de texte (artboard P1 B)
+
+    static var formatBarHighlightSectionTitle: String {
+        String(localized: "editor.formatBar.palette.highlightSection", bundle: .module)
+    }
+    static var formatBarTextColorSectionTitle: String {
+        String(localized: "editor.formatBar.palette.textColorSection", bundle: .module)
+    }
+    static var formatBarRemoveAllTitle: String {
+        String(localized: "editor.formatBar.palette.removeAll", bundle: .module)
+    }
+
+    /// Libelle d'accessibilite d'une pastille de surlignage (ex: "Jaune"). `token` est
+    /// `SlateHighlightToken.rawValue` (voir `SlateUI`) : un `switch` explicite plutot
+    /// qu'une cle interpolee (`String(localized:)` exige une cle CONSTANTE au moment de
+    /// la compilation -- une interpolation ne compile pas avec l'initialiseur base sur
+    /// une ressource, voir `String.LocalizationValue`).
+    static func highlightTokenAccessibilityLabel(_ token: String) -> String {
+        switch token {
+        case "yellow": String(localized: "editor.formatBar.palette.highlight.yellow", bundle: .module)
+        case "green": String(localized: "editor.formatBar.palette.highlight.green", bundle: .module)
+        case "blue": String(localized: "editor.formatBar.palette.highlight.blue", bundle: .module)
+        case "pink": String(localized: "editor.formatBar.palette.highlight.pink", bundle: .module)
+        case "red": String(localized: "editor.formatBar.palette.highlight.red", bundle: .module)
+        case "gray": String(localized: "editor.formatBar.palette.highlight.gray", bundle: .module)
+        default: token
+        }
+    }
+
+    /// Libelle d'accessibilite d'une pastille de couleur de texte (ex: "Bleu"). `token`
+    /// est `SlateTextColorToken.rawValue` (voir `SlateUI`) -- meme motif que
+    /// `highlightTokenAccessibilityLabel(_:)`.
+    static func textColorTokenAccessibilityLabel(_ token: String) -> String {
+        switch token {
+        case "primary": String(localized: "editor.formatBar.palette.textColor.primary", bundle: .module)
+        case "blue": String(localized: "editor.formatBar.palette.textColor.blue", bundle: .module)
+        case "green": String(localized: "editor.formatBar.palette.textColor.green", bundle: .module)
+        case "orange": String(localized: "editor.formatBar.palette.textColor.orange", bundle: .module)
+        case "red": String(localized: "editor.formatBar.palette.textColor.red", bundle: .module)
+        case "purple": String(localized: "editor.formatBar.palette.textColor.purple", bundle: .module)
+        case "gray": String(localized: "editor.formatBar.palette.textColor.gray", bundle: .module)
+        default: token
+        }
+    }
+
+    // MARK: - Popover d'edition de lien (artboard P1 C)
+
+    /// Titre du popover de CREATION (Cmd+K sur une selection sans lien) : "Lier
+    /// <texte selectionne>".
+    static func linkPopoverCreateTitle(selectedText: String) -> String {
+        // Voir la documentation de `formatBarStyleHeading(_:)` : meme correctif, meme
+        // raison (cle absente du catalogue faute de `%@` fixe).
+        let template = String(localized: "editor.formatBar.link.createTitle", bundle: .module)
+        return String(format: template, selectedText)
+    }
+
+    static var linkPopoverURLFieldPlaceholder: String {
+        String(localized: "editor.formatBar.link.urlPlaceholder", bundle: .module)
+    }
+    static var linkPopoverApply: String { String(localized: "editor.formatBar.link.apply", bundle: .module) }
+    static var linkPopoverCancel: String { String(localized: "editor.formatBar.link.cancel", bundle: .module) }
+    static var linkPopoverEditTitle: String { String(localized: "editor.formatBar.link.edit", bundle: .module) }
+    static var linkPopoverCopyAddress: String {
+        String(localized: "editor.formatBar.link.copyAddress", bundle: .module)
+    }
+    static var linkPopoverRemoveLink: String { String(localized: "editor.formatBar.link.remove", bundle: .module) }
+
+    /// Placeholder de la recherche de notes -- structure PRETE pour la Phase 16 (liens
+    /// internes/sous-pages, voir PLAN.md), non branchee ici (aucune recherche reelle,
+    /// voir `LinkEditorPopoverView`).
+    static var linkPopoverNoteSearchPlaceholder: String {
+        String(localized: "editor.formatBar.link.noteSearchPlaceholder", bundle: .module)
+    }
 }

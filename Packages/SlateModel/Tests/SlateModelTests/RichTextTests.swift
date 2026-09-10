@@ -115,6 +115,54 @@ struct RichTextTests {
         #expect(text.attributedString[range].slateHighlight == SlateHighlightColor("yellow"))
     }
 
+    // MARK: - Couleur de texte
+
+    @Test("couleur de texte : apply/remove et round-trip JSON")
+    func textColorApplyRemoveAndRoundTrip() throws {
+        var text = RichText(plainText: "Bonjour le monde")
+        let range = text.range(charactersOffset: 0..<7)
+        let color = SlateTextColor("#FF0000")
+
+        text.apply(.textColor(color), to: range)
+        #expect(text.attributedString[range].slateTextColor == color)
+
+        let encoded = try JSONEncoder().encode(text)
+        let decoded = try JSONDecoder().decode(RichText.self, from: encoded)
+        let decodedRange = decoded.range(charactersOffset: 0..<7)
+
+        #expect(decoded.attributedString[decodedRange].slateTextColor == color)
+        #expect(decoded == text)
+
+        // Zone hors plage : pas de couleur.
+        let untouched = decoded.range(charactersOffset: 7..<8)
+        #expect(decoded.attributedString[untouched].slateTextColor == nil)
+
+        var mutableDecoded = decoded
+        mutableDecoded.remove(.textColor(color), from: decodedRange)
+        #expect(mutableDecoded.attributedString[decodedRange].slateTextColor == nil)
+    }
+
+    @Test("couleur de texte cumulee avec surlignage et gras sur la meme plage")
+    func textColorCumulatesWithHighlightAndBold() {
+        var text = RichText(plainText: "abcdef")
+        let range = text.range(charactersOffset: 0..<6)
+
+        text.apply(.bold, to: range)
+        text.apply(.highlight(SlateHighlightColor("yellow")), to: range)
+        text.apply(.textColor(SlateTextColor("#0000FF")), to: range)
+
+        #expect(text.attributedString[range].inlinePresentationIntent == .stronglyEmphasized)
+        #expect(text.attributedString[range].slateHighlight == SlateHighlightColor("yellow"))
+        #expect(text.attributedString[range].slateTextColor == SlateTextColor("#0000FF"))
+
+        // Le retrait de la couleur de texte ne doit pas affecter le gras ni le surlignage.
+        text.remove(.textColor(SlateTextColor("#0000FF")), from: range)
+
+        #expect(text.attributedString[range].slateTextColor == nil)
+        #expect(text.attributedString[range].inlinePresentationIntent == .stronglyEmphasized)
+        #expect(text.attributedString[range].slateHighlight == SlateHighlightColor("yellow"))
+    }
+
     @Test("plainText avec accents et emoji")
     func plainTextWithAccentsAndEmoji() {
         let text = RichText(plainText: "Café à la crème 🎉 déjà vu")

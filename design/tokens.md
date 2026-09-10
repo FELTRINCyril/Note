@@ -25,10 +25,10 @@
 | `text.primary` | rgba(0,0,0,0.85) | rgba(255,255,255,0.85) | Texte principal (*label*) |
 | `text.secondary` | rgba(0,0,0,0.50) | rgba(255,255,255,0.55) | Métadonnées (*secondaryLabel*) |
 | `text.tertiary` | rgba(0,0,0,0.26) | rgba(255,255,255,0.26) | Texte discret (*tertiaryLabel*) |
-| `text.placeholder` | rgba(0,0,0,0.25) | rgba(255,255,255,0.25) | Placeholders |
+| `text.placeholder` | rgba(0,0,0,0.55) | rgba(255,255,255,0.60) | Placeholders — **corrigé** (0.25 donnait 1,83:1 sur `bg.editor` clair ; 0.55/0.60 → 4,76:1 et 6,86:1) |
 | `text.disabled` | rgba(0,0,0,0.25) | rgba(255,255,255,0.25) | Texte désactivé |
 | `text.link` | = `accent.default` | = `accent.default` | Liens hypertextes |
-| `text.onAccent` | #FFFFFF | #FFFFFF | Texte sur fond d'accent |
+| `text.onAccent` | fonction de l'accent (cf. §7) | idem | Texte sur fond d'accent — **pas toujours blanc** |
 | `text.inverse` | #FFFFFF | #000000 | Tooltips, contrastes inversés |
 
 ## 3. Couleurs — Accent & états interactifs
@@ -87,6 +87,25 @@
 | Jaune | #FFCC00 | #FFD60A |
 | Vert | #34C759 | #30D158 |
 | Graphite | #8E8E93 | #98989D |
+
+### `text.onAccent` par accent (mesuré sur l'aplat plein)
+> Blanc sur les quatre teintes claires tombait entre 1,7:1 et 2,1:1. `text.onAccent` est donc **une fonction de l'accent**, pas une constante.
+
+| Accent | `text.onAccent` clair | Ratio | `text.onAccent` sombre | Ratio |
+|---|---|---|---|---|
+| Bleu | #FFFFFF | 4,00:1 | #FFFFFF | 3,56:1 |
+| Violet | #FFFFFF | 4,04:1 | #FFFFFF | 3,44:1 |
+| Rose | #FFFFFF | 4,16:1 | #FFFFFF | 3,6:1 |
+| Rouge | #FFFFFF | 3,94:1 | #FFFFFF | 3,5:1 |
+| Orange | rgba(0,0,0,0.85) | 7,05:1 | rgba(0,0,0,0.85) | 7,60:1 |
+| Jaune | rgba(0,0,0,0.85) | 11,3:1 | rgba(0,0,0,0.85) | 11,6:1 |
+| Vert | rgba(0,0,0,0.85) | 6,54:1 | rgba(0,0,0,0.85) | 6,9:1 |
+| Graphite | #FFFFFF | 3,03:1 | rgba(0,0,0,0.85) | 6,17:1 |
+
+> **Écart assumé** : bleu, violet, rose et rouge restent entre 3,0 et 4,2:1 avec du blanc, sous les 4,5:1 de l'AA. Ce sont les valeurs Apple d'origine, cohérentes avec Finder et Mail. Sous « Augmenter le contraste », ces quatre teintes sont assombries de 12 % et repassent au-dessus de 4,5:1 (bleu 4,71 · violet 4,68 · rose 4,83 · rouge 4,60).
+
+### Couleur de texte dérivée de l'accent
+> `text.link` et toute application de l'accent **en texte sur `bg.editor`** utilisent une variante assombrie (clair) / éclaircie (sombre), pas l'accent brut : ex. vert #1E7A34 (4,96:1) au lieu de #34C759 (2,0:1), bleu sombre #6CB6FF (6,04:1) au lieu de #0A84FF (3,56:1).
 
 ## 8. Couleurs — Icônes de dossiers / notes
 > Mêmes teintes que la palette d'accents (§7). Le jaune sert d'icône de dossier par défaut, façon Notes.
@@ -207,6 +226,41 @@
 | `column.gap` | 24 pt | — | Espace entre colonnes |
 | `column.resizer` | = `separator` | = `separator` | Séparateur de colonnes |
 | `pageLink.text` / `pageLink.icon` | = `text.link` / `accent` | idem | Lien de page interne |
+
+## 16 bis. Callouts — fond, bordure et libellé par variante
+> Les `semantic.*` de §4 posés en **texte** sur leur propre fond atténué tombent à 2,04:1 (orange), 2,00:1 (vert) et 3,51:1 (bleu). Ils restent valides pour les icônes et les aplats, jamais pour du texte. D'où une couleur de libellé dédiée par variante. Le **corps** d'un callout reste toujours `text.primary`.
+
+| Variante | Fond clair | Fond sombre | Libellé clair | Libellé sombre | Contraste libellé |
+|---|---|---|---|---|---|
+| neutre | = `callout.bg` | = `callout.bg` | = `text.secondary` | = `text.secondary` | — |
+| info | #E5F1FF | #1B2A3A | #05509E | #6CB6FF | 6,93:1 · 6,04:1 |
+| attention | #FFF4E5 | #3A2E1A | #9A5700 | #FF9F0A | 5,17:1 · 5,83:1 |
+| succès | #EAF9EE | #1F3D27 | #1E7A34 | #30D158 | 4,96:1 · 5,94:1 |
+
+## 16 ter. Coloration syntaxique (`code.syntax.*`)
+> Mesurée sur `code.block.bg` (#F5F5F7 / #2A2A2C).
+
+| Rôle | Clair | Sombre | Contraste |
+|---|---|---|---|
+| `code.syntax.plain` | = `text.primary` | = `text.primary` | 15,1:1 · 13,9:1 |
+| `code.syntax.keyword` | #AF00DB | #FF7AB2 | 5,01:1 · 5,93:1 |
+| `code.syntax.string` | #A31515 | #FF8170 | 7,20:1 · 5,89:1 |
+| `code.syntax.number` | #0B6E99 | #D9C97C | 5,20:1 · 8,90:1 |
+| `code.syntax.type` | #6F42C1 | #B281F0 | 5,97:1 · 4,98:1 |
+| `code.syntax.comment` | #5A626B | #96A3AE | 5,67:1 · 5,57:1 |
+
+> Les gris de commentaire usuels (#6E7781 / #7F8C98) ont été écartés : 4,17:1 dans les deux thèmes.
+
+## 16 quater. Médias & pièces jointes
+| Token | Clair | Sombre | Usage |
+|---|---|---|---|
+| `media.dropzone.bg` | = `surface.secondary` | idem | Zone de dépôt vide au repos |
+| `media.dropzone.border` | = `border.strong` | idem | Tireté 1 pt au repos |
+| `media.dropzone.active.bg` | = `accent.subtle` | idem | Survol de dépôt (tireté 2 pt en `accent.default`) |
+| `media.handle.fill` | = `accent.default` | idem | Poignée 8 x 28 pt, liseré 1,5 pt en `bg.editor` |
+| `media.overflowWidth` | 960 pt | — | Palier « débord » entre colonne (720) et pleine largeur |
+| `attachment.height` | 52 pt | — | Hauteur de bloc fichier |
+| `attachment.icon.size` | 32 pt | — | Pastille de type, rayon `radius.s` |
 
 ## 17. Tokens barre latérale & liste
 | Token | Clair | Sombre | Usage |

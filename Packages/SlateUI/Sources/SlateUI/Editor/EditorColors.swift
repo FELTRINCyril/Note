@@ -93,4 +93,14 @@ public extension SlateColor {
 
     /// Fond du bouton de chrome de bloc presse.
     static let blockHandlePressedBackground = statePressed
+
+    // MARK: - Elevation (design/tokens.md §13)
+
+    /// Ombre portee `elevation.medium`, consommee par la barre de formatage flottante
+    /// (artboard P1 A, Phase 7). Voir `SlateGeometry.formatBarShadowRadius`/`formatBarShadowY`
+    /// pour le rayon et le decalage associes.
+    static let elevationMediumShadow = slateAdaptiveColor(
+        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.12),
+        dark: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.40)
+    )
 }

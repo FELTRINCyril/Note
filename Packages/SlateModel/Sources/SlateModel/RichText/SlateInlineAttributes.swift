@@ -65,6 +65,47 @@ public struct SlateHighlightAttribute: CodableAttributedStringKey, AttributedStr
     }
 }
 
+// MARK: - Couleur de texte
+
+/// Couleur de texte inline, sous forme neutre et serialisable.
+///
+/// Meme forme et meme raisonnement que `SlateHighlightColor` : `value` porte soit un nom
+/// de token de design, soit une chaine hex, et la resolution en couleur concrete est a la
+/// charge de la couche UI (`SlateUI`), jamais de `SlateModel`.
+public struct SlateTextColor: Codable, Hashable, Sendable {
+    public var value: String
+
+    public init(_ value: String) {
+        self.value = value
+    }
+}
+
+/// Attribut portant la couleur de texte d'une portion de texte.
+///
+/// Conforme aussi a `ObjectiveCConvertibleAttributedStringKey`, pour la meme raison que
+/// `SlateHighlightAttribute` : sans cela, le pont `AttributedString` <-> `NSAttributedString`
+/// ignore silencieusement cet attribut. Voir `SlateInlineAttributesObjectiveCBridgeTests`.
+public struct SlateTextColorAttribute: CodableAttributedStringKey, AttributedStringKey,
+    ObjectiveCConvertibleAttributedStringKey {
+    public typealias Value = SlateTextColor
+    public typealias ObjectiveCValue = NSString
+
+    // ATTENTION : cette chaine est le nom serialise (JSON) de l'attribut. Elle est
+    // persistee avec chaque note ecrite en base. Ne JAMAIS la modifier une fois des
+    // donnees existent en production, voir le commentaire sur `SlateHighlightAttribute.name`.
+    public static let name = "slateTextColor"
+
+    /// Voir le commentaire equivalent sur `SlateHighlightAttribute.objectiveCValue(for:)` :
+    /// cette conversion ne peut pas echouer.
+    public static func objectiveCValue(for value: SlateTextColor) throws -> NSString {
+        value.value as NSString
+    }
+
+    public static func value(for object: NSString) throws -> SlateTextColor {
+        SlateTextColor(object as String)
+    }
+}
+
 // MARK: - Code inline
 
 /// Marqueur booleen : la portion de texte est rendue comme du code inline
@@ -137,6 +178,7 @@ extension AttributeScopes {
     /// verite pour toute (de)serialisation dans `SlateModel`.
     public struct SlateAttributes: AttributeScope {
         public let slateHighlight: SlateHighlightAttribute
+        public let slateTextColor: SlateTextColorAttribute
         public let slateInlineCode: SlateInlineCodeAttribute
         public let slateUnderline: SlateUnderlineAttribute
         public let foundation: AttributeScopes.FoundationAttributes
@@ -148,7 +190,8 @@ extension AttributeScopes {
 
 extension AttributeDynamicLookup {
     /// Permet l'acces par point (`attributedString[range].slateHighlight`,
-    /// `.slateInlineCode`, `.slateUnderline`, mais aussi `.inlinePresentationIntent`,
+    /// `.slateTextColor`, `.slateInlineCode`, `.slateUnderline`, mais aussi
+    /// `.inlinePresentationIntent`,
     /// `.link` via le sous-scope `foundation` imbrique) sur les attributs du scope Slate.
     public subscript<T: AttributedStringKey>(
         dynamicMember keyPath: KeyPath<AttributeScopes.SlateAttributes, T>

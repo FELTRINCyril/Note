@@ -147,6 +147,36 @@ struct EntityGraphTests {
         #expect(fetchedBlock.text?.plainText == "Contenu riche")
     }
 
+    /// Meme chemin que `blockTextRoundTripsThroughRealFetch`, mais avec un attribut de
+    /// couleur de texte applique : c'est le chemin reel de persistance SwiftData/CloudKit
+    /// (via `Block.textData: Data?`), pas seulement le round-trip Codable isole teste dans
+    /// `RichTextTests`.
+    @Test
+    func blockTextColorRoundTripsThroughRealFetch() throws {
+        let container = try SlateContainer.make(inMemory: true)
+        let context = ModelContext(container)
+        let note = Note(title: "Texte colore")
+
+        var richText = RichText(plainText: "Contenu colore")
+        let range = richText.range(charactersOffset: 0..<9)
+        richText.apply(.textColor(SlateTextColor("#112233")), to: range)
+
+        let block = Block(order: 0, type: .paragraph, text: richText, note: note)
+        note.blocks = [block]
+        context.insert(note)
+        context.insert(block)
+        try context.save()
+
+        let freshContext = ModelContext(container)
+        let fetchedBlocks = try freshContext.fetch(FetchDescriptor<Block>())
+        let fetchedBlock = try #require(fetchedBlocks.first)
+        let fetchedText = try #require(fetchedBlock.text)
+        let fetchedRange = fetchedText.range(charactersOffset: 0..<9)
+
+        #expect(fetchedText.plainText == "Contenu colore")
+        #expect(fetchedText.attributedString[fetchedRange].slateTextColor == SlateTextColor("#112233"))
+    }
+
     @Test
     func blockNestingAndOrderAreRespected() throws {
         let container = try SlateContainer.make(inMemory: true)

@@ -67,21 +67,22 @@ public enum SlateTextOpacity {
     /// "les rangs secondaires passent de 0,50 a 0,72 en Increase Contrast").
     public static let secondaryIncreasedContrast = 0.72
 
-    /// `text.placeholder` clair, hors Increase Contrast (Phase 5, E4).
-    public static let placeholderLight = 0.25
-    /// `text.placeholder` sombre, hors Increase Contrast (Phase 5, E4).
-    public static let placeholderDark = 0.25
-    /// `text.placeholder` clair sous Increase Contrast.
+    /// `text.placeholder` clair, hors Increase Contrast.
     ///
-    /// ECART ASSUME PAR RAPPORT A LA LETTRE DE LA SPEC E4, valide par Cyril. La spec
-    /// ecrit "0,52" mais annonce dans la meme phrase l'objectif "le placeholder passe
-    /// alors AA (4,6:1)". Or 0,52 compose sur `bg.editor` clair ne donne que 4,27:1,
-    /// donc rate l'AA et rate l'objectif annonce. 0,54 donne 4,59:1, soit exactement la
-    /// valeur que la spec annonce : le designer a vraisemblablement calcule 0,54 et
-    /// ecrit 0,52. On suit donc l'INTENTION mesuree plutot que le chiffre, comme pour
-    /// l'aplat d'accent de la phase 3. Verifie par `EditorAccessibilityTests`.
-    public static let placeholderLightIncreasedContrast = 0.54
-    /// `text.placeholder` sombre sous Increase Contrast (spec E4). Mesure reelle
-    /// ~6,48:1 sur `bg.editor` : celui-ci atteint bien l'AA (et presque l'AAA).
-    public static let placeholderDarkIncreasedContrast = 0.58
+    /// CORRIGE en Phase 7 (design/tokens.md §2, "corrige") : 0,25 (valeur Phase 1-6)
+    /// composait a seulement 1,83:1 sur `bg.editor` clair, tres sous l'AA -- un
+    /// placeholder porte une consigne ("Tapez / pour les commandes"), contrairement a
+    /// `text.disabled` (qui reste a 0,25, aucune obligation AA pour un controle
+    /// desactive). 0,55 donne 4,76:1, verifie par `EditorAccessibilityTests`.
+    public static let placeholderLight = 0.55
+    /// `text.placeholder` sombre, hors Increase Contrast. Corrige en Phase 7, voir
+    /// `placeholderLight`. 0,60 donne ~6,85:1 sur `bg.editor` sombre.
+    public static let placeholderDark = 0.60
+    /// `text.placeholder` clair sous Increase Contrast. Corrige en Phase 7 (le calcul de
+    /// base atteignant deja l'AA, la variante HC vise desormais un renfort net au-dela,
+    /// pas seulement le seuil AA) : 0,70 donne ~8,52:1. Verifie par `EditorAccessibilityTests`.
+    public static let placeholderLightIncreasedContrast = 0.70
+    /// `text.placeholder` sombre sous Increase Contrast. Corrige en Phase 7 : 0,78 donne
+    /// ~10,71:1 sur `bg.editor` sombre.
+    public static let placeholderDarkIncreasedContrast = 0.78
 }

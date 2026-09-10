@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 6.
+**Dernière mise à jour :** fin de la phase 7.
 
 ---
 
 ## En un coup d'œil
 
-**6 / 21 phases terminées.**
+**7 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         ███░░░░░░░  33 %   (4/12)  ⏳ en cours
+App v1         ████░░░░░░  42 %   (5/12)  ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 6 (menu de commandes `/`) validée. 13 commandes, filtrage flou FR + EN, navigation clavier complète. Une incohérence entre livraisons parallèles trouvée et corrigée avant la revue (voir Décisions), puis une garde manquante ajoutée après revue.
-- **Prochaine étape :** **Phase 7 — Typographie & formatage**. 🎨 **Design requis** avant de coder l'UI (barre de formatage flottante, styles H1–H6).
-- **Qualité au dernier point (phase 6) :** 370 tests verts (dont 202 sur `SlateEditor`) · build sans avertissement nouveau · 0 violation SwiftLint.
+- **Où on en est :** phase 7 (typographie & formatage) validée. Les 8 marques inline (gras, italique, souligné, barré, code en ligne, surlignage, couleur de texte, lien), la barre de formatage flottante, les palettes de couleur, le popover de lien, les raccourcis ⌘B/I/U/⇧X/E/K et ⌥⌘0-3, et les titres H1–H6 enfin **réellement éditables**.
+- **Prochaine étape :** **Phase 8 — Blocs spéciaux** (code, citation, callout, listes, tableaux). Design déjà livré (artboards P1 E-H), plus aucun aller-retour design nécessaire pour aucune phase.
+- **Qualité au dernier point (phase 7) :** 411 tests verts (73 `SlateModel` · 232 `SlateEditor` · 48 `SlateUI` · 57 `SlateFeatures` · 1 `SlateServices`) · build complet sans avertissement nouveau · 0 violation SwiftLint.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -43,13 +43,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 4 | Liste des notes & regroupement par date | ✅ | 🎨 ✔️ | `5e9abb3` |
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
-| 7 | Typographie & formatage | ⏳ **prochaine** | 🎨 à livrer | — |
-| 8 | Blocs spéciaux | ⬜ | — | — |
-| 9 | Médias & pièces jointes | ⬜ | 🎨 à livrer | — |
+| 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `PHASE7` |
+| 8 | Blocs spéciaux | ⏳ **prochaine** | 🎨 ✔️ | — |
+| 9 | Médias & pièces jointes | ⬜ | 🎨 ✔️ | — |
 | 10 | Glisser-déposer & colonnes | ⬜ | — | — |
 | 11 | Organisation des notes | ⬜ | — | — |
 | 12 | Verrouillage de note | ⬜ | — | — |
-| 13 | Thèmes & apparence | ⬜ | 🎨 à livrer | — |
+| 13 | Thèmes & apparence | ⬜ | 🎨 ✔️ | — |
 | 14 | Raccourcis clavier | ⬜ | — | — |
 
 ### Jalon v2 — Puissance Notion
@@ -57,14 +57,14 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 |---|---|---|---|---|
 | 15 | Markdown natif à la frappe | ⬜ | — | — |
 | 16 | Liens internes & sous-pages | ⬜ | — | — |
-| 17 | Bases de données | ⬜ | 🎨 à livrer | — |
-| 18 | Fonctionnalités IA | ⬜ | 🎨 à livrer | — |
-| 19 | Espaces de travail (workspaces) | ⬜ | 🎨 à livrer | — |
+| 17 | Bases de données | ⬜ | 🎨 ✔️ | — |
+| 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
+| 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
 
 ### Jalon v3 — Mobilité
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
-| 20 | Portage iOS | ⬜ | 🎨 à livrer | — |
+| 20 | Portage iOS | ⬜ | 🎨 ✔️ | — |
 
 ---
 
@@ -87,6 +87,15 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 6 — État après une commande `/` :** le bloc reste **en édition, caret placé**, contrairement au menu de bloc (5.4/5.5) qui laisse le bloc simplement sélectionné. Écart volontaire : ici l'utilisateur est en train de taper, l'interrompre pour le forcer à recliquer serait absurde. ✅
 - **Phase 6 — `divider` :** traité hors `BlockConversion` (qui le refuserait en silence, il ne porte pas de texte et ne peut pas accueillir le caret). Le séparateur prend la place, puis un paragraphe vide focalisé le suit. ✅
 
+- **Phase 7 — `FormattingController` -> extension d'`EditorController` :** `docs/07` prévoyait un contrôleur dédié. Livré comme `EditorController+Formatting.swift`, sur le motif déjà en place pour `+Selection` et `+SlashMenu`. Un second contrôleur `@Observable` propriétaire d'une partie de l'état d'édition aurait créé deux sources de vérité pour la sélection. ✅
+- **Phase 7 — Couleur de texte inline :** le modèle n'avait que `highlight`, alors que `docs/07` et l'artboard B demandent aussi la couleur de texte. Ajout de `SlateTextColor` / `SlateTextColorAttribute` (nom persisté `slateTextColor`) et de `InlineMark.textColor`, calqués à l'identique sur le motif éprouvé du surlignage. ✅
+- **Phase 7 — Ancrage de la barre flottante :** même choix qu'en phase 6, overlay positionné par calcul et non `.popover`, pour ne pas voler la fenêtre clé. Le rectangle de sélection est remonté depuis TextKit 2 (`selectionBoundingRectForFormatting()`) et décalé par l'origine du cadre de bloc déjà connu via `blockFrames` : aucune nouvelle `PreferenceKey`. ✅
+- **Phase 7 — `text.link` n'est pas l'accent brut :** `tokens.md` §2 le donne égal à `accent.default`, mais la note de §7 impose une variante lisible dès que l'accent est posé en texte (l'accent vert brut tombe à 2,0:1). Token `textLink` dédié, à **dériver** de l'accent courant en phase 13 quand il deviendra personnalisable. ✅
+- **Phase 7 — Bouton destructif :** deux tokens distincts, `semanticError` (glyphes et aplats uniquement) et `semanticErrorFill` (#C4271E, seul aplat portant du texte blanc). Un test verrouille le fait que `#FF3B30` + blanc = 3,94:1, sous l'AA : c'est ce qui justifie la seconde variante plutôt qu'un caprice de nuance. ✅
+- **Phase 7 — Recherche de notes du popover de lien :** volontairement **non branchée**. La maquette C montre "chercher une note" et "Créer une note", mais c'est la phase 16 (liens internes). Le champ et la structure sont en place, désactivés. Même règle d'honnêteté d'interface qu'en 5.4/5.5 et 6. ✅
+- **Phase 7 — `text.placeholder` corrigé :** l'ancienne valeur (opacité 0,25) donnait 1,83:1, très loin de l'AA. Portée à 0,55 clair / 0,60 sombre (0,70/0,78 en Increase Contrast). `text.disabled` reste à 0,25, c'est son rôle. ✅
+- **Phase 7 — `design/tokens.md` resynchronisé :** `design/_design_complet/uploads/tokens.md` était une version plus récente (315 lignes contre 263). Reportée dans `design/tokens.md`, qui reste la source de vérité unique : §16 bis (callouts), §16 ter (`code.syntax.*`), §16 quater (médias), table `text.onAccent` par accent. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -101,8 +110,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **`ModelContext.insert` de SwiftData est non linéaire** (ratio 12,7 mesuré, indépendamment de notre code). Sans effet sur la frappe (0,86 ms par insertion sur une note de 500 blocs), mais l'import en masse d'une phase ultérieure devra utiliser une insertion par lot.
 
 ---
+- **Raccourcis de formatage sans sélection** (caret seul) : sans effet pour l'instant. Appliquer une marque « en attente » qui s'applique au texte tapé ensuite demanderait de gérer les *typing attributes* du `NSTextView`. Les critères d'acceptation de `docs/07` sont tous formulés sur une sélection, donc hors périmètre livré, mais c'est un geste courant : à faire.
+- **Ouverture des liens en ⌘+clic non vérifiée** : repose sur le comportement natif d'`NSTextView.clicked(onLink:at:)`, non surchargé. Standard et plausible, mais à confirmer à la main dans Xcode.
+- **Interligne des titres uniforme** : `applyTypography` applique 1,5 à tous les niveaux, alors que `tokens.md` §9 spécifie 1,2 à 1,4 selon le niveau. Simplification héritée de la phase 5, pas une régression de la 7.
+- **Barre flottante et popovers : positionnement pixel non vérifié** (pas de fenêtre disponible), même limite que le menu `/` en phase 6. La logique de bascule au-dessus/en-dessous est, elle, testée unitairement.
+- **`HeadingBlockContentView` est devenu du code mort** : les titres passent désormais par `RichTextBlockView`. Conservé pour ses previews SwiftUI, à supprimer si elles cessent de servir.
 
 ## Prochaine action concrète
-La **phase 7 — Typographie & formatage** est marquée 🎨 : il faut le design **avant** de coder l'UI. Ouvrir Claude Design et demander la **barre de formatage flottante** (états, position par rapport à la sélection) et les **styles de texte H1–H6**, puis déposer le livrable dans `design/07_typographie/`. Détail de la demande dans `DESIGN_HANDOFF.md`.
+La **phase 8 — Blocs spéciaux** (code avec coloration syntaxique, citation, callout, listes puces/numéros/tâches, tableaux). Le design est déjà là : artboards **E à H** de `design/_design_complet/Slate P1 - Formatage & blocs.dc.html`, et les composants SwiftUI de référence `design/_design_complet/SlateUI/BlockViews.swift` + `BlockTokens.swift` couvrent callout, citation, code, listes, checklist et divider. Seule la vue de tableau est à écrire de zéro.
 
-Le sous-titre de note y sera traité comme un **style de paragraphe** (décision ci-dessus), donc à inclure dans la demande de design au même titre que les niveaux de titre.
+Deux décisions ouvertes dans `docs/08` à trancher au passage : la structure de données du tableau (attributs dédiés ou sous-blocs) et la coloration syntaxique (bibliothèque tierce ou colorateur maison minimal). Rappel `CLAUDE.md` §6 : aucune dépendance tierce sans accord préalable de Cyril.

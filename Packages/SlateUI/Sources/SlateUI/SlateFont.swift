@@ -14,19 +14,22 @@ public struct SlateTextStyle: Sendable, Equatable {
     public let relativeTo: Font.TextStyle
     public let tabularNums: Bool
     public let tracking: CGFloat
+    public let design: Font.Design
 
     public init(
         size: CGFloat,
         weight: Font.Weight = .regular,
         relativeTo: Font.TextStyle = .body,
         tabularNums: Bool = false,
-        tracking: CGFloat = 0
+        tracking: CGFloat = 0,
+        design: Font.Design = .default
     ) {
         self.size = size
         self.weight = weight
         self.relativeTo = relativeTo
         self.tabularNums = tabularNums
         self.tracking = tracking
+        self.design = design
     }
 }
 
@@ -71,6 +74,22 @@ public enum SlateFont {
     /// Sous-titre. 17 pt Regular.
     public static let subtitle = SlateTextStyle(size: 17, weight: .regular, relativeTo: .headline)
 
+    /// Titre de niveau 1 (`h1`, design/tokens.md §9). 26 pt Bold -- SEUL niveau en Bold
+    /// (H2-H6 sont Semibold, voir artboard P1 D : "le gras passe en Semibold et non en
+    /// Bold" ne s'applique qu'au **gras du corps de texte**, pas a H1). Ajoute en Phase 7
+    /// pour combler le gap signale a l'agent 7.2 : `HeadingStyle.font(forLevel:)`
+    /// retombait sur `titleNote` (28 pt, taille du TITRE DE NOTE, pas d'un H1 de bloc)
+    /// faute de token H1-H3 dedie. Dynamic Type : `.title` (artboard P1 D).
+    public static let h1 = SlateTextStyle(size: 26, weight: .bold, relativeTo: .title)
+
+    /// Titre de niveau 2 (`h2`, design/tokens.md §9). 22 pt Semibold. Voir `h1`.
+    /// Dynamic Type : `.title2`.
+    public static let h2 = SlateTextStyle(size: 22, weight: .semibold, relativeTo: .title2)
+
+    /// Titre de niveau 3 (`h3`, design/tokens.md §9). 20 pt Semibold. Voir `h1`.
+    /// Dynamic Type : `.title3`.
+    public static let h3 = SlateTextStyle(size: 20, weight: .semibold, relativeTo: .title3)
+
     /// Titre de niveau 4 (`h4`, design/tokens.md §9). 17 pt Semibold. Ajoute en Phase 5
     /// pour combler le gap signale par l'agent 5.1 : `HeadingStyle` (SlateEditor)
     /// retombait sur `bodyEmphasis` pour les niveaux 4 a 6, faute de token dedie -- la
@@ -88,6 +107,18 @@ public enum SlateFont {
 
     /// Corps de texte accentue. 15 pt Semibold.
     public static let bodyEmphasis = SlateTextStyle(size: 15, weight: .semibold, relativeTo: .body)
+
+    /// `font.mono` (design/tokens.md §9) : code bloc/inline. 13 pt Regular, chiffres
+    /// tabulaires, dessin `.monospaced` (SF Mono) -- ajoute en Phase 7, seul token de
+    /// police qui ne soit pas `.default`. `relativeTo: .footnote` par coherence avec
+    /// `listSnippet`, deja a 13 pt.
+    public static let mono = SlateTextStyle(
+        size: 13,
+        weight: .regular,
+        relativeTo: .footnote,
+        tabularNums: true,
+        design: .monospaced
+    )
 
     /// Legende / metadonnee. 12 pt Regular.
     public static let caption = SlateTextStyle(size: 12, weight: .regular, relativeTo: .caption)
@@ -114,17 +145,19 @@ private struct SlateFontModifier: ViewModifier {
     private let weight: Font.Weight
     private let tabularNums: Bool
     private let tracking: CGFloat
+    private let design: Font.Design
 
     init(style: SlateTextStyle) {
         _scaledSize = ScaledMetric(wrappedValue: style.size, relativeTo: style.relativeTo)
         weight = style.weight
         tabularNums = style.tabularNums
         tracking = style.tracking
+        design = style.design
     }
 
     func body(content: Content) -> some View {
         content
-            .font(.system(size: scaledSize, weight: weight))
+            .font(.system(size: scaledSize, weight: weight, design: design))
             .tracking(tracking)
             .modifier(TabularNumsModifier(isEnabled: tabularNums))
     }

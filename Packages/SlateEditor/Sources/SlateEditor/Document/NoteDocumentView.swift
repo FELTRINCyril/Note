@@ -139,6 +139,18 @@ public struct NoteDocumentView: View {
                             if let slashMenuBlock {
                                 SlashMenuOverlay(block: slashMenuBlock, editorController: editorController)
                             }
+
+                            // Barre de formatage flottante (Phase 7) : meme
+                            // `coordinateSpace` nommee, meme raison de separation
+                            // overlay/popover que le menu "/" ci-dessus (voir
+                            // `FormatBarOverlay`).
+                            if let inlineSelection = editorController.inlineSelection, let formatBarBlock {
+                                FormatBarOverlay(
+                                    block: formatBarBlock,
+                                    editorController: editorController,
+                                    selection: inlineSelection
+                                )
+                            }
                         }
                         // Coordonnees partagees pour la resolution "quel bloc est sous le
                         // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
@@ -190,6 +202,13 @@ public struct NoteDocumentView: View {
     /// seul : le bloc peut etre imbrique (item de liste a puces/numerotee/tache).
     private var slashMenuBlock: Block? {
         guard let blockID = editorController.slashMenuState?.blockID else { return nil }
+        return BlockOrdering.flattenedBlocks(of: note).first { $0.id == blockID }
+    }
+
+    /// `Block` vise par `EditorController.inlineSelection` (Phase 7), meme motif que
+    /// `slashMenuBlock` ci-dessus.
+    private var formatBarBlock: Block? {
+        guard let blockID = editorController.inlineSelection?.blockID else { return nil }
         return BlockOrdering.flattenedBlocks(of: note).first { $0.id == blockID }
     }
 }

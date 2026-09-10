@@ -120,61 +120,67 @@ struct EditorAccessibilityTests {
         #expect(WCAGContrast.ratio(darkText, darkBackground) >= 7.0)
     }
 
-    // MARK: - Placeholder en Increase Contrast (text.placeholder a 0,54/0,58)
+    // MARK: - Placeholder (corrige en Phase 7 : 0,55/0,60 de base, 0,70/0,78 en Increase Contrast)
 
-    @Test("Les opacites du placeholder Increase Contrast sont bien 0,54 (clair) et 0,58 (sombre)")
-    func placeholderIncreasedContrastOpacities() {
-        #expect(SlateTextOpacity.placeholderLightIncreasedContrast == 0.54)
-        #expect(SlateTextOpacity.placeholderDarkIncreasedContrast == 0.58)
-        #expect(SlateTextOpacity.placeholderLight == 0.25)
-        #expect(SlateTextOpacity.placeholderDark == 0.25)
+    @Test("Les opacites du placeholder sont bien 0,55/0,60 de base et 0,70/0,78 en Increase Contrast")
+    func placeholderOpacities() {
+        #expect(SlateTextOpacity.placeholderLight == 0.55)
+        #expect(SlateTextOpacity.placeholderDark == 0.60)
+        #expect(SlateTextOpacity.placeholderLightIncreasedContrast == 0.70)
+        #expect(SlateTextOpacity.placeholderDarkIncreasedContrast == 0.78)
     }
 
-    /// La spec E4 ecrit l'opacite "0,52" mais annonce l'objectif "4,6:1" dans la meme
-    /// phrase. 0,52 ne donne que 4,27:1, donc rate l'AA ET rate l'objectif annonce :
-    /// c'est le chiffre de la spec qui est faux, pas son intention. On applique 0,54,
-    /// qui donne 4,59:1, soit exactement la valeur annoncee. Ce test verrouille
-    /// l'objectif AA, pas la constante : il echouerait si quelqu'un remettait 0,52.
-    @Test("Le placeholder Increase Contrast atteint l'AA en clair, ~4,59:1 (objectif annonce par la spec)")
-    func placeholderIncreasedContrastMeetsAAInLight() {
-        let placeholder = SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLightIncreasedContrast)
+    /// L'ancienne valeur (0,25, Phases 1-6) est verrouillee comme CONTRE-EXEMPLE : elle
+    /// echouait largement l'AA (~1,83:1 sur `bg.editor` clair), d'ou la correction Phase 7.
+    /// Ce test empeche une regression silencieuse vers ce chiffre.
+    @Test("L'ancienne opacite 0,25 aurait echoue l'AA en clair (~1,83:1) -- d'ou la correction Phase 7")
+    func oldPlaceholderOpacityWouldFailAAInLight() {
+        let placeholder = SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.25)
         let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorLight)
         let ratio = WCAGContrast.ratio(composited, Self.bgEditorLight)
 
-        #expect(abs(ratio - 4.59) < 0.05)
-        #expect(ratio >= 4.5)
-    }
-
-    /// Contre-preuve du test precedent : la valeur litterale de la spec echoue bien.
-    /// Documente pourquoi on s'en ecarte, pour qu'un futur relecteur ne "corrige" pas
-    /// 0,54 en 0,52 en croyant revenir a la spec.
-    @Test("La valeur litterale 0,52 de la spec E4 echouerait l'AA en clair (~4,27:1)")
-    func specLiteralPlaceholderOpacityWouldFailAAInLight() {
-        let placeholder = SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.52)
-        let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorLight)
-        let ratio = WCAGContrast.ratio(composited, Self.bgEditorLight)
-
-        #expect(abs(ratio - 4.27) < 0.05)
+        #expect(abs(ratio - 1.83) < 0.05)
         #expect(ratio < 4.5)
     }
 
-    @Test("Le placeholder Increase Contrast atteint bien l'AA en sombre : ~6,48:1")
-    func placeholderIncreasedContrastMeetsAAInDark() {
-        let placeholder = SlateRGB(red: 1, green: 1, blue: 1, alpha: SlateTextOpacity.placeholderDarkIncreasedContrast)
-        let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorDark)
-        let ratio = WCAGContrast.ratio(composited, Self.bgEditorDark)
-
-        #expect(abs(ratio - 6.48) < 0.05)
-        #expect(ratio >= 4.5)
-    }
-
-    @Test("Hors Increase Contrast, le placeholder (0,25) reste loin de l'AA -- attendu, il n'est pas porteur d'info")
-    func placeholderBaseOpacityIsFarFromAA() {
+    @Test("Le placeholder de base atteint bien l'AA en clair : ~4,76:1")
+    func placeholderBaseMeetsAAInLight() {
         let placeholder = SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLight)
         let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorLight)
         let ratio = WCAGContrast.ratio(composited, Self.bgEditorLight)
 
-        #expect(ratio < 4.5)
+        #expect(abs(ratio - 4.76) < 0.05)
+        #expect(ratio >= 4.5)
+    }
+
+    @Test("Le placeholder de base atteint bien l'AA en sombre : ~6,85:1")
+    func placeholderBaseMeetsAAInDark() {
+        let placeholder = SlateRGB(red: 1, green: 1, blue: 1, alpha: SlateTextOpacity.placeholderDark)
+        let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorDark)
+        let ratio = WCAGContrast.ratio(composited, Self.bgEditorDark)
+
+        #expect(abs(ratio - 6.85) < 0.05)
+        #expect(ratio >= 4.5)
+    }
+
+    @Test("Le placeholder Increase Contrast renforce nettement au-dela de l'AA en clair : ~8,52:1")
+    func placeholderIncreasedContrastReinforcesInLight() {
+        let placeholder = SlateRGB(red: 0, green: 0, blue: 0, alpha: SlateTextOpacity.placeholderLightIncreasedContrast)
+        let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorLight)
+        let ratio = WCAGContrast.ratio(composited, Self.bgEditorLight)
+
+        #expect(abs(ratio - 8.52) < 0.05)
+        #expect(ratio >= 4.5)
+    }
+
+    @Test("Le placeholder Increase Contrast renforce nettement au-dela de l'AA en sombre : ~10,71:1")
+    func placeholderIncreasedContrastReinforcesInDark() {
+        let placeholder = SlateRGB(red: 1, green: 1, blue: 1, alpha: SlateTextOpacity.placeholderDarkIncreasedContrast)
+        let composited = WCAGContrast.compositeOverBackground(placeholder, Self.bgEditorDark)
+        let ratio = WCAGContrast.ratio(composited, Self.bgEditorDark)
+
+        #expect(abs(ratio - 10.71) < 0.05)
+        #expect(ratio >= 4.5)
     }
 
     // MARK: - Geometrie (verifiable sans acceder a une Color / MainActor)

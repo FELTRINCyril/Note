@@ -91,6 +91,7 @@ public enum InlineMark: Hashable, Sendable {
     case strikethrough
     case inlineCode
     case highlight(SlateHighlightColor)
+    case textColor(SlateTextColor)
     case link(URL)
 }
 
@@ -112,6 +113,8 @@ extension RichText {
             attributedString[range].slateInlineCode = true
         case let .highlight(color):
             attributedString[range].slateHighlight = color
+        case let .textColor(color):
+            attributedString[range].slateTextColor = color
         case let .link(url):
             attributedString[range].link = url
         }
@@ -133,6 +136,8 @@ extension RichText {
             attributedString[range].slateInlineCode = nil
         case .highlight:
             attributedString[range].slateHighlight = nil
+        case .textColor:
+            attributedString[range].slateTextColor = nil
         case .link:
             attributedString[range].link = nil
         }

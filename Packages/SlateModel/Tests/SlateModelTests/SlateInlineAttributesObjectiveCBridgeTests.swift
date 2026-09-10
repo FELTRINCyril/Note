@@ -214,6 +214,34 @@ struct SlateInlineAttributesObjectiveCBridgeTests {
         #expect(underlineValue is NSNumber)
     }
 
+    @Test("la couleur de texte survit au pont scope, avec la bonne valeur")
+    func textColorSurvivesScopedBridgeExactly() throws {
+        var text = RichText(plainText: "important")
+        let range = text.range(charactersOffset: 0..<9)
+        text.apply(.textColor(SlateTextColor("#112233")), to: range)
+
+        let bridged = try roundTripThroughScopedObjectiveCBridge(text)
+        let bridgedRange = bridged.range(charactersOffset: 0..<9)
+
+        let transported = bridged.attributedString[bridgedRange].slateTextColor
+        #expect(transported == SlateTextColor("#112233"))
+        #expect(transported?.value == "#112233")
+    }
+
+    @Test("la couleur de texte cumulee avec le surlignage survit au pont scope, sans se contaminer")
+    func textColorAndHighlightBothSurviveScopedBridge() throws {
+        var text = RichText(plainText: "important")
+        let range = text.range(charactersOffset: 0..<9)
+        text.apply(.highlight(SlateHighlightColor("yellow")), to: range)
+        text.apply(.textColor(SlateTextColor("#112233")), to: range)
+
+        let bridged = try roundTripThroughScopedObjectiveCBridge(text)
+        let bridgedRange = bridged.range(charactersOffset: 0..<9)
+
+        #expect(bridged.attributedString[bridgedRange].slateHighlight == SlateHighlightColor("yellow"))
+        #expect(bridged.attributedString[bridgedRange].slateTextColor == SlateTextColor("#112233"))
+    }
+
     // MARK: - Limite mesuree du correctif : le pont SANS scope explicite reste casse
 
     @Test(
@@ -237,6 +265,7 @@ struct SlateInlineAttributesObjectiveCBridgeTests {
         let range = text.range(charactersOffset: 0..<5)
         text.apply(.bold, to: range)
         text.apply(.highlight(SlateHighlightColor("yellow")), to: range)
+        text.apply(.textColor(SlateTextColor("#112233")), to: range)
         text.apply(.inlineCode, to: range)
         text.apply(.underline, to: range)
 
@@ -250,8 +279,9 @@ struct SlateInlineAttributesObjectiveCBridgeTests {
         // fonctionne en general, seuls nos attributs custom sont affectes.
         #expect(bridged.attributedString[bridgedRange].inlinePresentationIntent == .stronglyEmphasized)
 
-        // Les trois attributs custom Slate sont perdus par ce chemin, sans aucune erreur.
+        // Les attributs custom Slate sont perdus par ce chemin, sans aucune erreur.
         #expect(bridged.attributedString[bridgedRange].slateHighlight == nil)
+        #expect(bridged.attributedString[bridgedRange].slateTextColor == nil)
         #expect(bridged.attributedString[bridgedRange].slateInlineCode == nil)
         #expect(bridged.attributedString[bridgedRange].slateUnderline == nil)
     }
@@ -265,6 +295,7 @@ struct SlateInlineAttributesObjectiveCBridgeTests {
         let range = text.range(charactersOffset: 0..<6)
 
         text.apply(.highlight(SlateHighlightColor("yellow")), to: range)
+        text.apply(.textColor(SlateTextColor("#112233")), to: range)
         text.apply(.inlineCode, to: range)
         text.apply(.underline, to: range)
 
@@ -273,6 +304,7 @@ struct SlateInlineAttributesObjectiveCBridgeTests {
 
         #expect(decoded == text)
         #expect(decoded.attributedString[range].slateHighlight == SlateHighlightColor("yellow"))
+        #expect(decoded.attributedString[range].slateTextColor == SlateTextColor("#112233"))
         #expect(decoded.attributedString[range].slateInlineCode == true)
         #expect(decoded.attributedString[range].slateUnderline == true)
     }

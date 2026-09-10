@@ -86,6 +86,21 @@ public final class EditorController {
     /// longueur de `CLAUDE.md` §5, meme motif exact que `EditorController+Selection.swift`.
     public internal(set) var slashMenuState: SlashMenuState?
 
+    /// Selection de texte INLINE courante (Phase 7, docs/07_typographie_formatage.md) :
+    /// bloc + plage de caracteres selectionnee dans son `NSTextView`, et le rectangle de
+    /// cette selection dans la `coordinateSpace` partagee (pour ancrer la barre de
+    /// formatage flottante, voir `FormatBarOverlay`/`FormatBarPositioning`). `nil` des
+    /// que la selection redevient un caret ponctuel (la barre ne s'affiche que sur une
+    /// VRAIE selection de texte, artboard P1 A) ou que le bloc perd le focus -- voir
+    /// `EditorController+Formatting.swift`, ou vit toute la logique de ce fichier
+    /// (memes raisons de separation que `EditorController+Selection.swift`).
+    public internal(set) var inlineSelection: EditorInlineSelection?
+
+    /// Demande d'ouverture du popover d'edition de lien (Cmd+K ou bouton "lien" de la
+    /// barre flottante), `nil` si aucune n'est en attente. Voir
+    /// `EditorController+Formatting.swift`.
+    public internal(set) var linkEditRequest: LinkEditRequest?
+
     /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
     /// autre fichier de ce type -- voir sa documentation de tete de fichier).
     let note: Note
@@ -137,6 +152,9 @@ public final class EditorController {
         if slashMenuState?.blockID == blockID {
             slashMenuState = nil
         }
+        // Barre de formatage (Phase 7, artboard P1 A : "se ferme... a la perte de
+        // selection") : la perte de focus du bloc EST une perte de selection.
+        clearInlineSelection(for: blockID)
     }
 
     // MARK: - Entree / Retour arriere (delegue a `BlockLifecycle`)

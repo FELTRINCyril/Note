@@ -27,10 +27,13 @@ struct BlockContentRouterView: View {
 
     var body: some View {
         switch BlockRenderRouting.kind(for: block.type) {
-        case .paragraph:
+        case .paragraph, .heading:
+            // Titres EDITABLES depuis la Phase 7 (docs/07_typographie_formatage.md,
+            // point 6) : `RichTextBlockView` derive sa typographie du `BlockType` reel
+            // du bloc (voir `RichTextEditingTextView.applyTypography(for:)`), plus
+            // besoin de `HeadingBlockContentView` (lecture seule, conserve pour ses
+            // previews mais plus route ici).
             RichTextBlockView(block: block, editorController: editorController)
-        case let .heading(level):
-            HeadingBlockContentView(text: block.text, level: level)
         case .divider:
             DividerBlockContentView()
         case .bulletedListItem:

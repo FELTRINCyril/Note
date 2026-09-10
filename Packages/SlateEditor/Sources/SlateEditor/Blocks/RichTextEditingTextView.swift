@@ -1,4 +1,5 @@
 import AppKit
+import SlateModel
 import SlateUI
 import SwiftUI
 
@@ -68,50 +69,11 @@ final class RichTextEditingTextView: NSTextView {
         applyTypography()
     }
 
-    /// Police et interligne du corps de bloc (design/tokens.md §16, spec E4 : "Corps
-    /// 15 pt, interligne 1,5"). Rappele a chaque `updateNSView` (voir
-    /// `RichTextBlockView`) plutot qu'une seule fois a la creation : c'est la seule
-    /// facon de suivre un changement de Dynamic Type systeme en cours de vie de la vue,
-    /// AppKit n'offrant pas de notification dediee equivalente a l'environnement
-    /// SwiftUI `\.dynamicTypeSize` pour un `NSTextView` autonome.
-    func applyTypography() {
-        let bodyFont = Self.scaledBodyFont()
-        let paragraphStyle = Self.bodyParagraphStyle(for: bodyFont)
-        font = bodyFont
-        textColor = NSColor(SlateColor.textPrimary)
-        defaultParagraphStyle = paragraphStyle
-        typingAttributes = [
-            .font: bodyFont,
-            .foregroundColor: NSColor(SlateColor.textPrimary),
-            .paragraphStyle: paragraphStyle
-        ]
-    }
-
-    /// Approxime la mise a l'echelle Dynamic Type de `SlateFont.body`
-    /// (`@ScaledMetric(wrappedValue: 15, relativeTo: .body)`, cf. `SlateFont.swift`)
-    /// pour un `NSTextView` autonome, sans equivalent direct de `@ScaledMetric` en
-    /// AppKit pur. `NSFont.preferredFont(forTextStyle: .body)` est l'API AppKit qui
-    /// suit reellement le reglage systeme "Texte plus grand" ; `NSFont.systemFontSize`
-    /// (13 pt) est la taille de reference macOS pour ce style a l'echelle 100 % --
-    /// meme principe de calcul de ratio que `@ScaledMetric`, applique a la taille de
-    /// base du token (15 pt) plutot qu'a la taille systeme par defaut.
-    private static func scaledBodyFont() -> NSFont {
-        let referenceSize = NSFont.systemFontSize
-        let preferredBodySize = NSFont.preferredFont(forTextStyle: .body).pointSize
-        let scale = referenceSize > 0 ? preferredBodySize / referenceSize : 1
-        return NSFont.systemFont(ofSize: SlateFont.body.size * scale)
-    }
-
-    /// Interligne de 1,5 (`SlateGeometry.editorParagraphLineHeight`) impose via les
-    /// bornes min/max de `NSParagraphStyle` -- l'equivalent AppKit du `.lineSpacing`
-    /// SwiftUI utilise par `ParagraphBlockContentView` en lecture seule.
-    private static func bodyParagraphStyle(for font: NSFont) -> NSParagraphStyle {
-        let style = NSMutableParagraphStyle()
-        let lineHeight = font.pointSize * SlateGeometry.editorParagraphLineHeight
-        style.minimumLineHeight = lineHeight
-        style.maximumLineHeight = lineHeight
-        return style
-    }
+    // Typographie (`applyTypography(for:)` et ses helpers prives) : voir
+    // `RichTextEditingTextView+Typography.swift` -- extrait de ce fichier pour rester
+    // sous la limite de longueur de `CLAUDE.md` §5 (fichier separe, pas un second type :
+    // tous les helpers y restent `private`, appeles uniquement depuis ce meme fichier
+    // voisin).
 
     /// Taille intrinseque du bloc pour une largeur proposee par SwiftUI (voir
     /// `RichTextBlockView.sizeThatFits`) : point technique central de la sous-etape
@@ -254,6 +216,26 @@ final class RichTextEditingTextView: NSTextView {
         super.cancelOperation(sender)
     }
 
+    // MARK: - Raccourcis de formatage (docs/07_typographie_formatage.md)
+    //
+    // `performKeyEquivalent(with:)` est le point d'accroche recommande pour des
+    // combinaisons Cmd (voir la tache) : contrairement a `insertNewline(_:)`/
+    // `deleteBackward(_:)` (des ACTIONS `NSResponder` que `NSTextView` appelle deja),
+    // Cmd+B/I/U/E/K et Cmd+Opt+0..3 ne correspondent a AUCUN selecteur natif que
+    // `NSTextView` invoquerait de lui-meme -- il faut intercepter l'evenement clavier
+    // brut avant qu'AppKit ne le laisse tomber silencieusement (aucun Format-menu n'est
+    // cable dans ce projet, voir CLAUDE.md -- perimetre de l'agent editeur, pas de la
+    // barre de menus).
+
+    override func performKeyEquivalent(with event: NSEvent) -> Bool {
+        if handleFormattingKeyEquivalent(event) { return true }
+        return super.performKeyEquivalent(with: event)
+    }
+
+    // `handleFormattingKeyEquivalent(_:)` et `selectionBoundingRectForFormatting()` :
+    // voir `RichTextEditingTextView+Formatting.swift` -- meme motif d'extraction que la
+    // typographie ci-dessus (fichier separe, pas un second type).
+
     // MARK: - Application d'un `EditorCaretRequest.Placement` (appele par le Coordinator)
 
     /// Place le caret a la position demandee, en convertissant `.visualColumn` via la
@@ -343,56 +325,4 @@ final class RichTextEditingTextView: NSTextView {
         let localRect = convert(windowRect, from: nil)
         return localRect.midX
     }
-}
-
-/// Delegue informe des franchissements de bloc au clavier (Entree, Retour arriere en
-/// debut de bloc, fleches haut/bas aux bords, Echap) -- seul point de contact entre ce
-/// fichier (generique, ignore `Block`/`SlateModel`/`EditorController`, voir sa
-/// documentation de tete) et le cycle de vie des blocs. Implemente par
-/// `RichTextBlockView.Coordinator`, qui adapte ces appels vers `EditorController`.
-@MainActor
-protocol RichTextBlockLifecycleDelegate: AnyObject {
-    /// Entree pressee. `caretOffset` : position du caret (0-based, en CARACTERES,
-    /// `RichTextOffset` -- voir sa documentation) au moment de l'appui. Retourne `true`
-    /// si le cycle de vie a pris la main (le retour a la ligne natif ne doit alors PAS
-    /// s'executer par-dessus).
-    func richTextViewShouldHandleReturn(caretOffset: RichTextOffset) -> Bool
-
-    /// Retour arriere presse alors que le caret est EXACTEMENT en debut de bloc (aucune
-    /// selection) -- precondition deja verifiee par l'appelant. Retourne `true` si le
-    /// cycle de vie a pris la main (fusion/suppression).
-    func richTextViewShouldHandleBackspaceAtStart() -> Bool
-
-    /// Fleche haut alors que le caret est deja sur la PREMIERE ligne visuelle du bloc.
-    /// `visualColumnX` : abscisse locale du caret, pour que le bloc precedent puisse s'y
-    /// aligner (spec E4 : "conservent la colonne visuelle"). Retourne `true` si la
-    /// navigation inter-bloc a pris la main.
-    func richTextViewShouldHandleMoveUp(visualColumnX: CGFloat) -> Bool
-
-    /// Symmetrique de ci-dessus pour la fleche bas depuis la DERNIERE ligne visuelle.
-    func richTextViewShouldHandleMoveDown(visualColumnX: CGFloat) -> Bool
-
-    /// Echap presse en cours d'edition : sort de l'edition, selectionne le bloc entier.
-    /// Retourne `true` (toujours pris en charge par le cycle de vie de bloc).
-    func richTextViewShouldHandleCancelEditing() -> Bool
-
-    /// Maj+fleche haut alors que le caret est deja sur la PREMIERE ligne visuelle du
-    /// bloc (sous-etape 5.6, accessibilite clavier de la selection multi-blocs).
-    /// Retourne `true` si l'extension de selection inter-bloc a pris la main.
-    func richTextViewShouldHandleExtendSelectionUp() -> Bool
-
-    /// Symmetrique de ci-dessus pour Maj+fleche bas depuis la DERNIERE ligne visuelle.
-    func richTextViewShouldHandleExtendSelectionDown() -> Bool
-
-    // MARK: - Menu "/" (Phase 6, 6.4) : priorite absolue, interrogees en TETE de
-    // `insertNewline`/`moveUp`/`moveDown`/`cancelOperation`. `false` de son propre chef
-    // si aucun menu n'est ouvert pour ce bloc (meme motif que `richTextViewShouldHandleMoveUp`).
-
-    /// Fleche haut/bas menu ouvert : deplace la selection DANS le menu, depuis
-    /// N'IMPORTE QUELLE ligne (contrairement a `richTextViewShouldHandleMoveUp`/`Down`).
-    func richTextViewShouldHandleSlashMenuMoveSelection(_ direction: BlockSelectionDirection) -> Bool
-    /// Entree menu ouvert : valide l'item mis en avant plutot que de scinder le bloc.
-    func richTextViewShouldHandleSlashMenuReturn() -> Bool
-    /// Echap menu ouvert : ferme le menu SEUL, sans selectionner le bloc entier.
-    func richTextViewShouldHandleSlashMenuEscape() -> Bool
 }

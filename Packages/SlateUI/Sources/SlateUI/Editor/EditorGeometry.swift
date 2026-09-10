@@ -102,6 +102,28 @@ public extension SlateGeometry {
     /// de l'editeur). Spec E4 : "44 pt, `control.height.l` + `space.s`" (36 + 8).
     static let editorToolbarHeight: CGFloat = 44
 
+    // MARK: - Barre de formatage flottante (artboard P1 A, Phase 7)
+
+    /// Hauteur de la barre. Equivalent `control.height.l` (design/tokens.md §15).
+    static let formatBarHeight: CGFloat = 36
+
+    /// Rayon de coin de la barre. Equivalent `radius.m` -- alias nomme pour la
+    /// tracabilite avec l'artboard ("rayon 8 pt"), pas une nouvelle valeur.
+    static let formatBarRadius: CGFloat = radiusMedium
+
+    /// Decalage vertical de la barre au-dessus de la plage selectionnee (artboard P1 A :
+    /// "ancree 8 pt au-dessus de la plage"). Equivalent `space.s` -- alias nomme, pas une
+    /// nouvelle valeur.
+    static let formatBarOffset: CGFloat = Spacing.sm
+
+    /// Rayon de flou de l'ombre portee, `elevation.medium` (design/tokens.md §13 : "y:4
+    /// blur:12"). Pas de namespace `SlateElevation` dedie en Phase 7 (seul consommateur
+    /// actuel) : a extraire si un deuxieme composant a besoin d'une des trois elevations.
+    static let formatBarShadowRadius: CGFloat = 12
+
+    /// Decalage vertical de l'ombre portee, `elevation.medium` (design/tokens.md §13).
+    static let formatBarShadowY: CGFloat = 4
+
     // MARK: - Depot de drag & drop
 
     /// Epaisseur de la ligne d'insertion affichee pendant un glisser-depose de bloc.
