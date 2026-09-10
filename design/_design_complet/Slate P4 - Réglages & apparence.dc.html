@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+</style>
+</helmet>
+
+<section id="P4" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:40px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">P4</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">Page 4 — Réglages &amp; apparence</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;">Fenêtre de réglages macOS standard : barre d'onglets en haut, une vue par onglet, largeur fixe 620 pt, hauteur adaptée au contenu. Pas de sidebar de réglages — quatre onglets ne le justifient pas.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;"><b>Un réglage = une ligne.</b> Libellé à gauche aligné à droite sur une colonne de 180 pt, contrôle à droite, explication sous le contrôle en <code>caption</code>. C'est la grammaire des Réglages Système ; s'en écarter donnerait une fenêtre qui ne ressemble pas à un Mac.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:900px;text-wrap:pretty;"><b>Le choix d'accent recolore <code>accent.*</code> partout</b> — barre de formatage, cases cochées, sélection de liste, indicateur de dépôt. La section D vérifie les huit teintes de §7 sur les fonds réels, dans les deux thèmes : deux d'entre elles imposent une variante de texte.</div>
+    </div>
+  </div>
+
+  <!-- A · APPARENCE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">A · Onglet Apparence</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair</div>
+        <div style="width:620px;background:#ECECEC;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.30);overflow:hidden;">
+          <div style="height:52px;display:flex;align-items:center;justify-content:center;gap:2px;background:#F2F2F5;border-bottom:1px solid rgba(0,0,0,0.10);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;background:rgba(0,0,0,0.10);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.6"><circle cx="12" cy="12" r="8"></circle><path d="M12 4v16"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Apparence</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Verrouillage</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.6"><path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">IA</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.6"><circle cx="12" cy="12" r="3"></circle><path d="M19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-4l-.3 2.6a7 7 0 0 0-1.7 1l-2.4-1-2 3.5L6 10.6a7 7 0 0 0 0 2.8l-2 1.5 2 3.5 2.4-1a7 7 0 0 0 1.7 1l.3 2.6h4l.3-2.6a7 7 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5c.1-.3.1-.7.1-1z"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Général</div></div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:18px;">
+
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:right;padding-top:24px;flex:none;">Thème :</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;gap:12px;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <div style="width:88px;height:56px;border-radius:6px;overflow:hidden;border:1px solid rgba(0,0,0,0.12);display:flex;"><div style="flex:1;background:#F2F2F5;"></div><div style="flex:1;background:#232326;"></div></div>
+                    <div style="display:flex;align-items:center;gap:5px;"><div style="width:13px;height:13px;border-radius:999px;border:1px solid rgba(0,0,0,0.30);"></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Système</div></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <div style="width:88px;height:56px;border-radius:6px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.12);outline:2px solid #007AFF;outline-offset:2px;display:flex;flex-direction:column;padding:6px;gap:3px;"><div style="height:5px;width:60%;background:rgba(0,0,0,0.85);border-radius:2px;"></div><div style="height:4px;width:85%;background:rgba(0,0,0,0.26);border-radius:2px;"></div><div style="height:4px;width:70%;background:rgba(0,0,0,0.26);border-radius:2px;"></div></div>
+                    <div style="display:flex;align-items:center;gap:5px;"><div style="width:13px;height:13px;border-radius:999px;background:#007AFF;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:999px;background:#FFFFFF;"></div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Clair</div></div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:5px;">
+                    <div style="width:88px;height:56px;border-radius:6px;background:#1C1C1E;border:1px solid rgba(0,0,0,0.12);display:flex;flex-direction:column;padding:6px;gap:3px;"><div style="height:5px;width:60%;background:rgba(255,255,255,0.85);border-radius:2px;"></div><div style="height:4px;width:85%;background:rgba(255,255,255,0.26);border-radius:2px;"></div><div style="height:4px;width:70%;background:rgba(255,255,255,0.26);border-radius:2px;"></div></div>
+                    <div style="display:flex;align-items:center;gap:5px;"><div style="width:13px;height:13px;border-radius:999px;border:1px solid rgba(0,0,0,0.30);"></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Sombre</div></div>
+                  </div>
+                </div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);max-width:340px;text-wrap:pretty;">« Système » suit les Réglages du Mac, y compris la bascule automatique au coucher du soleil.</div>
+              </div>
+            </div>
+
+            <div style="height:1px;background:rgba(0,0,0,0.10);"></div>
+
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:right;flex:none;">Couleur d'accent :</div>
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div style="display:flex;gap:8px;">
+                  <div style="width:22px;height:22px;border-radius:999px;background:#007AFF;display:flex;align-items:center;justify-content:center;outline:2px solid rgba(0,0,0,0.30);outline-offset:2px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#AF52DE;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#FF2D55;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#FF3B30;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#FF9500;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#FFCC00;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#34C759;"></div>
+                  <div style="width:22px;height:22px;border-radius:999px;background:#8E8E93;"></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;background:#007AFF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Suivre l'accent du système</div></div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);max-width:340px;text-wrap:pretty;">Chaque teinte est nommée au survol et lue par VoiceOver (« Bleu, sélectionné »). La sélection est marquée par une coche en plus de l'anneau.</div>
+              </div>
+            </div>
+
+            <div style="height:1px;background:rgba(0,0,0,0.10);"></div>
+
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:right;flex:none;">Police du corps :</div>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="height:28px;display:flex;align-items:center;gap:20px;padding:0 8px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">SF Pro (système)<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">ou New York (serif)</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:right;flex:none;padding-top:3px;">Taille du texte :</div>
+              <div style="display:flex;flex-direction:column;gap:6px;width:340px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div style="font:400 11px/1 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">A</div>
+                  <div style="flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,0.10);position:relative;"><div style="position:absolute;left:0;top:0;bottom:0;width:40%;background:#007AFF;border-radius:2px;"></div><div style="position:absolute;left:40%;top:-6px;margin-left:-8px;width:16px;height:16px;border-radius:999px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.12);box-shadow:0 1px 3px rgba(0,0,0,0.20);"></div></div>
+                  <div style="font:400 17px/1 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">A</div>
+                </div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-wrap:pretty;">Réglage local à Slate, cumulé avec la taille système. Aperçu en direct dans l'éditeur.</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:right;flex:none;">Options :</div>
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;background:#007AFF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Afficher la couverture des notes</div></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,0.30);"></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Réduire la transparence de la barre latérale</div></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;border:1px solid rgba(0,0,0,0.30);"></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Augmenter le contraste des séparateurs</div></div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);max-width:340px;text-wrap:pretty;">Ces deux options suivent par défaut les réglages d'accessibilité de macOS ; les cocher ici force le comportement dans Slate seulement.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · Verrouillage · IA · Général</div>
+        <div style="width:620px;background:#1E1E1E;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.50);overflow:hidden;">
+          <div style="height:52px;display:flex;align-items:center;justify-content:center;gap:2px;background:#232326;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6"><circle cx="12" cy="12" r="8"></circle><path d="M12 4v16"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Apparence</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;background:rgba(255,255,255,0.13);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Verrouillage</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6"><path d="M12 3v3M12 18v3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M3 12h3M18 12h3M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">IA</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 14px;border-radius:6px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.6"><circle cx="12" cy="12" r="3"></circle><path d="M12 3v3M12 18v3M5 12H2M22 12h-3"></path></svg><div style="font:400 11px/1.2 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Général</div></div>
+          </div>
+          <div style="padding:24px 28px;display:flex;flex-direction:column;gap:16px;">
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Mot de passe :</div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="height:28px;display:flex;align-items:center;padding:0 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Modifier…</div><div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Défini le 4 juin 2026</div></div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Déverrouillage :</div>
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:19px;border-radius:999px;background:#0A84FF;padding:2px;display:flex;justify-content:flex-end;"><div style="width:15px;height:15px;border-radius:999px;background:#FFFFFF;"></div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Touch ID</div></div>
+                <div style="display:flex;align-items:center;gap:8px;"><div style="width:32px;height:19px;border-radius:999px;background:#0A84FF;padding:2px;display:flex;justify-content:flex-end;"><div style="width:15px;height:15px;border-radius:999px;background:#FFFFFF;"></div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Apple Watch à proximité</div></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Reverrouiller :</div>
+              <div style="height:28px;display:flex;align-items:center;gap:20px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Après 5 minutes d'inactivité<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);"></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Assistant IA</div>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Traitement :</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:999px;background:#0A84FF;display:flex;align-items:center;justify-content:center;"><div style="width:5px;height:5px;border-radius:999px;background:#FFFFFF;"></div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Sur cet appareil uniquement</div></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:999px;border:1px solid rgba(255,255,255,0.35);"></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Autoriser le traitement distant pour les tâches longues</div></div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);max-width:340px;text-wrap:pretty;">Les notes verrouillées ne sont jamais envoyées, quel que soit ce réglage.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Index de recherche :</div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="height:28px;display:flex;align-items:center;padding:0 12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Reconstruire</div><div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">1 284 notes indexées</div></div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);"></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Général</div>
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Au démarrage :</div>
+              <div style="display:flex;flex-direction:column;gap:7px;">
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;background:#0A84FF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Rouvrir la dernière note</div></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;background:#0A84FF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Synchroniser via iCloud</div></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div style="width:150px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:right;flex:none;">Nouvelle note :</div>
+              <div style="height:28px;display:flex;align-items:center;gap:20px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Dans le dossier courant<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B · VÉRIFICATION DES ACCENTS -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">B · Les 8 accents vérifiés sur leurs usages réels</div>
+    <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);max-width:900px;">Chaque teinte de §7 est testée là où elle porte du texte blanc : cellule de liste sélectionnée, bouton principal, case cochée. Le rapport est mesuré sur la couleur composée, pas sur une estimation.</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · blanc sur accent</div>
+        <div style="width:600px;background:#FFFFFF;border-radius:8px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#007AFF;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Bleu — Feuille de route Q3</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">4,00:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#AF52DE;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Violet</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">4,04:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FF2D55;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Rose</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">4,16:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FF3B30;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Rouge</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">3,94:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FF9500;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Orange — texte noir imposé</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">7,05:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FFCC00;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Jaune — texte noir imposé</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">11,3:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#34C759;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Vert — texte noir imposé</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">6,54:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#8E8E93;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Graphite</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">3,03:1</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre + verdict</div>
+        <div style="width:600px;background:#1C1C1E;border-radius:8px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#0A84FF;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Bleu</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">3,56:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#BF5AF2;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Violet</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">3,44:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FF9F0A;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Orange — texte noir</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">7,60:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#FFD60A;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Jaune — texte noir</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">11,6:1</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:30px;padding:0 12px;background:#98989D;border-radius:6px;"><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Graphite — texte noir</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">6,17:1</div></div>
+        </div>
+        <div style="width:600px;background:#FFFFFF;border-radius:8px;padding:16px 18px;box-shadow:0 4px 12px rgba(0,0,0,0.20);display:flex;flex-direction:column;gap:8px;">
+          <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Règle à inscrire dans §7</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;"><code>text.onAccent</code> n'est pas toujours blanc. Il devient <b>une fonction de l'accent</b> : noir 85 % sur orange, jaune, vert et graphite ; blanc sur bleu, violet, rose et rouge. Les quatre teintes claires passaient sinon entre 1,7:1 et 2,1:1 — illisibles.</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:#BF2600;text-wrap:pretty;">Restent quatre teintes entre 3,0 et 4,2:1 avec du blanc — sous les 4,5:1 de l'AA pour du texte normal. Ce sont les valeurs Apple d'origine, cohérentes avec Finder et Mail. Deux options, à trancher : (a) accepter l'écart pour rester fidèle au système, en signalant que « Augmenter le contraste » assombrit ces quatre teintes de 12 % (bleu → 4,71:1, violet → 4,68:1, rose → 4,83:1, rouge → 4,60:1) ; (b) assombrir par défaut. Recommandation : option (a) — la variante HC existe déjà dans <code>Tokens.swift</code> et le comportement reste natif.</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;">Le graphite sombre (3,03:1 en blanc) bascule en texte noir : c'est la seule teinte où le thème sombre est plus contraignant que le clair.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C · APERÇU DE L'ACCENT APPLIQUÉ -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">C · Le même écran sous trois accents</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Bleu · clair</div>
+        <div style="width:290px;background:#FFFFFF;border-radius:8px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:8px;">
+          <div style="height:28px;border-radius:6px;background:#007AFF;display:flex;align-items:center;padding:0 10px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Note sélectionnée</div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:4px;background:#007AFF;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.26);text-decoration:line-through;">Tâche cochée</div></div>
+          <div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Un <span style="color:#007AFF;text-decoration:underline;">lien interne</span> et une <span style="background:rgba(0,122,255,0.28);">sélection</span>.</div>
+          <div style="height:2px;background:#007AFF;border-radius:1px;"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Vert · clair · texte noir sur accent</div>
+        <div style="width:290px;background:#FFFFFF;border-radius:8px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:8px;">
+          <div style="height:28px;border-radius:6px;background:#34C759;display:flex;align-items:center;padding:0 10px;font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Note sélectionnée</div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:4px;background:#34C759;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.26);text-decoration:line-through;">Tâche cochée</div></div>
+          <div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Un <span style="color:#1E7A34;text-decoration:underline;">lien interne</span> et une <span style="background:rgba(52,199,89,0.28);">sélection</span>.</div>
+          <div style="height:2px;background:#34C759;border-radius:1px;"></div>
+        </div>
+        <div style="width:290px;font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le lien ne prend pas l'accent brut : <code>text.link</code> dérive vers la variante lisible sur <code>bg.editor</code> (ici 4,96:1).</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Violet · sombre</div>
+        <div style="width:290px;background:#1C1C1E;border-radius:8px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;gap:8px;">
+          <div style="height:28px;border-radius:6px;background:#BF5AF2;display:flex;align-items:center;padding:0 10px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Note sélectionnée</div>
+          <div style="display:flex;align-items:center;gap:8px;"><div style="width:18px;height:18px;border-radius:4px;background:#BF5AF2;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.26);text-decoration:line-through;">Tâche cochée</div></div>
+          <div style="font:400 14px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Un <span style="color:#CB9AF5;text-decoration:underline;">lien interne</span> et une <span style="background:rgba(191,90,242,0.35);">sélection</span>.</div>
+          <div style="height:2px;background:#BF5AF2;border-radius:1px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}"></script>
+</body>
+</html>

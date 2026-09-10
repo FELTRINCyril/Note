@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+</style>
+</helmet>
+
+<section id="P5" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:40px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">P5</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">Page 5 — Bases de données</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;">Un seul jeu de données — la base <b>Chantiers</b>, 6 fiches, 6 champs — rendu dans les cinq vues. Même barre de vue en haut partout : onglets de vue à gauche, filtres / tris / groupes / recherche à droite, bouton Nouvelle fiche.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;"><b>Une fiche est une note.</b> Un clic sur n'importe quelle carte ou ligne ouvre l'éditeur de <a href="#3a">3a</a> avec ses propriétés en tête. Les vues ne sont que des lectures différentes du même contenu ; aucune n'a de champ qui lui soit propre.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:900px;text-wrap:pretty;"><b>Étiquettes.</b> Les teintes <code>db.tag.bg</code> de §18 sont des fonds <code>.subtle</code> ; le texte de l'étiquette prend donc la variante lisible mesurée en P1/P4, pas la couleur vive. Chaque statut porte aussi une forme de puce distincte — l'état ne dépend jamais de la seule couleur.</div>
+    </div>
+  </div>
+
+  <!-- A · GRILLE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">A · Vue Grille (table) — clair</div>
+    <div style="width:1240px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);overflow:hidden;">
+      <div style="height:44px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid rgba(0,0,0,0.10);">
+        <div style="display:flex;gap:2px;">
+          <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;background:rgba(0,0,0,0.10);font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M9 9v11"></path></svg>Grille</div>
+          <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="4" width="5" height="16" rx="1.5"></rect><rect x="10" y="4" width="5" height="11" rx="1.5"></rect><rect x="17" y="4" width="4" height="14" rx="1.5"></rect></svg>Kanban</div>
+          <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg>Calendrier</div>
+          <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="3" width="8" height="8" rx="1.5"></rect><rect x="13" y="3" width="8" height="8" rx="1.5"></rect><rect x="3" y="13" width="8" height="8" rx="1.5"></rect><rect x="13" y="13" width="8" height="8" rx="1.5"></rect></svg>Galerie</div>
+          <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>Liste</div>
+        </div>
+        <div style="flex:1;"></div>
+        <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 8px;border-radius:6px;background:rgba(0,122,255,0.12);font:400 13px/1.3 -apple-system,sans-serif;color:#05509E;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#05509E" stroke-width="1.8"><path d="M3 5h18l-7 8v6l-4 2v-8z"></path></svg>2 filtres</div>
+        <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><path d="M7 4v16m0 0l-3-3m3 3l3-3M17 20V4m0 0l-3 3m3-3l3 3"></path></svg>Trier</div>
+        <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><rect x="3" y="4" width="18" height="5" rx="1.5"></rect><rect x="3" y="13" width="18" height="7" rx="1.5"></rect></svg>Grouper</div>
+        <div style="height:26px;width:26px;display:flex;align-items:center;justify-content:center;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="M16 16l5 5"></path></svg></div>
+        <div style="height:26px;display:flex;align-items:center;gap:5px;padding:0 10px;border-radius:6px;background:#007AFF;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg>Nouvelle fiche</div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;background:#F2F2F5;border-bottom:1px solid rgba(0,0,0,0.10);">
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid rgba(0,0,0,0.10);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><path d="M4 7h16M4 12h10M4 17h13"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Chantier</div></div>
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid rgba(0,0,0,0.10);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Statut</div><div style="flex:1;"></div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid rgba(0,0,0,0.10);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20a7 7 0 0 1 14 0"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Responsable</div></div>
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid rgba(0,0,0,0.10);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 10h18M8 3v4M16 3v4"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Livraison</div></div>
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;border-right:1px solid rgba(0,0,0,0.10);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><path d="M5 19V9M12 19V5M19 19v-7"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Avancement</div></div>
+        <div style="padding:7px 12px;display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><path d="M4 7h4M4 12h4M4 17h4M11 7h9M11 12h9M11 17h9"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Étiquettes</div><div style="flex:1;"></div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;border-bottom:1px solid rgba(0,0,0,0.10);">
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.7"><path d="M6 3h9l5 5v13H6z"></path><path d="M15 3v5h5"></path></svg>Éditeur de blocs</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;"><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:999px;background:#AF52DE;font:600 9px/18px -apple-system,sans-serif;color:#FFFFFF;text-align:center;">CM</div><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Camille</div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">12 sept. 2026</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,0.10);"><div style="width:72%;height:100%;background:#007AFF;border-radius:2px;"></div></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">72 %</div></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:4px;"><div style="height:20px;display:flex;align-items:center;padding:0 8px;border-radius:999px;background:rgba(175,82,222,0.12);font:400 12px/1.3 -apple-system,sans-serif;color:#7B3AA8;">v1</div><div style="height:20px;display:flex;align-items:center;padding:0 8px;border-radius:999px;background:rgba(255,149,0,0.12);font:400 12px/1.3 -apple-system,sans-serif;color:#9A5700;">bloquant</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;border-bottom:1px solid rgba(0,0,0,0.10);background:rgba(0,0,0,0.02);">
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.7"><path d="M6 3h9l5 5v13H6z"></path><path d="M15 3v5h5"></path></svg>Synchronisation iCloud</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;"><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:999px;background:#34C759;font:600 9px/18px -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">NA</div><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Nadia</div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">3 oct. 2026</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,0.10);"><div style="width:45%;height:100%;background:#007AFF;border-radius:2px;"></div></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">45 %</div></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:4px;"><div style="height:20px;display:flex;align-items:center;padding:0 8px;border-radius:999px;background:rgba(175,82,222,0.12);font:400 12px/1.3 -apple-system,sans-serif;color:#7B3AA8;">v1</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;border-bottom:1px solid rgba(0,0,0,0.10);">
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.7"><path d="M6 3h9l5 5v13H6z"></path><path d="M15 3v5h5"></path></svg>Verrouillage de notes</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;"><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(52,199,89,0.12);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1E7A34" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#1E7A34;">Livré</div></div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="width:18px;height:18px;border-radius:999px;background:#AF52DE;font:600 9px/18px -apple-system,sans-serif;color:#FFFFFF;text-align:center;">CM</div><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Camille</div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">28 août 2026</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,0.10);"><div style="width:100%;height:100%;background:#007AFF;border-radius:2px;"></div></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">100 %</div></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:4px;"><div style="height:20px;display:flex;align-items:center;padding:0 8px;border-radius:999px;background:rgba(0,0,0,0.06);font:400 12px/1.3 -apple-system,sans-serif;color:#5A626B;">sécurité</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;border-bottom:1px solid rgba(0,0,0,0.10);background:rgba(0,0,0,0.02);">
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);display:flex;align-items:center;gap:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.7"><path d="M6 3h9l5 5v13H6z"></path><path d="M15 3v5h5"></path></svg>Assistant IA — RAG</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;"><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,0,0,0.06);"><div style="width:7px;height:7px;border-radius:999px;border:1.5px solid #5A626B;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#5A626B;">À faire</div></div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;"><div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.26);">Non attribué</div></div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.26);">—</div>
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);display:flex;align-items:center;gap:6px;"><div style="flex:1;height:4px;border-radius:2px;background:rgba(0,0,0,0.10);"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">0 %</div></div>
+        <div style="padding:8px 12px;display:flex;align-items:center;gap:4px;"><div style="height:20px;display:flex;align-items:center;padding:0 8px;border-radius:999px;background:rgba(255,45,85,0.12);font:400 12px/1.3 -apple-system,sans-serif;color:#B3245A;">v2</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;border-bottom:1px solid rgba(0,0,0,0.10);">
+        <div style="padding:8px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.26);display:flex;align-items:center;gap:8px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>Nouvelle fiche</div>
+        <div style="border-right:1px solid rgba(0,0,0,0.10);"></div><div style="border-right:1px solid rgba(0,0,0,0.10);"></div><div style="border-right:1px solid rgba(0,0,0,0.10);"></div><div style="border-right:1px solid rgba(0,0,0,0.10);"></div><div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:300px 150px 170px 140px 130px 1fr;background:#F2F2F5;">
+        <div style="padding:7px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">6 fiches</div>
+        <div style="padding:7px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Livré : 2</div>
+        <div style="padding:7px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Vides : 1</div>
+        <div style="padding:7px 12px;border-right:1px solid rgba(0,0,0,0.10);font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">Plus tard : 3 oct.</div>
+        <div style="padding:7px 12px;border-right:1px solid rgba(0,0,0,0.10);font:600 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);font-variant-numeric:tabular-nums;">Moyenne : 54 %</div>
+        <div style="padding:7px 12px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.26);">Calcul…</div>
+      </div>
+    </div>
+    <div style="width:1240px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Barre de calculs en pied de colonne : chaque cellule ouvre un menu (Somme, Moyenne, Min, Max, Vides, Remplies, Pourcentage rempli). Au repos elle affiche « Calcul… » en <code>text.tertiary</code>, discret mais cliquable. La colonne titre affiche toujours le nombre de fiches, non modifiable.</div>
+  </div>
+
+  <!-- B · KANBAN + CALENDRIER -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">B · Kanban &amp; Calendrier — sombre</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Kanban · groupé par Statut · carte en cours de déplacement</div>
+        <div style="width:700px;height:420px;background:#1E1E1E;border-radius:8px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;gap:12px;position:relative;">
+
+          <div style="flex:1;background:#232326;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:999px;border:1.5px solid #A8B0B8;"></div><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">À faire</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">2</div></div>
+            <div style="background:#2A2A2C;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,0.30);">
+              <div style="font:600 14px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Assistant IA — RAG</div>
+              <div style="display:flex;gap:4px;"><div style="height:18px;display:flex;align-items:center;padding:0 7px;border-radius:999px;background:rgba(255,55,95,0.22);font:400 11px/1.3 -apple-system,sans-serif;color:#FF9BB5;">v2</div></div>
+              <div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Non attribué</div>
+            </div>
+            <div style="height:2px;background:#0A84FF;border-radius:1px;"></div>
+            <div style="background:#2A2A2C;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;opacity:0.4;">
+              <div style="font:600 14px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Partage de note</div>
+              <div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Nadia · 14 nov.</div>
+            </div>
+          </div>
+
+          <div style="flex:1;background:#232326;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;background:#6CB6FF;"></div><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">En cours</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">2</div></div>
+            <div style="background:#2A2A2C;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,0.30);">
+              <div style="font:600 14px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Éditeur de blocs</div>
+              <div style="display:flex;gap:4px;"><div style="height:18px;display:flex;align-items:center;padding:0 7px;border-radius:999px;background:rgba(191,90,242,0.22);font:400 11px/1.3 -apple-system,sans-serif;color:#CB9AF5;">v1</div><div style="height:18px;display:flex;align-items:center;padding:0 7px;border-radius:999px;background:rgba(255,159,10,0.22);font:400 11px/1.3 -apple-system,sans-serif;color:#FFB84D;">bloquant</div></div>
+              <div style="display:flex;align-items:center;gap:6px;"><div style="width:16px;height:16px;border-radius:999px;background:#BF5AF2;font:600 8px/16px -apple-system,sans-serif;color:#FFFFFF;text-align:center;">CM</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);flex:1;">12 sept.</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">72 %</div></div>
+            </div>
+          </div>
+
+          <div style="flex:1;background:#232326;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:6px;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#5FD98A" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Livré</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">2</div></div>
+            <div style="background:#2A2A2C;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 1px 3px rgba(0,0,0,0.30);">
+              <div style="font:600 14px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Verrouillage de notes</div>
+              <div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Camille · 28 août</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;height:28px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>Ajouter</div>
+          </div>
+
+          <div style="position:absolute;left:250px;top:120px;width:200px;background:#2A2A2C;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 10px 30px rgba(0,0,0,0.55);opacity:0.6;transform:rotate(-2deg);">
+            <div style="font:600 14px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Partage de note</div>
+            <div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Nadia · 14 nov.</div>
+          </div>
+        </div>
+        <div style="width:700px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Déposer une carte dans une colonne écrit la valeur du champ de groupement — ici Statut. Ligne d'insertion et fantôme identiques à ceux des blocs (P1 §I). Au clavier : ⌃⌘← / → changent de colonne et annoncent « En cours, position 2 sur 2 ».</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Calendrier · mois · champ Livraison</div>
+        <div style="width:480px;height:420px;background:#1E1E1E;border-radius:8px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="font:600 15px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Septembre 2026</div>
+            <div style="flex:1;"></div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2.4"><path d="M15 5l-7 7 7 7"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Aujourd'hui</div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2.4"><path d="M9 5l7 7-7 7"></path></svg>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;">
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">L</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">M</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">M</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">J</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">V</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">S</div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.45);text-align:center;padding:4px 0;">D</div>
+          </div>
+          <div style="flex:1;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.15);border-radius:6px;overflow:hidden;">
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.26);font-variant-numeric:tabular-nums;">31</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">1</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">2</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">3</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">4</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">5</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">6</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">7</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">8</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">9</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">10</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">11</div>
+            <div style="background:#1C1C1E;padding:4px;display:flex;flex-direction:column;gap:3px;"><div style="width:19px;height:19px;border-radius:999px;background:rgba(10,132,255,0.22);font:600 11px/19px -apple-system,sans-serif;color:#6CB6FF;text-align:center;font-variant-numeric:tabular-nums;">12</div><div style="height:16px;border-radius:4px;background:rgba(10,132,255,0.22);padding:0 4px;font:400 10px/16px -apple-system,sans-serif;color:rgba(255,255,255,0.85);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">Éditeur de blocs</div></div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">13</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">14</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">15</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">16</div>
+            <div style="background:#1C1C1E;padding:4px;display:flex;flex-direction:column;gap:3px;"><div style="font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">17</div><div style="height:16px;border-radius:4px;background:rgba(10,132,255,0.22);padding:0 4px;font:400 10px/16px -apple-system,sans-serif;color:rgba(255,255,255,0.85);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">Revue design</div></div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">18</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">19</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">20</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">21</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">22</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">23</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">24</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">25</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">26</div>
+            <div style="background:#1C1C1E;padding:4px;font:400 11px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">27</div>
+          </div>
+        </div>
+        <div style="width:480px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le jour courant utilise <code>db.calendar.today</code> — pastille <code>accent.subtle</code> + numéro en teinte lisible (6,04:1), pas un aplat d'accent plein qui ferait concurrence aux événements. Glisser un événement change la date ; les fiches sans date restent dans un tiroir « Non planifiées » sous le mois.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C · GALERIE + LISTE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">C · Galerie &amp; Liste — clair</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Galerie · aperçu = couverture de la note</div>
+        <div style="width:620px;background:#FFFFFF;border-radius:8px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div style="border:1px solid rgba(0,0,0,0.12);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+            <div style="height:96px;background:repeating-linear-gradient(135deg,#E5E5EA 0 10px,#DEDEE3 10px 20px);"></div>
+            <div style="padding:8px;display:flex;flex-direction:column;gap:5px;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Éditeur de blocs</div>
+              <div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);align-self:flex-start;"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">Camille · 12 sept.</div>
+            </div>
+          </div>
+          <div style="border:1px solid rgba(0,0,0,0.12);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+            <div style="height:96px;background:repeating-linear-gradient(135deg,#E5E5EA 0 10px,#DEDEE3 10px 20px);"></div>
+            <div style="padding:8px;display:flex;flex-direction:column;gap:5px;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Synchronisation iCloud</div>
+              <div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);align-self:flex-start;"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">Nadia · 3 oct.</div>
+            </div>
+          </div>
+          <div style="border:1px solid rgba(0,0,0,0.12);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+            <div style="height:96px;background:#F2F2F5;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 15l5-4 4 3 3-2 6 4"></path></svg></div>
+            <div style="padding:8px;display:flex;flex-direction:column;gap:5px;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Assistant IA — RAG</div>
+              <div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,0,0,0.06);align-self:flex-start;"><div style="width:7px;height:7px;border-radius:999px;border:1.5px solid #5A626B;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#5A626B;">À faire</div></div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);">Sans aperçu</div>
+            </div>
+          </div>
+        </div>
+        <div style="width:620px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Trois tailles de vignette (S 96 / M 160 / L 240 pt). Sans couverture, l'aperçu affiche un cadre neutre, jamais la première image du corps — trop imprévisible.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Liste · groupée par Responsable · ligne survolée</div>
+        <div style="width:560px;background:#FFFFFF;border-radius:8px;padding:8px 0;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg><div style="width:18px;height:18px;border-radius:999px;background:#AF52DE;font:600 9px/18px -apple-system,sans-serif;color:#FFFFFF;text-align:center;">CM</div><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Camille</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">2</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px 0 30px;"><div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Éditeur de blocs</div><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;width:70px;text-align:right;">12 sept.</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px 0 30px;background:rgba(0,0,0,0.05);"><div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Verrouillage de notes</div><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(52,199,89,0.12);"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1E7A34" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#1E7A34;">Livré</div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;width:70px;text-align:right;">28 août</div><div style="display:flex;gap:2px;"><div style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(0,0,0,0.50)"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></div></div></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;margin-top:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg><div style="width:18px;height:18px;border-radius:999px;background:#34C759;font:600 9px/18px -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">NA</div><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Nadia</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">2</div></div>
+          <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px 0 30px;"><div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Synchronisation iCloud</div><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;width:70px;text-align:right;">3 oct.</div></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 14px;margin-top:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg><div style="width:18px;height:18px;border-radius:999px;background:#E5E5EA;font:600 9px/18px -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-align:center;">?</div><div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Non attribué</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">2</div></div>
+        </div>
+        <div style="width:560px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le groupe vide (« Non attribué ») est toujours en dernier et replié par défaut. Hauteur de ligne 34 pt en Liste contre 64 pt dans la liste de notes de <a href="#2a">2a</a> : ici les fiches n'ont pas d'extrait.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D · ÉDITEUR DE CHAMP + FILTRES + TEMPLATE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">D · Éditeur de champ, filtres, template de fiche</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · éditeur de champ « Statut » · tous les types</div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:300px;background:rgba(252,252,254,0.98);border:1px solid rgba(0,0,0,0.12);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.20);">
+            <div style="height:28px;display:flex;align-items:center;padding:0 8px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Statut</div>
+            <div style="height:28px;display:flex;align-items:center;gap:6px;padding:0 8px;background:#FFFFFF;border:1px solid rgba(0,0,0,0.12);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><circle cx="12" cy="12" r="8"></circle></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Sélection unique</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="3"><path d="M6 9l6 6 6-6"></path></svg></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(0,0,0,0.45);">Options</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <div style="display:flex;align-items:center;gap:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,0,0,0.06);flex:1;"><div style="width:7px;height:7px;border-radius:999px;border:1.5px solid #5A626B;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#5A626B;">À faire</div></div><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M5 19L19 5M5 5l14 14"></path></svg></div>
+              <div style="display:flex;align-items:center;gap:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(0,122,255,0.12);flex:1;"><div style="width:7px;height:7px;background:#05509E;"></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;">En cours</div></div><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M5 19L19 5M5 5l14 14"></path></svg></div>
+              <div style="display:flex;align-items:center;gap:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(0,0,0,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg><div style="display:flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:999px;background:rgba(52,199,89,0.12);flex:1;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#1E7A34" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg><div style="font:400 12px/1.3 -apple-system,sans-serif;color:#1E7A34;">Livré</div></div><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M5 19L19 5M5 5l14 14"></path></svg></div>
+              <div style="display:flex;align-items:center;gap:6px;padding-left:17px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>Ajouter une option</div>
+            </div>
+            <div style="height:1px;background:rgba(0,0,0,0.10);"></div>
+            <div style="display:flex;align-items:center;gap:6px;"><div style="width:13px;height:13px;border-radius:3px;background:#007AFF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Afficher dans le Kanban</div></div>
+            <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-wrap:pretty;">Chaque option porte une forme de puce en plus de sa couleur — carré, rond creux, coche.</div>
+          </div>
+
+          <div style="width:250px;background:rgba(252,252,254,0.98);border:1px solid rgba(0,0,0,0.12);border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:1px;box-shadow:0 10px 30px rgba(0,0,0,0.20);">
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(0,0,0,0.45);padding:6px 8px 3px;">Type de champ</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Texte</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Texte long</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Nombre <span style="color:rgba(0,0,0,0.50);">— entier, décimal, %, devise</span></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;background:#007AFF;font:400 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Sélection unique</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Sélection multiple</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Date <span style="color:rgba(0,0,0,0.50);">— avec ou sans heure</span></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Personne</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Case à cocher</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">URL · E-mail · Téléphone</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Fichier</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Relation vers une base</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Formule</div>
+            <div style="height:1px;background:rgba(0,0,0,0.10);margin:3px 6px;"></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(0,0,0,0.45);padding:6px 8px 3px;">Automatiques</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Créée le · Modifiée le</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · filtres / tris / groupement · template de fiche</div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <div style="width:330px;background:rgba(42,42,44,0.98);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.55);">
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Filtres</div>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <div style="width:44px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Où</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Statut</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">n'est pas</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Livré</div>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"><path d="M5 19L19 5M5 5l14 14"></path></svg>
+            </div>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <div style="width:44px;height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Et</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Livraison</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">avant</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Dans 30 jours</div>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"><path d="M5 19L19 5M5 5l14 14"></path></svg>
+            </div>
+            <div style="display:flex;gap:12px;font:400 13px/1.3 -apple-system,sans-serif;color:#6CB6FF;"><div>+ Filtre</div><div>+ Groupe de conditions</div></div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);"></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Tris</div>
+            <div style="display:flex;align-items:center;gap:5px;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,255,255,0.26)"><circle cx="9" cy="6" r="1.6"></circle><circle cx="15" cy="6" r="1.6"></circle><circle cx="9" cy="12" r="1.6"></circle><circle cx="15" cy="12" r="1.6"></circle><circle cx="9" cy="18" r="1.6"></circle><circle cx="15" cy="18" r="1.6"></circle></svg>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Livraison</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Croissant</div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);"></div>
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);">Groupement</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <div style="height:24px;display:flex;align-items:center;padding:0 6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Responsable</div>
+              <div style="display:flex;align-items:center;gap:5px;"><div style="width:13px;height:13px;border-radius:3px;background:#0A84FF;display:flex;align-items:center;justify-content:center;"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="4"><path d="M5 13l4 4L19 7"></path></svg></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Groupes vides</div></div>
+            </div>
+            <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Les réglages sont propres à la vue, pas à la base : chaque onglet garde ses filtres. Un badge compte les filtres actifs dans la barre.</div>
+          </div>
+
+          <div style="width:290px;background:rgba(42,42,44,0.98);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.55);">
+            <div style="font:700 15px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Template de fiche</div>
+            <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Le contenu de départ de toute nouvelle fiche. Les propriétés préremplies sont modifiables ensuite.</div>
+            <div style="background:#1C1C1E;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;">
+              <div style="font:700 17px/1.2 -apple-system,sans-serif;color:rgba(255,255,255,0.60);">Nom du chantier</div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:80px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Statut</div><div style="display:flex;align-items:center;gap:5px;height:18px;padding:0 7px;border-radius:999px;background:rgba(255,255,255,0.10);"><div style="width:6px;height:6px;border-radius:999px;border:1.5px solid #A8B0B8;"></div><div style="font:400 11px/1.3 -apple-system,sans-serif;color:#A8B0B8;">À faire</div></div></div>
+              <div style="display:flex;align-items:center;gap:8px;"><div style="width:80px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Avancement</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);font-variant-numeric:tabular-nums;">0 %</div></div>
+              <div style="height:1px;background:rgba(255,255,255,0.15);margin:2px 0;"></div>
+              <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Objectif</div>
+              <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.60);">Une phrase.</div>
+              <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Critères d'acceptation</div>
+              <div style="display:flex;gap:6px;align-items:center;"><div style="width:13px;height:13px;border-radius:3px;border:1.5px solid rgba(255,255,255,0.35);"></div><div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.60);">Premier critère</div></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;height:26px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Modifier</div>
+              <div style="flex:1;height:26px;display:flex;align-items:center;justify-content:center;background:#0A84FF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Définir par défaut</div>
+            </div>
+            <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Plusieurs templates possibles ; le bouton « Nouvelle fiche » devient alors un menu déroulant.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}"></script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+  @keyframes slateSpin{to{transform:rotate(360deg)}}
+  @keyframes slatePulse{0%,100%{opacity:1}50%{opacity:0.45}}
+</style>
+</helmet>
+
+<section id="P8" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:40px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">P8</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">Page 8 — États système</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;">Vides, chargements, erreurs, synchronisation. Ce sont les écrans qu'on voit le plus souvent en début d'usage et le moins souvent en démo.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;"><b>Trois lignes, jamais plus.</b> Un état vide = un glyphe fin, un titre qui décrit la situation, une phrase qui dit quoi faire, et au plus une action. Pas d'illustration, pas de ton badin : l'app est un outil de travail.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:900px;text-wrap:pretty;"><b>Aucun spinner nu.</b> Tout chargement de plus de 400 ms montre soit un squelette de la forme attendue, soit une phrase disant ce qui charge. Toute erreur nomme la cause et propose une reprise.</div>
+    </div>
+  </div>
+
+  <!-- A · ÉTATS VIDES -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">A · États vides</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · dossier vide</div>
+        <div style="width:400px;height:280px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 48px;">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="1.1"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+          <div style="font:600 17px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">Aucune note dans « Feuilles de route »</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.55);text-align:center;text-wrap:pretty;">Créez la première, ou glissez-y des notes depuis un autre dossier.</div>
+          <div style="height:28px;display:flex;align-items:center;gap:5px;padding:0 12px;background:#007AFF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;margin-top:4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg>Nouvelle note</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · recherche sans résultat</div>
+        <div style="width:400px;height:280px;background:#1E1E1E;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <div style="height:28px;display:flex;align-items:center;gap:7px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.60)" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="M16 16l5 5"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">rétroplanning fournisseur</div><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:0 40px;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="1.1"><circle cx="11" cy="11" r="7"></circle><path d="M16 16l5 5"></path></svg>
+            <div style="font:600 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:center;">Aucun résultat</div>
+            <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-align:center;text-wrap:pretty;">Rien ne correspond à « rétroplanning fournisseur » dans Produit. 3 notes verrouillées n'ont pas été fouillées.</div>
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Chercher dans tous les workspaces</div>
+              <div style="height:24px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Demander à l'assistant</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · base de données vide</div>
+        <div style="width:400px;height:280px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="height:36px;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid rgba(0,0,0,0.10);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M3 9h18M9 9v11"></path></svg><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Chantiers</div></div>
+          <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr;background:#F2F2F5;border-bottom:1px solid rgba(0,0,0,0.10);">
+            <div style="padding:6px 10px;font:600 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);border-right:1px solid rgba(0,0,0,0.10);">Chantier</div>
+            <div style="padding:6px 10px;font:600 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);border-right:1px solid rgba(0,0,0,0.10);">Statut</div>
+            <div style="padding:6px 10px;font:600 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Livraison</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:0 40px;">
+            <div style="font:600 15px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">Base vide</div>
+            <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.55);text-align:center;text-wrap:pretty;">Les 3 champs sont définis. Ajoutez une première fiche, ou importez un CSV.</div>
+            <div style="display:flex;gap:6px;margin-top:2px;">
+              <div style="height:26px;display:flex;align-items:center;gap:4px;padding:0 10px;background:#007AFF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Nouvelle fiche</div>
+              <div style="height:26px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Importer un CSV</div>
+            </div>
+          </div>
+        </div>
+        <div style="width:400px;font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Les en-têtes de colonnes restent visibles : la base vide montre sa structure, ce qui vaut mieux qu'un cadre blanc.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · aucune note sélectionnée</div>
+        <div style="width:400px;height:280px;background:#1C1C1E;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 48px;">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="1.1"><path d="M6 3h9l5 5v13H6z"></path><path d="M15 3v5h5"></path></svg>
+          <div style="font:600 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:center;">Aucune note sélectionnée</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-align:center;text-wrap:pretty;">Choisissez une note dans la liste, ou appuyez sur ⌘N.</div>
+        </div>
+        <div style="width:400px;font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Ici pas de bouton : le raccourci suffit, et la liste voisine porte déjà l'action. Un bouton de plus ferait doublon.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B · SYNCHRONISATION -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">B · Indicateur de synchronisation iCloud</div>
+    <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);max-width:900px;">Ligne discrète en pied de sidebar. À jour, elle s'efface après 3 s et ne laisse que la date de dernière synchronisation au survol. En erreur, elle reste et devient cliquable.</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · les quatre états</div>
+        <div style="width:400px;background:#F2F2F5;border-radius:8px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:2px;">
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2.2" style="animation:slateSpin 0.9s linear infinite;"><path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Synchronisation — 12 notes sur 48</div>
+          </div>
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1E7A34" stroke-width="2.2"><path d="M5 13l4 4L19 7"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">À jour</div>
+            <div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">il y a 1 min</div>
+          </div>
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9A5700" stroke-width="1.9"><path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17h.01"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Hors ligne — 3 modifications en attente</div>
+          </div>
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:6px;background:rgba(255,59,48,0.12);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="1.9"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Échec de synchronisation</div>
+            <div style="font:400 12px/1.3 -apple-system,sans-serif;color:#05509E;text-decoration:underline;">Détails</div>
+          </div>
+        </div>
+        <div style="width:400px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Quatre glyphes distincts, quatre libellés distincts : l'état ne se lit jamais à la couleur seule. Le compteur « 12 sur 48 » remplace une barre de progression — plus informatif dans une ligne de 30 pt.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · détail de l'erreur · conflit de version</div>
+        <div style="width:440px;background:#2A2A2C;border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.55);display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:flex-start;gap:9px;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FF8A82" stroke-width="1.8" style="flex:none;margin-top:1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="font:700 15px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">iCloud a refusé 2 notes</div>
+              <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Votre espace iCloud est plein (5 Go sur 5 Go). Les modifications locales sont conservées et seront envoyées dès qu'il y aura de la place.</div>
+            </div>
+          </div>
+          <div style="background:#1C1C1E;border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;">
+            <div style="display:flex;align-items:center;gap:8px;"><div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Entretiens utilisateurs</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">18,2 Mo</div></div>
+            <div style="display:flex;align-items:center;gap:8px;"><div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Architecture de l'éditeur</div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">4,1 Mo</div></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div style="height:28px;display:flex;align-items:center;padding:0 12px;background:#0A84FF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Réessayer</div>
+            <div style="height:28px;display:flex;align-items:center;padding:0 12px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Gérer iCloud…</div>
+            <div style="flex:1;"></div>
+            <div style="height:28px;display:flex;align-items:center;padding:0 12px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Ignorer</div>
+          </div>
+        </div>
+
+        <div style="width:440px;background:#2A2A2C;border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.55);display:flex;flex-direction:column;gap:10px;">
+          <div style="font:700 15px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Deux versions de « Feuille de route Q3 »</div>
+          <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">La note a été modifiée sur deux appareils pendant que vous étiez hors ligne. Rien n'a été perdu : choisissez celle à garder, l'autre reste disponible dans l'historique.</div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;background:#1C1C1E;border:1px solid #0A84FF;border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:3px;">
+              <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Ce Mac</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">14:22 · 428 mots</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">+ 2 blocs, − 1 bloc</div>
+            </div>
+            <div style="flex:1;background:#1C1C1E;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:9px;display:flex;flex-direction:column;gap:3px;">
+              <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">iPhone de Camille</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);font-variant-numeric:tabular-nums;">13:47 · 402 mots</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">+ 1 bloc</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Garder les deux</div>
+            <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;background:#0A84FF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Garder celle-ci</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C · CHARGEMENT & ERREUR -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">C · Chargement &amp; erreurs avec reprise</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · squelettes (liste + éditeur)</div>
+        <div style="width:620px;height:300px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;overflow:hidden;">
+          <div style="width:230px;border-right:1px solid rgba(0,0,0,0.10);padding:12px;display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;flex-direction:column;gap:6px;animation:slatePulse 1.4s ease-in-out infinite;">
+              <div style="height:11px;width:70%;background:#E5E5EA;border-radius:3px;"></div>
+              <div style="height:9px;width:92%;background:#F2F2F5;border-radius:3px;"></div>
+              <div style="height:9px;width:44%;background:#F2F2F5;border-radius:3px;"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;animation:slatePulse 1.4s ease-in-out infinite;">
+              <div style="height:11px;width:56%;background:#E5E5EA;border-radius:3px;"></div>
+              <div style="height:9px;width:88%;background:#F2F2F5;border-radius:3px;"></div>
+              <div style="height:9px;width:38%;background:#F2F2F5;border-radius:3px;"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;animation:slatePulse 1.4s ease-in-out infinite;">
+              <div style="height:11px;width:64%;background:#E5E5EA;border-radius:3px;"></div>
+              <div style="height:9px;width:80%;background:#F2F2F5;border-radius:3px;"></div>
+            </div>
+          </div>
+          <div style="flex:1;padding:20px;display:flex;flex-direction:column;gap:12px;animation:slatePulse 1.4s ease-in-out infinite;">
+            <div style="height:22px;width:62%;background:#E5E5EA;border-radius:4px;"></div>
+            <div style="height:11px;width:90%;background:#F2F2F5;border-radius:3px;"></div>
+            <div style="height:11px;width:96%;background:#F2F2F5;border-radius:3px;"></div>
+            <div style="height:11px;width:72%;background:#F2F2F5;border-radius:3px;"></div>
+            <div style="height:11px;width:88%;background:#F2F2F5;border-radius:3px;"></div>
+          </div>
+        </div>
+        <div style="width:620px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le squelette reprend la forme réelle : trois cellules de 64 pt, un titre de 28 pt, quatre lignes de corps. Il ne s'affiche qu'au-delà de 400 ms — en deçà, le contenu arrive avant que l'œil n'ait le temps de voir un état intermédiaire. Sous « Réduire les animations », la pulsation s'arrête et les blocs restent unis. VoiceOver annonce « Chargement de la liste des notes », pas la structure vide.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · erreurs de chargement · trois portées</div>
+        <div style="width:560px;display:flex;flex-direction:column;gap:12px;">
+
+          <div style="background:#1C1C1E;border-radius:8px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;align-items:center;gap:9px;">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="1.1"><path d="M6 3h9l5 5v13H6z"></path><path d="M9 13h6M9 17h4"></path></svg>
+            <div style="font:600 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Impossible d'ouvrir cette note</div>
+            <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-align:center;max-width:380px;text-wrap:pretty;">Le fichier local est corrompu. Une version du 3 août est disponible dans l'historique iCloud.</div>
+            <div style="display:flex;gap:8px;margin-top:2px;">
+              <div style="height:28px;display:flex;align-items:center;padding:0 12px;background:#0A84FF;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Restaurer la version du 3 août</div>
+              <div style="height:28px;display:flex;align-items:center;padding:0 12px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Signaler</div>
+            </div>
+          </div>
+
+          <div style="background:#1C1C1E;border-radius:8px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;align-items:center;gap:10px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FFB84D" stroke-width="1.8" style="flex:none;"><path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17h.01"></path></svg>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;">
+              <div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">La vue Kanban n'a pas pu charger 12 fiches</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Les autres vues restent utilisables.</div>
+            </div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Recharger</div>
+          </div>
+
+          <div style="background:#1C1C1E;border-radius:8px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;align-items:center;gap:10px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.8" style="flex:none;"><path d="M3 12a9 9 0 0 1 9-9M21 12a9 9 0 0 1-9 9"></path><path d="M3 5v4h4M21 19v-4h-4"></path></svg>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;">
+              <div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">L'assistant n'a pas répondu</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Délai dépassé après 30 s. Votre question est conservée.</div>
+            </div>
+            <div style="height:24px;display:flex;align-items:center;padding:0 10px;background:#0A84FF;border-radius:6px;font:600 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Relancer</div>
+          </div>
+
+          <div style="font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Trois portées, trois traitements : l'écran entier quand rien n'est utilisable, le bandeau dans la vue quand une partie l'est, la ligne en place quand l'action seule a échoué. Une erreur ne bloque jamais plus que ce qu'elle concerne, et chacune garde le travail en cours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}"></script>
+</body>
+</html>

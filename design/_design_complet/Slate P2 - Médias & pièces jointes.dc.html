@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+  @keyframes slateSpin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<section id="P2" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:40px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">P2</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">Page 2 — Médias &amp; pièces jointes</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;">Suite de <a href="#P1">P1</a>. Un média est un bloc comme un autre : même gouttière, même chrome ⋮⋮, même sélection. Il ne sort de la colonne de 720 pt que sur demande explicite (alignement pleine largeur).</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;"><b>Trois largeurs, pas un curseur libre.</b> Colonne (720 pt), débord (960 pt) et pleine largeur : les poignées se calent sur ces paliers, avec position libre entre 25 % et 100 % de la colonne. Ça évite les mises en page ingérables au redimensionnement de la fenêtre.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:900px;text-wrap:pretty;"><b>Tokens ajoutés</b> (§16 quater, détaillés en bas) : <code>media.dropzone.*</code>, <code>media.handle.*</code>, <code>attachment.icon.*</code>. Aucun n'introduit de couleur nouvelle : tous dérivent de §3 et §5.</div>
+    </div>
+  </div>
+
+  <!-- A · BLOC IMAGE : LES 4 ÉTATS -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">A · Bloc image — parcours complet</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · 1 vide · 2 survol de dépôt · 3 chargement</div>
+        <div style="width:600px;background:#FFFFFF;border-radius:8px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:16px;">
+
+          <div style="display:flex;align-items:center;gap:12px;height:80px;border:1px dashed rgba(0,0,0,0.22);border-radius:8px;padding:0 16px;background:#F2F2F5;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 15l5-4 4 3 3-2 6 4"></path><circle cx="9" cy="9.5" r="1.2"></circle></svg>
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Ajouter une image</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.55);">Glissez un fichier, collez, ou <span style="color:#007AFF;text-decoration:underline;">choisissez sur le Mac</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:center;gap:10px;height:80px;border:2px dashed #007AFF;border-radius:8px;background:rgba(0,122,255,0.12);">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#05509E" stroke-width="1.8"><path d="M12 16V4m0 0L8 8m4-4l4 4"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>
+            <div style="font:600 15px/1.5 -apple-system,sans-serif;color:#05509E;">Déposer « schema-blocs.png »</div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:8px;height:80px;justify-content:center;border-radius:8px;background:#F2F2F5;padding:0 16px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2.2" style="animation:slateSpin 0.9s linear infinite;"><path d="M12 3a9 9 0 1 0 9 9" stroke-linecap="round"></path></svg>
+              <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">schema-blocs.png</div>
+              <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);font-variant-numeric:tabular-nums;">1,8 Mo · 64 %</div>
+              <div style="font:400 13px/1.3 -apple-system,sans-serif;color:#007AFF;">Annuler</div>
+            </div>
+            <div style="height:4px;border-radius:2px;background:rgba(0,0,0,0.10);overflow:hidden;"><div style="width:64%;height:100%;background:#007AFF;"></div></div>
+          </div>
+
+          <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-wrap:pretty;">La zone vide fait 80 pt de haut, pas plus : elle ne doit pas donner l'impression d'un trou dans la note. Le pourcentage est en chiffres tabulaires ; la barre est doublée par le texte, la progression n'est pas portée par la seule couleur.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · 4 affichée · sélectionnée · poignées · légende</div>
+        <div style="width:600px;background:#1C1C1E;border-radius:8px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;gap:8px;">
+          <div style="position:relative;border-radius:8px;overflow:visible;">
+            <div style="height:220px;border-radius:8px;background:repeating-linear-gradient(135deg,#3A3A3C 0 14px,#333335 14px 28px);position:relative;outline:2px solid #0A84FF;outline-offset:2px;">
+              <div style="position:absolute;left:12px;top:10px;font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">schema-blocs.png · 1 640 × 984</div>
+              <div style="position:absolute;right:8px;top:8px;display:flex;gap:4px;">
+                <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(28,28,30,0.9);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2"><path d="M4 6h16M7 12h10M4 18h16"></path></svg>Colonne</div>
+                <div style="width:22px;height:22px;display:flex;align-items:center;justify-content:center;background:rgba(28,28,30,0.9);border:1px solid rgba(255,255,255,0.15);border-radius:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></div>
+              </div>
+              <div style="position:absolute;left:-4px;top:50%;margin-top:-14px;width:8px;height:28px;border-radius:4px;background:#0A84FF;border:1.5px solid #1C1C1E;"></div>
+              <div style="position:absolute;right:-4px;top:50%;margin-top:-14px;width:8px;height:28px;border-radius:4px;background:#0A84FF;border:1.5px solid #1C1C1E;"></div>
+              <div style="position:absolute;left:50%;bottom:-4px;margin-left:-14px;width:28px;height:8px;border-radius:4px;background:#0A84FF;border:1.5px solid #1C1C1E;"></div>
+              <div style="position:absolute;right:12px;bottom:12px;height:18px;padding:0 6px;border-radius:4px;background:#0A84FF;font:400 11px/18px -apple-system,sans-serif;color:#FFFFFF;font-variant-numeric:tabular-nums;">720 pt · colonne</div>
+            </div>
+          </div>
+          <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);padding:6px 2px 0;text-wrap:pretty;">Architecture des blocs, révision de septembre. <span style="color:rgba(255,255,255,0.26);">— légende, style <code style="background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.55);">caption</code>, cliquez pour éditer</span></div>
+          <div style="display:flex;gap:6px;margin-top:4px;">
+            <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Gauche</div>
+            <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:#0A84FF;border:1px solid #0A84FF;border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:#FFFFFF;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg>Centré</div>
+            <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Droite</div>
+            <div style="width:1px;background:rgba(255,255,255,0.15);margin:0 2px;"></div>
+            <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Débord 960</div>
+            <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Pleine largeur</div>
+          </div>
+          <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.55);margin-top:4px;text-wrap:pretty;">Poignées 8 × 28 pt, cible de saisie portée à 20 pt. Au clavier : ⌥← / ⌥→ passent d'un palier au suivant et annoncent « largeur colonne, 720 points ». L'alignement actif porte une coche, pas seulement l'aplat d'accent.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B · PIÈCES JOINTES -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">B · Bloc fichier joint</div>
+    <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);max-width:900px;">Hauteur fixe 52 pt, icône 32 pt à gauche, nom + métadonnées au centre, actions à droite au survol. Un seul fichier par bloc — pas de grille de vignettes, qui rendrait la sélection de bloc ambiguë.</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · icônes par type · dernier bloc survolé</div>
+        <div style="width:600px;background:#FFFFFF;border-radius:8px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;gap:8px;">
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px solid rgba(0,0,0,0.12);border-radius:8px;">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(255,59,48,0.12);display:flex;align-items:center;justify-content:center;font:700 10px/1 -apple-system,sans-serif;color:#B3261E;letter-spacing:0.3px;">PDF</div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Spécifications techniques v4.pdf</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.55);font-variant-numeric:tabular-nums;">PDF · 2,4 Mo · 12 pages</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px solid rgba(0,0,0,0.12);border-radius:8px;">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(52,199,89,0.12);display:flex;align-items:center;justify-content:center;font:700 10px/1 -apple-system,sans-serif;color:#1E7A34;letter-spacing:0.3px;">XLS</div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Budget Q3.xlsx</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.55);font-variant-numeric:tabular-nums;">Tableur · 148 Ko</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px solid rgba(0,0,0,0.12);border-radius:8px;">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M9 18V6l10-2v12"></path><circle cx="6" cy="18" r="3"></circle><circle cx="16" cy="16" r="3"></circle></svg></div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Réunion cadrage 12-08.m4a</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.55);font-variant-numeric:tabular-nums;">Audio · 18,2 Mo · 42:07</div>
+            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px solid rgba(0,0,0,0.12);border-radius:8px;background:rgba(0,0,0,0.05);">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M21 8v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path><path d="M14 3h7v7"></path></svg></div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">archive-recherche.zip</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.55);font-variant-numeric:tabular-nums;">Archive · 64,9 Mo</div>
+            </div>
+            <div style="display:flex;gap:2px;">
+              <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><circle cx="11" cy="11" r="7"></circle><path d="M16 16l5 5"></path></svg></div>
+              <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M12 4v12m0 0l-4-4m4 4l4-4"></path><path d="M4 20h16"></path></svg></div>
+              <div style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;"><svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(0,0,0,0.50)"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></div>
+            </div>
+          </div>
+          <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-wrap:pretty;">Actions au survol : Aperçu (barre d'espace), Télécharger, menu ⋯ (Renommer, Révéler dans le Finder, Remplacer, Supprimer). Le type est écrit en toutes lettres dans les métadonnées : la pastille colorée n'est jamais la seule indication.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · échec de dépôt · fichier manquant · menu ⋯</div>
+        <div style="width:600px;background:#1C1C1E;border-radius:8px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;gap:8px;position:relative;">
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(255,69,58,0.18);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF8A82" stroke-width="1.8"><path d="M12 4l9 16H3z"></path><path d="M12 10v4M12 17h.01"></path></svg></div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">montage-final.mov</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:#FF8A82;">Échec de l'import — fichier supérieur à 2 Go</div>
+            </div>
+            <div style="height:22px;display:flex;align-items:center;padding:0 8px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Réessayer</div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;height:52px;padding:0 12px;border:1px dashed rgba(255,255,255,0.28);border-radius:8px;opacity:0.7;">
+            <div style="width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M9 9l6 6M15 9l-6 6"></path></svg></div>
+            <div style="display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;">
+              <div style="font:400 15px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">notes-terrain.pdf</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.55);">Fichier introuvable — non synchronisé depuis cet appareil</div>
+            </div>
+            <div style="height:22px;display:flex;align-items:center;padding:0 8px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Localiser</div>
+          </div>
+
+          <div style="width:210px;background:rgba(42,42,44,0.98);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px;display:flex;flex-direction:column;gap:1px;box-shadow:0 4px 12px rgba(0,0,0,0.40);margin-top:8px;align-self:flex-end;">
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;background:rgba(255,255,255,0.07);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><path d="M12 20h9"></path><path d="M16.5 3.5l4 4L7 21H3v-4z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Renommer</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><path d="M4 6h6l2 2h8v10H4z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Révéler dans le Finder</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><path d="M20 12a8 8 0 1 1-2.3-5.6"></path><path d="M20 4v5h-5"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Remplacer le fichier…</div></div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);margin:3px 6px;"></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Supprimer le bloc</div></div>
+          </div>
+          <div style="font:400 12px/1.4 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Les deux états d'erreur portent une icône, un texte explicite et une action de reprise. Le rouge n'apparaît que sur le glyphe et sur la ligne de cause ; le nom du fichier reste en <code style="background:rgba(255,255,255,0.10);color:rgba(255,255,255,0.85);">text.primary</code>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C · ZONE DE DROP GLOBALE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">C · Dépôt dans l'éditeur</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · dépôt entre deux blocs (survol précis)</div>
+        <div style="width:600px;background:#FFFFFF;border-radius:8px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,0.30);font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.85);display:flex;flex-direction:column;gap:4px;position:relative;">
+          <div style="padding:2px 8px;">Le curseur survole la frontière entre deux paragraphes.</div>
+          <div style="height:2px;background:#007AFF;border-radius:1px;margin:6px 8px;position:relative;"><div style="position:absolute;left:-5px;top:-3px;width:8px;height:8px;border-radius:999px;background:#007AFF;"></div><div style="position:absolute;right:0;top:-22px;height:18px;padding:0 6px;border-radius:4px;background:#007AFF;font:400 11px/18px -apple-system,sans-serif;color:#FFFFFF;">Insérer 3 images ici</div></div>
+          <div style="padding:2px 8px;">Même ligne d'insertion que pour le déplacement de blocs — un seul vocabulaire de dépôt dans toute l'app.</div>
+        </div>
+        <div style="width:600px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le badge de comptage n'apparaît qu'à partir de deux fichiers. Un dossier déposé est refusé avec un message, pas ignoré silencieusement.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · dépôt sur la note entière (survol large)</div>
+        <div style="width:600px;height:280px;background:#1C1C1E;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.50);position:relative;overflow:hidden;">
+          <div style="padding:24px;font:400 15px/1.5 -apple-system,sans-serif;color:rgba(255,255,255,0.85);display:flex;flex-direction:column;gap:8px;opacity:0.35;">
+            <div style="font:700 28px/1.15 -apple-system,sans-serif;">Architecture de l'éditeur</div>
+            <div>Quand le curseur n'est proche d'aucune frontière, la note entière devient la cible et le contenu s'atténue.</div>
+            <div>Les fichiers sont alors ajoutés à la fin de la note.</div>
+          </div>
+          <div style="position:absolute;inset:12px;border:2px dashed #0A84FF;border-radius:8px;background:rgba(10,132,255,0.20);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6CB6FF" stroke-width="1.6"><path d="M12 16V4m0 0L8 8m4-4l4 4"></path><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path></svg>
+            <div style="font:600 17px/1.3 -apple-system,sans-serif;color:#6CB6FF;">Déposer dans « Architecture de l'éditeur »</div>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">3 images et 1 PDF — ajoutés à la fin de la note</div>
+          </div>
+        </div>
+        <div style="width:600px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le voile de dépôt utilise <code>accent.subtle</code> et non un scrim noir : la note reste identifiable derrière. Sortie du survol = retour immédiat, sans animation de fermeture.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D · TOKENS -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">D · Tokens §16 quater</div>
+    <div style="background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);display:flex;flex-direction:column;gap:12px;">
+      <div style="display:grid;grid-template-columns:200px 1fr 1fr 1.4fr;gap:4px 16px;font:400 13px/1.45 -apple-system,sans-serif;">
+        <div style="font-weight:600;color:rgba(0,0,0,0.50);">Token</div><div style="font-weight:600;color:rgba(0,0,0,0.50);">Clair</div><div style="font-weight:600;color:rgba(0,0,0,0.50);">Sombre</div><div style="font-weight:600;color:rgba(0,0,0,0.50);">Usage</div>
+        <div><code>media.dropzone.bg</code></div><div><code>#F2F2F5</code></div><div><code>#2C2C2E</code></div><div>Zone vide au repos = <code>surface.secondary</code></div>
+        <div><code>media.dropzone.border</code></div><div><code>rgba(0,0,0,0.22)</code></div><div><code>rgba(255,255,255,0.28)</code></div><div>Tireté 1 pt au repos = <code>border.strong</code></div>
+        <div><code>media.dropzone.active.bg</code></div><div colspan="2"><code>= accent.subtle</code></div><div></div><div>Survol de dépôt, tireté 2 pt en <code>accent.default</code></div>
+        <div><code>media.handle.fill</code></div><div colspan="2"><code>= accent.default</code></div><div></div><div>Poignée 8 × 28 pt, liseré 1,5 pt en <code>bg.editor</code></div>
+        <div><code>media.overflowWidth</code></div><div><code>960 pt</code></div><div>—</div><div>Palier « débord » entre colonne et pleine largeur</div>
+        <div><code>attachment.height</code></div><div><code>52 pt</code></div><div>—</div><div>Hauteur de bloc fichier</div>
+        <div><code>attachment.icon.size</code></div><div><code>32 pt</code></div><div>—</div><div>Pastille de type, rayon <code>radius.s</code></div>
+        <div><code>attachment.icon.bg</code></div><div colspan="2">teinte <code>.subtle</code> du type, sinon <code>state.hover</code></div><div></div><div>Le type est toujours écrit en clair à côté</div>
+      </div>
+      <div style="height:1px;background:rgba(0,0,0,0.10);"></div>
+      <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;"><b>Contrastes mesurés.</b> Étiquette de dépôt <code>#05509E</code> sur <code>accent.subtle</code> composé (#E5F1FF) : 6,93:1. En sombre <code>#6CB6FF</code> sur (#1B2A3A) : 6,04:1. Pastille PDF <code>#B3261E</code> sur <code>rgba(255,59,48,0.12)</code> composé (#FFECEB) : 6,01:1. Pastille XLS <code>#1E7A34</code> sur (#EAF9EE) : 4,96:1. Ligne d'erreur <code>#FF8A82</code> sur <code>bg.editor</code> sombre : 6,42:1.</div>
+      <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-wrap:pretty;"><b>Dynamic Type.</b> À partir de <code>.accessibility1</code>, le bloc fichier passe de 52 pt à hauteur libre et les actions descendent sous les métadonnées. Les poignées de redimensionnement d'image gardent 8 × 28 pt (contrôle direct, non textuel) mais la cible passe à 28 pt.</div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  html,body{margin:0;padding:0;background:#8A8A8E;-webkit-font-smoothing:antialiased;}
+  a{color:#0A6BE6;text-decoration:none;}
+  a:hover{color:#0A6CE0;text-decoration:underline;}
+  code{font-family:ui-monospace,'SF Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px;}
+  @keyframes slateCaret{0%,45%{opacity:1}55%,100%{opacity:0}}
+</style>
+</helmet>
+
+<section id="P3" style="font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;padding:48px;display:flex;flex-direction:column;gap:40px;background:#8A8A8E;color:#1A1A1A;">
+
+  <div style="display:flex;align-items:flex-start;gap:24px;background:#FFFFFF;border-radius:12px;padding:24px 28px;max-width:1240px;box-shadow:0 4px 12px rgba(0,0,0,0.12);">
+    <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:#FFFFFF;background:#0A6BE6;border-radius:999px;padding:5px 10px;flex:none;">P3</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="font:700 28px/1.15 -apple-system,sans-serif;letter-spacing:-0.4px;">Page 3 — Organisation &amp; sécurité</div>
+      <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;">Menus contextuels de note, corbeille, verrouillage. Les écrans reprennent la coquille à trois colonnes de <a href="#1a">1a</a> ; seule la troisième colonne change.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.55);max-width:900px;text-wrap:pretty;"><b>Deux règles de destruction.</b> Rien ne disparaît sans passer par la corbeille, et rien ne quitte la corbeille sans confirmation nommée (le titre de la note apparaît dans l'alerte). La suppression définitive est la seule action de toute l'app qui utilise un bouton destructif rouge plein.</div>
+      <div style="font:400 14px/1.5 -apple-system,sans-serif;color:#BF2600;max-width:900px;text-wrap:pretty;"><b>Verrouillage.</b> Une note verrouillée ne montre ni son contenu, ni son extrait dans la liste, ni ses pièces jointes dans la recherche. Le titre reste visible : c'est un choix explicite, signalé dans le dialogue de définition du mot de passe.</div>
+    </div>
+  </div>
+
+  <!-- A · MENUS CONTEXTUELS -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">A · Menus contextuels de note</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · clic droit sur une cellule de liste</div>
+        <div style="width:600px;height:420px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);position:relative;overflow:hidden;">
+          <div style="padding:12px 0;display:flex;flex-direction:column;">
+            <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);padding:6px 16px;">Aujourd'hui</div>
+            <div style="height:64px;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;background:rgba(0,0,0,0.10);border-radius:6px;margin:0 8px;">
+              <div style="display:flex;align-items:center;gap:6px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="#007AFF"><path d="M12 2l2 6h6l-5 4 2 7-5-4-5 4 2-7-5-4h6z"></path></svg><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Feuille de route Q3</div></div>
+              <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Ce que l'on livre avant septembre, et ce que l'on…</div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.26);">14:22 · Produit</div>
+            </div>
+            <div style="height:64px;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Comptes rendus hebdo</div>
+              <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Semaine 32 — décisions et points bloquants</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:180px;top:96px;width:236px;background:rgba(252,252,254,0.98);border:1px solid rgba(0,0,0,0.12);border-radius:8px;padding:4px;display:flex;flex-direction:column;gap:1px;box-shadow:0 10px 30px rgba(0,0,0,0.20);">
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;background:rgba(0,0,0,0.05);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><path d="M12 2l2 6h6l-5 4 2 7-5-4-5 4 2-7-5-4h6z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Désépingler</div><div style="font:400 12px/1.3 ui-monospace,monospace;color:rgba(0,0,0,0.50);">⌃⌘P</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Verrouiller la note</div><div style="font:400 12px/1.3 ui-monospace,monospace;color:rgba(0,0,0,0.50);">⌃⌘L</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h8"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Dupliquer</div><div style="font:400 12px/1.3 ui-monospace,monospace;color:rgba(0,0,0,0.50);">⌘D</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><path d="M4 6h6l2 2h8v10H4z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Déplacer vers</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg></div>
+            <div style="height:1px;background:rgba(0,0,0,0.10);margin:3px 6px;"></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><path d="M12 16V4m0 0L8 8m4-4l4 4"></path><path d="M4 16v3h16v-3"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Exporter…</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.7"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Copier le lien interne</div></div>
+            <div style="height:1px;background:rgba(0,0,0,0.10);margin:3px 6px;"></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF3B30" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);flex:1;">Mettre à la corbeille</div><div style="font:400 12px/1.3 ui-monospace,monospace;color:rgba(0,0,0,0.50);">⌘⌫</div></div>
+          </div>
+          <div style="position:absolute;left:424px;top:96px;width:150px;font:400 12px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-wrap:pretty;">La cellule reste marquée pendant l'ouverture du menu, mais en <code>state.selectedInactive</code> : la fenêtre n'a plus le focus clavier.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · sélection multiple · sous-menu « Déplacer vers »</div>
+        <div style="width:600px;height:420px;background:#1E1E1E;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.50);position:relative;overflow:hidden;">
+          <div style="padding:12px 0;display:flex;flex-direction:column;">
+            <div style="font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.55);padding:6px 16px;">Cette semaine</div>
+            <div style="height:56px;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;background:#0A84FF;border-radius:6px;margin:0 8px;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Entretiens utilisateurs</div>
+              <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.75);">7 sessions, verbatims bruts</div>
+            </div>
+            <div style="height:56px;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;background:#0A84FF;border-radius:6px;margin:2px 8px 0;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Grille d'analyse</div>
+              <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.75);">Codage thématique v2</div>
+            </div>
+            <div style="height:56px;padding:8px 16px;display:flex;flex-direction:column;justify-content:center;gap:2px;background:#0A84FF;border-radius:6px;margin:2px 8px 0;">
+              <div style="font:600 14px/1.3 -apple-system,sans-serif;color:#FFFFFF;">Synthèse pour le comité</div>
+              <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.75);">Brouillon</div>
+            </div>
+          </div>
+          <div style="position:absolute;left:150px;top:120px;width:220px;background:rgba(42,42,44,0.98);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px;display:flex;flex-direction:column;gap:1px;box-shadow:0 10px 30px rgba(0,0,0,0.55);">
+            <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.4px;text-transform:uppercase;color:rgba(255,255,255,0.45);padding:6px 8px 3px;">3 notes sélectionnées</div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><path d="M12 2l2 6h6l-5 4 2 7-5-4-5 4 2-7-5-4h6z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Épingler</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;opacity:0.4;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Verrouiller</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;background:#0A84FF;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.7"><path d="M4 6h6l2 2h8v10H4z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;flex:1;">Déplacer vers</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg></div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);margin:3px 6px;"></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF453A" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Mettre 3 notes à la corbeille</div></div>
+          </div>
+          <div style="position:absolute;left:374px;top:180px;width:200px;background:rgba(42,42,44,0.98);border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:4px;display:flex;flex-direction:column;gap:1px;box-shadow:0 10px 30px rgba(0,0,0,0.55);">
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#FFD60A"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Recherche</div></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;background:rgba(255,255,255,0.07);"><svg width="13" height="13" viewBox="0 0 24 24" fill="#BF5AF2"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Produit</div><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="3"><path d="M9 5l7 7-7 7"></path></svg></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#30D158"><path d="M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Ops</div></div>
+            <div style="height:1px;background:rgba(255,255,255,0.15);margin:3px 6px;"></div>
+            <div style="display:flex;align-items:center;gap:8px;height:26px;padding:0 8px;border-radius:6px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="1.7"><path d="M12 5v14M5 12h14"></path></svg><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);flex:1;">Nouveau dossier…</div></div>
+          </div>
+        </div>
+        <div style="width:600px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Sur sélection multiple, les libellés se comptent (« Mettre 3 notes à la corbeille ») et les actions impossibles sur l'ensemble sont désactivées, pas masquées : l'utilisateur voit qu'elles existent.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B · CORBEILLE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">B · Corbeille</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · liste + bandeau + alerte de suppression définitive</div>
+        <div style="width:760px;height:480px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;overflow:hidden;position:relative;">
+          <div style="height:44px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid rgba(0,0,0,0.10);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg>
+            <div style="font:600 15px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Corbeille</div>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">4 notes</div>
+            <div style="flex:1;"></div>
+            <div style="height:22px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Vider la corbeille</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 16px;background:#FFF4E5;border-bottom:1px solid rgba(0,0,0,0.10);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9A5700" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+            <div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Les notes sont supprimées définitivement au bout de 30 jours.</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;">
+            <div style="height:60px;padding:0 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,0.10);background:rgba(0,0,0,0.05);">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+                <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Ancien plan de lancement</div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Supprimée il y a 2 jours · était dans Produit · expire dans 28 jours</div>
+              </div>
+              <div style="height:22px;display:flex;align-items:center;gap:4px;padding:0 10px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.85)" stroke-width="1.8"><path d="M4 12a8 8 0 1 0 2.3-5.6"></path><path d="M4 4v5h5"></path></svg>Restaurer</div>
+              <div style="height:22px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Supprimer</div>
+            </div>
+            <div style="height:60px;padding:0 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,0.10);">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+                <div style="display:flex;align-items:center;gap:6px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Comptes bancaires</div></div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Verrouillée · supprimée il y a 9 jours · expire dans 21 jours</div>
+              </div>
+              <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Déverrouiller pour restaurer</div>
+            </div>
+            <div style="height:60px;padding:0 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(0,0,0,0.10);">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px;">
+                <div style="font:600 14px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Brouillon newsletter juin</div>
+                <div style="font:400 12px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.50);">Supprimée il y a 27 jours · <span style="color:#9A5700;">expire demain</span></div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;inset:0;background:rgba(0,0,0,0.20);display:flex;align-items:center;justify-content:center;">
+            <div style="width:340px;background:#FFFFFF;border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,0.20);">
+              <div style="width:44px;height:44px;border-radius:999px;background:rgba(255,59,48,0.12);display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#B3261E" stroke-width="1.8"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg></div>
+              <div style="font:700 15px/1.35 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">Supprimer définitivement « Ancien plan de lancement » ?</div>
+              <div style="font:400 13px/1.4 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-align:center;text-wrap:pretty;">Cette note et ses 2 pièces jointes seront effacées de tous vos appareils. Cette action est irréversible.</div>
+              <div style="display:flex;gap:8px;width:100%;margin-top:6px;">
+                <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,0.12);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Annuler</div>
+                <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;background:#FF3B30;border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:#FFFFFF;outline:3px solid rgba(0,122,255,0.60);outline-offset:1px;">Supprimer</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width:760px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Le bouton destructif porte le focus clavier par défaut mais n'est pas déclenché par Entrée — il faut ⌘⏎ ou un clic. Blanc sur <code>semantic.error</code> clair : 3,94:1, sous l'AA texte. Le libellé passe donc en Semibold 13 pt (texte large au sens WCAG à partir de 14 pt gras : ici on reste sous le seuil), et un liseré interne 1 pt <code>#C4271E</code> renforce la limite du bouton. Alternative si le rapport doit être strict : fond <code>#C4271E</code> (4,52:1).</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · corbeille vide</div>
+        <div style="width:440px;height:480px;background:#1E1E1E;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="height:44px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid rgba(255,255,255,0.15);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.7"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg>
+            <div style="font:600 15px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Corbeille</div>
+            <div style="flex:1;"></div>
+            <div style="height:22px;display:flex;align-items:center;padding:0 10px;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.26);">Vider la corbeille</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 48px;">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="1.2"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"></path></svg>
+            <div style="font:600 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-align:center;">Corbeille vide</div>
+            <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-align:center;text-wrap:pretty;">Les notes supprimées restent ici 30 jours avant d'être effacées définitivement.</div>
+          </div>
+        </div>
+        <div style="width:440px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">« Vider la corbeille » reste visible mais désactivé (<code>opacity.disabled</code>) plutôt que masqué : la position du bouton ne bouge pas quand des notes arrivent.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C · VERROUILLAGE -->
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="font:700 20px/1.2 -apple-system,sans-serif;color:#FFFFFF;">C · Note verrouillée &amp; mot de passe</div>
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-start;">
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Clair · note verrouillée (Touch ID disponible)</div>
+        <div style="width:600px;height:400px;background:#FFFFFF;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.30);display:flex;flex-direction:column;overflow:hidden;">
+          <div style="height:44px;flex:none;display:flex;align-items:center;gap:6px;padding:0 16px;border-bottom:1px solid rgba(0,0,0,0.10);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.8"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(0,0,0,0.85);">Comptes bancaires</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 64px;">
+            <div style="width:56px;height:56px;border-radius:999px;background:#F2F2F5;display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.50)" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></div>
+            <div style="font:700 22px/1.2 -apple-system,sans-serif;color:rgba(0,0,0,0.85);text-align:center;">Cette note est verrouillée</div>
+            <div style="font:400 15px/1.5 -apple-system,sans-serif;color:rgba(0,0,0,0.50);text-align:center;text-wrap:pretty;">Le contenu, les pièces jointes et l'extrait dans la liste restent masqués tant que la note est verrouillée.</div>
+            <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;background:#007AFF;border-radius:8px;font:600 15px/1.3 -apple-system,sans-serif;color:#FFFFFF;margin-top:6px;outline:3px solid rgba(0,122,255,0.60);outline-offset:2px;box-shadow:inset 0 0 0 1px #0857B8;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.7"><path d="M12 4c-2.8 0-5 2.2-5 5v3c0 3.3 2.2 6.5 5 8 2.8-1.5 5-4.7 5-8V9c0-2.8-2.2-5-5-5z"></path><path d="M12 9v6"></path></svg>
+              Déverrouiller avec Touch ID
+            </div>
+            <div style="font:400 13px/1.3 -apple-system,sans-serif;color:#007AFF;text-decoration:underline;">Utiliser le mot de passe</div>
+          </div>
+        </div>
+        <div style="width:600px;font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">Sur un Mac sans Touch ID, le bouton principal devient « Saisir le mot de passe » et le lien secondaire disparaît — jamais un bouton grisé qui laisse croire à une panne. Le focus clavier arrive sur le bouton principal ; ⏎ le déclenche.</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font:600 11px/1.3 -apple-system,sans-serif;letter-spacing:0.5px;text-transform:uppercase;color:rgba(255,255,255,0.9);">Sombre · définition du mot de passe · échec de saisie</div>
+        <div style="width:600px;display:flex;flex-direction:column;gap:16px;">
+          <div style="background:#1C1C1E;border-radius:8px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,0.50);display:flex;justify-content:center;">
+            <div style="width:400px;background:#2A2A2C;border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,0.55);">
+              <div style="font:700 17px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Définir un mot de passe</div>
+              <div style="font:400 13px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.55);text-wrap:pretty;">Un seul mot de passe protège toutes vos notes verrouillées. Slate ne peut pas le récupérer : notez-le ailleurs.</div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Mot de passe</div>
+                <div style="height:28px;display:flex;align-items:center;padding:0 8px;background:#1C1C1E;border:1px solid #0A84FF;border-radius:6px;outline:3px solid rgba(10,132,255,0.65);outline-offset:1px;"><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);letter-spacing:2px;">••••••••••</div><div style="width:2px;height:15px;background:#0A84FF;animation:slateCaret 1.06s steps(1,end) infinite;margin-left:2px;"></div></div>
+                <div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);overflow:hidden;"><div style="width:70%;height:100%;background:#30D158;"></div></div><div style="font:400 12px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Robuste</div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Confirmation</div>
+                <div style="height:28px;display:flex;align-items:center;padding:0 8px;background:#1C1C1E;border:1px solid #FF453A;border-radius:6px;"><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);letter-spacing:2px;">••••••••</div></div>
+                <div style="display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FF8A82" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v5M12 16h.01"></path></svg><div style="font:400 12px/1.35 -apple-system,sans-serif;color:#FF8A82;">Les deux mots de passe ne correspondent pas.</div></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Indice (facultatif)</div>
+                <div style="height:28px;display:flex;align-items:center;padding:0 8px;background:#1C1C1E;border:1px solid rgba(255,255,255,0.15);border-radius:6px;"><div style="font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.60);">Visible avant le déverrouillage</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:2px;">
+                <div style="width:32px;height:19px;border-radius:999px;background:#0A84FF;padding:2px;display:flex;justify-content:flex-end;"><div style="width:15px;height:15px;border-radius:999px;background:#FFFFFF;"></div></div>
+                <div style="font:400 13px/1.35 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Autoriser Touch ID</div>
+              </div>
+              <div style="display:flex;gap:8px;margin-top:4px;">
+                <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.15);border-radius:6px;font:400 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.85);">Annuler</div>
+                <div style="flex:1;height:28px;display:flex;align-items:center;justify-content:center;background:rgba(10,132,255,0.4);border-radius:6px;font:600 13px/1.3 -apple-system,sans-serif;color:rgba(255,255,255,0.6);">Définir</div>
+              </div>
+            </div>
+          </div>
+          <div style="font:400 12.5px/1.45 -apple-system,sans-serif;color:rgba(255,255,255,0.85);text-wrap:pretty;">L'erreur est portée par la bordure <b>et</b> par une ligne de texte avec icône. L'indicateur de robustesse est doublé du mot « Robuste » : jamais une barre colorée seule. « Définir » reste désactivé tant que la confirmation ne correspond pas, et le message est annoncé à VoiceOver au moment de la perte de focus, pas à chaque frappe.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}"></script>
+</body>
+</html>
