@@ -43,7 +43,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 4 | Liste des notes & regroupement par date | ✅ | 🎨 ✔️ | `5e9abb3` |
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
-| 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `PHASE7` |
+| 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
 | 8 | Blocs spéciaux | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 9 | Médias & pièces jointes | ⬜ | 🎨 ✔️ | — |
 | 10 | Glisser-déposer & colonnes | ⬜ | — | — |
