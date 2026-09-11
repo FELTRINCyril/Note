@@ -58,6 +58,11 @@ struct SlateApp: App {
             }
             .preferredColorScheme(ThemeManager.shared.preferredColorScheme)
         }
+        // Phase 14 : barre de menu macOS (Fichier/Edition/Format/Affichage) --
+        // `SlateAppCommands` lit l'etat de la fenetre au premier plan via
+        // `@FocusedValue` (voir `SlateFocusedValues.swift`), ce fichier n'a donc besoin
+        // de rien lui transmettre explicitement.
+        .commands { SlateAppCommands() }
 
         // Phase 13 : fenetre de reglages standard macOS (Menu Slate > Reglages,
         // Cmd+,). `SettingsWindowView` ne depend d'aucun `ModelContainer` explicite

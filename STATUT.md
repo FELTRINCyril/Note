@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 13.
+**Dernière mise à jour :** fin de la phase 14 - **jalon v1 terminé**.
 
 ---
 
 ## En un coup d'œil
 
-**13 / 21 phases terminées.**
+**14 / 21 phases terminées. Jalon v1 complet.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         █████████░  92 %   (11/12) ⏳ en cours
+App v1         ██████████ 100 %   (12/12) ✅ terminé
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 13 (thèmes & apparence) validée. Fenêtre de réglages macOS à 4 onglets, thème Système/Clair/Sombre, 8 accents personnalisables, police et taille de corps, et les trois options d'apparence réellement branchées. Deux corrections de fond livrées : `text.onAccent` et `text.link` sont désormais **dérivés de l'accent courant** au lieu d'être constants.
-- **Prochaine étape :** **Phase 14 — Raccourcis clavier**, dernière phase du jalon v1.
-- **Qualité au dernier point (phase 13) :** 724 tests verts (101 `SlateModel` · 329 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 98 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
+- **Où on en est :** **jalon v1 terminé.** Les 12 phases de l'app utilisable sont livrées, de la coquille à trois colonnes jusqu'aux raccourcis clavier. Slate prend, édite, organise, verrouille et met en forme des notes avec un éditeur de blocs complet.
+- **Prochaine étape :** **Phase 15 — Markdown natif à la frappe**, premier pas du jalon v2 (puissance Notion).
+- **Qualité à la clôture du jalon v1 :** 726 tests verts (101 `SlateModel` · 329 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 100 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict` sur 342 fichiers.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -50,12 +50,12 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
 | 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `e04d5f8` |
 | 13 | Thèmes & apparence | ✅ | 🎨 ✔️ | `2be8452` |
-| 14 | Raccourcis clavier | ⏳ **prochaine** | — | — |
+| 14 | Raccourcis clavier | ✅ | — | `PH14` |
 
 ### Jalon v2 — Puissance Notion
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
-| 15 | Markdown natif à la frappe | ⬜ | — | — |
+| 15 | Markdown natif à la frappe | ⏳ **prochaine** | — | — |
 | 16 | Liens internes & sous-pages | ⬜ | — | — |
 | 17 | Bases de données | ⬜ | 🎨 ✔️ | — |
 | 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
@@ -139,6 +139,12 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 13 — Les trois options d'apparence sont réellement branchées**, pas seulement persistées : transparence de la barre latérale, contraste des séparateurs et affichage de la couverture. Un réglage affiché, actif et sans effet est exactement ce que la règle d'honnêteté d'interface interdit. Les deux réglages d'accessibilité s'**ajoutent** à leur équivalent système (l'un ou l'autre suffit), sans jamais l'écraser. ✅
 - **Phase 13 — `SlateFolderColor` délègue à `SlateAccentColor`** au lieu de dupliquer les mêmes 8 valeurs hexadécimales : une source unique, plus de risque de désynchronisation. ✅
 
+- **Phase 14 — ⌘K reste l'insertion de lien.** `docs/14` proposait une palette de commandes globale sur la même combinaison. Le lien est livré depuis la phase 7 et c'est la convention de tous les éditeurs ; la palette est marquée "optionnel" dans le doc, n'existe nulle part et ne figure dans aucun critère d'acceptation. Aucune fonctionnalité n'a été inventée pour justifier un raccourci. ✅
+- **Phase 14 — Le menu Format est affiché mais DÉSACTIVÉ, et c'est délibéré.** AppKit interroge la barre de menu **avant** le `NSTextView` focalisé : activer ces entrées aurait intercepté l'événement et **cassé** les raccourcis de formatage livrés en phase 7, pour un gain purement cosmétique. Les combinaisons restent visibles à titre indicatif. ✅
+- **Phase 14 — Focus entre panneaux sur ⌃⌘1/2/3.** ⌘1/⌘2 sont pris par la bascule de visibilité (phase 3) et ⌥⌘1-3 par les conversions de titre (phase 7) : ⌃⌘ était la seule famille libre pour les trois, et voisine du ⌃⌘F déjà en place. Sans ce déplacement de focus, le critère d'acceptation "entièrement au clavier" était faux. ✅
+- **Phase 14 — Le focus AppKit interne de l'éditeur n'a PAS été touché.** Le saut vers l'éditeur réutilise `EditorController.selectBlock(_:)`, déjà le point d'entrée du clic sur un bloc, plutôt que de manipuler le premier répondant. La restauration de focus du `LazyVStack` (phase 5) est délicate et fonctionne : la casser aurait coûté bien plus que ce raccourci ne rapporte. ✅
+- **Phase 14 — Le registre rend les conflits détectables par test**, et pas seulement par relecture : deux raccourcis actifs de même portée ne peuvent pas partager une combinaison. Aucun conflit réel n'existait dans l'acquis des phases 5 à 13 ; c'est une garde préventive. Les touches nues (flèches, Tab, Espace, Entrée) en sont volontairement exclues : elles sont contextuelles par widget et produiraient de faux conflits. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -198,10 +204,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **`LockSettingsTabView` garde sa largeur propre de 460 pt** dans une fenêtre de 620 pt : centré, non retouché.
 - **Couleurs en dur signalées hors périmètre et laissées telles quelles** : `Workspace.accentColorHex` et `Tag.colorHex` dupliquent des valeurs de `SlateAccentColor` comme défauts de données persistées. Ce sont des données, pas du rendu, mais la source n'est plus unique.
 - **Aucune vérification visuelle de la phase 13** : alignements de la fenêtre de réglages, rendu des pastilles d'accent, bascule clair/sombre réelle, aperçu en direct de la taille de texte. Aucune fenêtre disponible. C'est d'autant plus gênant ici que la phase est entièrement visuelle.
+- **Recherche globale (⌘⇧F) sans mécanisme** : seul un filtre local au dossier affiché existe. La recherche plein texte relève d'une phase ultérieure, l'entrée reste désactivée.
+- **Menu Format désactivé** (voir Décisions) : les raccourcis eux-mêmes fonctionnent, seules les entrées de menu sont inertes.
+- **Raccourcis clavier jamais exercés dans une vraie fenêtre** : c'est la limite la plus gênante de cette phase, puisqu'un raccourci ne se vérifie vraiment qu'à l'usage. Le câblage `@FocusedValue`/`.focusedSceneValue`, le grisage effectif des entrées de menu et le déplacement réel de l'anneau de focus restent à confirmer à la main dans Xcode.
 
 ## Prochaine action concrète
-La **phase 14 — Raccourcis clavier**, dernière du jalon v1. Aucun design requis.
+**Le jalon v1 est clos.** Avant d'attaquer le jalon v2, une chose domine tout le reste : **rien de ce qui a été construit des phases 7 à 14 n'a jamais été vu à l'écran.** Aucune fenêtre n'était disponible, ni pour les agents livreurs, ni pour les revues. Tout est couvert par 726 tests de logique, un build complet et des contrastes calculés, mais la conformité visuelle au design déposé reste entièrement à vérifier.
 
-C'est une phase de **consolidation** : elle rassemble les raccourcis déjà posés au fil des phases 5 à 13 et comble les manques, plutôt que d'inventer des fonctionnalités. Trois chantiers : un registre centralisé, les entrées de **menu bar macOS** (Fichier, Édition, Format, Affichage - attendues sur une app native), et `docs/RACCOURCIS.md` qui documente la liste.
+La première action utile est donc une **passe de vérification visuelle dans Xcode**, en clair et en sombre, avec la liste des points déjà identifiés comme non observés (elle est dans la section "Points ouverts" ci-dessus, phase par phase). Les plus à risque, par ordre : le glisser-déposer de blocs et la mise en colonnes (phase 10), les 4 états du bloc image et le geste de redimensionnement (phase 9), la barre de formatage flottante et son ancrage (phase 7), la fenêtre de réglages et la bascule de thème (phase 13), et les raccourcis de la barre de menu (phase 14).
 
-Points connus à traiter : les raccourcis du menu contextuel de la phase 11 (⌃⌘P, ⌘D, ⌘⌫) ne sont actifs que menu ouvert, faute de `CommandGroup` au niveau de l'app. Et `docs/14` signale un conflit à arbitrer : **⌘K est revendiqué à la fois par l'insertion de lien (phase 7, déjà livrée) et par la palette de commandes globale** que ce doc propose.
+Ensuite seulement, la **phase 15 — Markdown natif à la frappe** (`#`, `**`, `-`, `[]`...), premier pas du jalon v2. Elle s'appuiera directement sur l'acquis des phases 7 et 8 : les marques inline et les types de bloc existent tous, il s'agit de les déclencher à la frappe.

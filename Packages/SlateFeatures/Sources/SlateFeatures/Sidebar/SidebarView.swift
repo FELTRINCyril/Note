@@ -32,7 +32,18 @@ public struct SidebarView: View {
     @State private var showsNewSpaceComingSoonAlert = false
     @State private var showsTrash = false
 
-    public init() {}
+    /// Focus de panneau PARTAGE avec `MainWindowView` (Phase 14, ⌃⌘1) -- voir
+    /// `SlatePanelFocus`. Distinct de `focusedFolderID` ci-dessus (qui reste le SEUL
+    /// proprietaire du focus PAR LIGNE) : ce binding ne fait que donner le focus
+    /// clavier reel a la `ScrollView` ci-dessous, qui porte deja les `onKeyPress`
+    /// haut/bas/gauche/droite -- la toute premiere fleche pressee ensuite delegue
+    /// normalement a `handleVerticalArrow(_:)`, qui focalise alors la ligne concernee
+    /// via `focusedFolderID` exactement comme un clic l'aurait fait.
+    let panelFocus: FocusState<SlatePanelFocus?>.Binding
+
+    public init(panelFocus: FocusState<SlatePanelFocus?>.Binding) {
+        self.panelFocus = panelFocus
+    }
 
     public var body: some View {
         VStack(spacing: 0) {
@@ -81,6 +92,12 @@ public struct SidebarView: View {
             .onKeyPress(.downArrow) { handleVerticalArrow(1) }
             .onKeyPress(.leftArrow) { handleLeftArrow() }
             .onKeyPress(.rightArrow) { handleRightArrow() }
+            // Phase 14 (⌃⌘1) : cible du focus de panneau -- voir la documentation de
+            // `panelFocus`. `.focusable()` est necessaire pour que cette `ScrollView`
+            // (jusqu'ici focalisable seulement INDIRECTEMENT via une ligne de dossier)
+            // puisse elle-meme devenir la cible directe d'un `@FocusState`.
+            .focusable()
+            .focused(panelFocus, equals: .sidebar)
 
             SidebarFooterView(
                 canCreateNote: appState.selectedFolder != nil,
@@ -133,6 +150,10 @@ public struct SidebarView: View {
         } message: {
             Text(String(localized: "sidebar.action.newSpace.comingSoon.message", bundle: .module))
         }
+        // Phase 14 : publie "Nouvelle note"/"Nouveau dossier" pour `SlateAppCommands`
+        // (barre de menu Fichier), meme garde que `SidebarFooterView.canCreateNote`.
+        .focusedSceneValue(\.newNoteAction, newNoteActionForCommands)
+        .focusedSceneValue(\.newFolderAction, { createNewFolder() })
     }
 
     // MARK: - Donnees derivees
@@ -230,6 +251,15 @@ public struct SidebarView: View {
         } else if let space = spaces.first {
             namePromptContext = FolderNamePromptContext(mode: .newSubfolder(parent: nil, space: space))
         }
+    }
+
+    /// Publie via `.focusedSceneValue(\.newNoteAction, ...)` ci-dessus (voir la
+    /// documentation de `SlateFocusedValues.newNoteAction`) : `nil` explicitement typé
+    /// pour eviter toute ambiguite du compilateur entre une reference de methode et
+    /// `nil` dans un operateur ternaire.
+    private var newNoteActionForCommands: (() -> Void)? {
+        guard appState.selectedFolder != nil else { return nil }
+        return { createNewNote() }
     }
 
     private func createNewNote() {

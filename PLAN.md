@@ -36,7 +36,7 @@
 - [x] **Phase 11 — Organisation des notes** (dupliquer, déplacer, épingler, supprimer, corbeille) → `docs/11_organisation_notes.md`
 - [x] **Phase 12 — Verrouillage de note** (mot de passe / Touch ID / Face ID) → `docs/12_verrouillage.md`
 - [x] 🎨 **Phase 13 — Thèmes & apparence** (sombre/clair, couleur d'accent personnalisable) → `docs/13_themes_apparence.md`
-- [ ] **Phase 14 — Raccourcis clavier** (navigation complète sans souris) → `docs/14_raccourcis_clavier.md`
+- [x] **Phase 14 — Raccourcis clavier** (navigation complète sans souris) → `docs/14_raccourcis_clavier.md`
 
 ---
 

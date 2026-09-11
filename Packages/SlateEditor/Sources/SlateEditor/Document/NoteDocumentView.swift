@@ -200,7 +200,17 @@ public struct NoteDocumentView: View {
             .onChange(of: editorController.focusedBlockID) { _, newValue in
                 scrollToFocusedBlockIfNeeded(newValue, proxy: scrollProxy)
             }
+            // Phase 14 : publie "Focus editeur" (⌃⌘3) pour `SlateAppCommands` -- voir
+            // `EditorFocusedValues.swift`.
+            .focusedSceneValue(\.editorFocusAction, editorFocusAction)
         }
+    }
+
+    /// Voir `EditorFocusedValues.editorFocusAction`. `nil` si la note n'a aucun bloc de
+    /// premier niveau (note toute juste creee sans paragraphe visible).
+    private var editorFocusAction: (() -> Void)? {
+        guard let firstBlock = BlockOrdering.topLevelBlocks(of: note).first else { return nil }
+        return { editorController.selectBlock(firstBlock) }
     }
 
     /// Complement OBLIGATOIRE du `LazyVStack` ci-dessus (pas une simple amelioration) :

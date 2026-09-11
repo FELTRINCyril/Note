@@ -20,6 +20,15 @@ public struct MainWindowView: View {
     @State private var columnLayout = ColumnLayoutState.all
     @State private var bootstrapError: (any Error)?
 
+    /// Focus de panneau (Phase 14, ⌃⌘1/⌃⌘2) : source UNIQUE, projetee vers
+    /// `SidebarView`/`NoteListView` via leur parametre `panelFocus` (voir
+    /// `SlatePanelFocus`). Une commande de la barre de menu (`SlateAppCommands`) se
+    /// contente d'assigner cette valeur -- c'est `.focused(panelFocus, equals: ...)`,
+    /// cote de chaque panneau, qui traduit ce changement en un VRAI deplacement du
+    /// focus clavier systeme, exactement comme un clic l'aurait fait. L'editeur n'a
+    /// pas d'entree ici : voir `SlatePanelFocus`.
+    @FocusState private var focusedPanel: SlatePanelFocus?
+
     /// Notification distribuee emise par macOS au verrouillage de l'ecran (aucune API
     /// SwiftUI/`NSWorkspace` dediee pour cet evenement precis, contrairement au
     /// sommeil de l'ecran -- c'est la notification que le systeme lui-meme utilise
@@ -54,10 +63,10 @@ public struct MainWindowView: View {
 
     private var splitView: some View {
         NavigationSplitView(columnVisibility: columnVisibilityBinding) {
-            SidebarView()
+            SidebarView(panelFocus: $focusedPanel)
                 .slateColumnWidth(NavigationLayout.sidebarWidth)
         } content: {
-            NoteListView()
+            NoteListView(panelFocus: $focusedPanel)
                 .slateColumnWidth(listColumnWidth)
         } detail: {
             NoteDetailColumnView()
@@ -79,6 +88,17 @@ public struct MainWindowView: View {
             SlateMotion.animation(duration: SlateMotion.durationSlow, reduceMotion: reduceMotion),
             value: columnLayout
         )
+        // Phase 14 : publie les bascules de colonnes pour `SlateAppCommands` (menu
+        // Affichage). Pas de `.keyboardShortcut` duplique cote menu (voir sa
+        // documentation) : Cmd+1/Cmd+2/Ctrl+Cmd+F restent portes par les boutons
+        // locaux ci-dessus, seule source reelle de la combinaison.
+        .focusedSceneValue(\.toggleSidebarAction, { columnLayout.toggleSidebar() })
+        .focusedSceneValue(\.toggleListAction, { columnLayout.toggleList() })
+        .focusedSceneValue(\.toggleFocusModeAction, { columnLayout.toggleFocusMode() })
+        // Phase 14 (⌃⌘1/⌃⌘2) : deplacement du focus clavier entre panneaux -- voir
+        // `focusedPanel`/`SlatePanelFocus`.
+        .focusedSceneValue(\.focusSidebarAction, { focusedPanel = .sidebar })
+        .focusedSceneValue(\.focusListAction, { focusedPanel = .list })
     }
 
     @ToolbarContentBuilder

@@ -65,7 +65,13 @@ public struct NoteListView: View {
     @State var pendingLockSelection: [Note] = []
     @State var isSetPasswordSheetPresented = false
 
-    public init() {}
+    /// Focus de panneau PARTAGE avec `MainWindowView` (Phase 14, ⌃⌘2) -- meme motif
+    /// exact que `SidebarView.panelFocus`, voir sa documentation.
+    let panelFocus: FocusState<SlatePanelFocus?>.Binding
+
+    public init(panelFocus: FocusState<SlatePanelFocus?>.Binding) {
+        self.panelFocus = panelFocus
+    }
 
     public var body: some View {
         Group {
@@ -97,6 +103,9 @@ public struct NoteListView: View {
                 }
             )
         }
+        // Phase 14 : publie les actions de note (epingler/dupliquer/verrouiller/
+        // corbeille) pour `SlateAppCommands` -- voir `NoteListView+MenuCommands.swift`.
+        .focusedSceneValue(\.noteMenuActions, noteMenuCommandActions)
     }
 
     // MARK: - Dossier selectionne
@@ -167,6 +176,11 @@ public struct NoteListView: View {
         .onKeyPress(.upArrow) { handleVerticalArrow(-1) }
         .onKeyPress(.downArrow) { handleVerticalArrow(1) }
         .onKeyPress(.return) { handleReturn() }
+        // Phase 14 (⌃⌘2) : cible du focus de panneau -- voir `SidebarView.panelFocus`
+        // (meme motif exact). Uniquement disponible quand la liste affiche reellement
+        // des notes : sans contenu, il n'y a rien vers quoi deplacer le focus.
+        .focusable()
+        .focused(panelFocus, equals: .list)
     }
 
     @ViewBuilder

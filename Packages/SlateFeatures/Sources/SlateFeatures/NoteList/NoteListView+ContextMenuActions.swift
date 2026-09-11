@@ -90,9 +90,7 @@ extension NoteListView {
     // MARK: - Actions
 
     func toggleSelectionPin(clicking note: Note) {
-        let selection = selectionForContextMenu(clicking: note)
-        let shouldPin = !selection.allSatisfy(\.isPinned)
-        try? noteActions.setPinned(shouldPin, for: selection)
+        performPin(on: selectionForContextMenu(clicking: note))
     }
 
     /// Critere d'acceptation `docs/11_organisation_notes.md` : la bascule doit
@@ -112,15 +110,7 @@ extension NoteListView {
     /// definition validee (`lockPendingSelection`) -- jamais de verrouillage silencieux
     /// sans mot de passe utilisable pour deverrouiller ensuite.
     func lockSelection(clicking note: Note) {
-        let selection = selectionForContextMenu(clicking: note)
-        guard lockService.isPasswordSet else {
-            pendingLockSelection = selection
-            isSetPasswordSheetPresented = true
-            return
-        }
-        for target in selection {
-            lockService.lock(target)
-        }
+        performLock(on: selectionForContextMenu(clicking: note))
     }
 
     /// Verrouille la selection memorisee par `lockSelection(clicking:)` une fois le mot
@@ -133,8 +123,7 @@ extension NoteListView {
     }
 
     func duplicateSelection(clicking note: Note) {
-        let selection = selectionForContextMenu(clicking: note)
-        _ = try? noteActions.duplicate(selection)
+        performDuplicate(on: selectionForContextMenu(clicking: note))
     }
 
     func moveSelection(clicking note: Note, to folder: Folder) {
@@ -165,11 +154,6 @@ extension NoteListView {
     }
 
     func trashSelection(clicking note: Note) {
-        let selection = selectionForContextMenu(clicking: note)
-        try? noteActions.moveToTrash(selection)
-        if selection.contains(where: { $0.id == appState.selectedNote?.id }) {
-            appState.selectedNote = nil
-        }
-        selectedNoteIDs.subtract(selection.map(\.id))
+        performTrash(on: selectionForContextMenu(clicking: note))
     }
 }
