@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 import SwiftData
 import SlateModel
@@ -22,13 +23,35 @@ import SlateUI
 /// primitives `SlateUI` sous-jacentes couvrent deja tous les etats visuels requis,
 /// clair et sombre compris).
 public struct NoteListView: View {
-    @Environment(\.appState) private var appState
-    @Environment(\.modelContext) private var modelContext
+    // Non `private` : accedes depuis `NoteListView+ContextMenuActions.swift` (meme
+    // module, extension separee pour tenir la limite `file_length` de SwiftLint).
+    @Environment(\.appState) var appState
+    @Environment(\.modelContext) var modelContext
+    @Environment(\.noteActions) var noteActions
+
+    @Query(sort: [SortDescriptor(\Folder.sortIndex), SortDescriptor(\Folder.name)])
+    var allFolders: [Folder]
 
     @State private var searchText = ""
     @State private var sortCriterion: NoteSortCriterion = .modifiedDate
     @State private var sortDirection: SortDirection = .descending
-    @FocusState private var focusedNoteID: Note.ID?
+    @FocusState var focusedNoteID: Note.ID?
+
+    /// Selection multiple (design P3, artboard A) : vide en usage courant (une seule
+    /// note "selectionnee" reste pilotee par `appState.selectedNote`, seule source de
+    /// verite lue par les AUTRES vues - colonne detail, sidebar...). Non vide des que
+    /// l'utilisateur Cmd/Maj-clique plus d'une cellule : dans ce cas, c'est CET etat qui
+    /// pilote le surlignage de la liste et le contenu du menu contextuel
+    /// (`NoteContextMenuContent`), voir `isCellSelected(_:)`/`selectionForContextMenu(clicking:in:)`.
+    @State var selectedNoteIDs: Set<Note.ID> = []
+
+    /// Ancre de la selection par extension (Maj-clic), voir `handleCellTap(_:in:)`.
+    @State var shiftAnchorID: Note.ID?
+
+    /// Notes en attente de deplacement une fois le dossier cree via
+    /// `newFolderPromptContext` (sous-menu "Deplacer vers" > "Nouveau dossier...").
+    @State var pendingMoveSelection: [Note] = []
+    @State var newFolderPromptContext: FolderNamePromptContext?
 
     public init() {}
 
@@ -41,6 +64,11 @@ public struct NoteListView: View {
             }
         }
         .background(SlateColor.bgList)
+        .sheet(item: $newFolderPromptContext) { context in
+            FolderNamePromptSheet(context: context) { name in
+                submitNewFolderForMove(context: context, name: name)
+            }
+        }
     }
 
     // MARK: - Dossier selectionne
@@ -74,11 +102,12 @@ public struct NoteListView: View {
     }
 
     private func listScrollView(data: NoteListData) -> some View {
-        ScrollView {
+        let allVisibleNotes = data.pinnedNotes + data.restNotes
+        return ScrollView {
             LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
                 if !data.pinnedNotes.isEmpty {
                     Section {
-                        ForEach(data.pinnedNotes) { note in cellRow(note) }
+                        ForEach(data.pinnedNotes) { note in cellRow(note, allNotes: allVisibleNotes) }
                     } header: {
                         ListSectionHeader(
                             String(localized: "noteList.section.pinned", bundle: .module),
@@ -91,11 +120,11 @@ public struct NoteListView: View {
                 // Spec E3 ("Tri") : en tri par titre, les groupes de date s'aplatissent
                 // (Epinglees puis liste unique, sans en-tetes de date).
                 if Self.shouldFlattenDateGroups(for: sortCriterion) {
-                    ForEach(data.restNotes) { note in cellRow(note) }
+                    ForEach(data.restNotes) { note in cellRow(note, allNotes: allVisibleNotes) }
                 } else {
                     ForEach(data.dateGroups) { group in
                         Section {
-                            ForEach(group.notes) { note in cellRow(note) }
+                            ForEach(group.notes) { note in cellRow(note, allNotes: allVisibleNotes) }
                         } header: {
                             ListSectionHeader(
                                 NoteDateGroupTitle.string(for: group.kind),
@@ -113,10 +142,10 @@ public struct NoteListView: View {
     }
 
     @ViewBuilder
-    private func cellRow(_ note: Note) -> some View {
+    private func cellRow(_ note: Note, allNotes: [Note]) -> some View {
         NoteCell(
             note: note,
-            isSelected: appState.selectedNote?.id == note.id,
+            isSelected: isCellSelected(note),
             isFocused: focusedNoteID == note.id,
             referenceDate: referenceDate(for: note),
             calendar: calendar,
@@ -124,11 +153,23 @@ public struct NoteListView: View {
         )
         .contentShape(Rectangle())
         .onTapGesture {
-            appState.selectedNote = note
-            focusedNoteID = note.id
+            handleCellTap(note, in: allNotes)
         }
         .focusable()
         .focused($focusedNoteID, equals: note.id)
+        .contextMenu {
+            NoteContextMenuContent(
+                selection: selectionForContextMenu(clicking: note),
+                candidateFolders: candidateFoldersForMove,
+                onTogglePin: { toggleSelectionPin(clicking: note) },
+                onToggleFavorite: { toggleSelectionFavorite(clicking: note) },
+                onDuplicate: { duplicateSelection(clicking: note) },
+                onMove: { folder in moveSelection(clicking: note, to: folder) },
+                onRequestNewFolder: { presentNewFolderForMove(clicking: note) },
+                onCopyInternalLink: { copyInternalLink(for: note) },
+                onMoveToTrash: { trashSelection(clicking: note) }
+            )
+        }
     }
 
     private var searchBar: some View {
@@ -289,7 +330,7 @@ public struct NoteListView: View {
     /// `body` - reste donc en dehors du perimetre de `resolveListData(for:)`/`folderContent(_:)`
     /// (qui vise le rendu). Une seule requete `NoteListQuery` par appui de touche (au lieu
     /// des deux requetes independantes de l'ancien code, `pinnedNotes` puis `restNotes`).
-    private var navigationOrder: [Note] {
+    var navigationOrder: [Note] {
         guard let folder = appState.selectedFolder else { return [] }
         let data = resolveListData(for: folder)
         return data.pinnedNotes + data.restNotes

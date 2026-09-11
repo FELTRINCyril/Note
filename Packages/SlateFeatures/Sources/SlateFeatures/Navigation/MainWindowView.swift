@@ -28,8 +28,14 @@ public struct MainWindowView: View {
                 splitView
             }
         }
+        // Point de branchement REEL de `NoteActionsProviding` (voir
+        // `NoteActionsProvidingAdapter`) : toutes les vues descendantes (sidebar, liste
+        // de notes, corbeille) lisent `\.noteActions` depuis l'environnement plutot que
+        // de construire elles-memes un `NoteActionsService`.
+        .environment(\.noteActions, NoteActionsProvidingAdapter(modelContext: modelContext))
         .task {
             await bootstrapWorkspaceIfNeeded()
+            purgeExpiredTrash()
         }
     }
 
@@ -153,5 +159,13 @@ public struct MainWindowView: View {
         } catch {
             bootstrapError = error
         }
+    }
+
+    /// Purge automatique de la corbeille au lancement (`docs/11_organisation_notes.md` :
+    /// "tache de purge au lancement"). Echec silencieux (`try?`, meme convention que le
+    /// reste de la coquille) : une purge manquee n'empeche pas l'app de demarrer, elle
+    /// sera retentee au prochain lancement.
+    private func purgeExpiredTrash() {
+        _ = try? NoteActionsProvidingAdapter(modelContext: modelContext).purgeExpiredTrash(now: .now)
     }
 }

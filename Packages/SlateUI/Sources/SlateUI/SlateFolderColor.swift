@@ -14,6 +14,13 @@ public enum SlateOpacity {
     /// valeur numerique par coincidence, pas une parente semantique (meme convention
     /// que `listMarkerWidth`/`blockHandleSize` dans `BlockDecorationMetrics`).
     public static let dragSourceBlock: Double = disabled
+
+    /// Fond du badge circulaire de `DeletePermanentlyConfirmationOverlay` (design P3,
+    /// artboard B : `rgba(255,59,48,0.12)` derriere l'icone de corbeille).
+    public static let badgeSubtleFill: Double = 0.12
+
+    /// Aplat d'un bouton plein pendant l'appui (design P3 : bouton "Supprimer").
+    public static let pressedFill: Double = 0.85
 }
 
 /// Palette d'icones de dossiers/notes (design/tokens.md §7/§8). Reprend les couleurs

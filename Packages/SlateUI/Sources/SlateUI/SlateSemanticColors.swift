@@ -27,6 +27,21 @@ extension SlateColor {
         dark: SlateRGB(hex: "#C4271E") ?? .black
     )
 
+    /// Fond de bandeau d'avertissement doux (design P3, artboard B : bandeau "Les notes
+    /// sont supprimees definitivement au bout de 30 jours."). Distinct de
+    /// `semanticWarning` (reserve aux glyphes non textuels, 3:1 seulement) : cette
+    /// paire fond/texte doit tenir l'AA TEXTE (voir `semanticWarningText`).
+    public static let semanticWarningSubtle = slateAdaptiveColor(
+        light: SlateRGB(hex: "#FFF4E5") ?? .black,
+        dark: SlateRGB(hex: "#3A2E12") ?? .black
+    )
+
+    /// Texte/glyphe pose sur `semanticWarningSubtle` (design P3 : `#9A5700` en clair).
+    public static let semanticWarningText = slateAdaptiveColor(
+        light: SlateRGB(hex: "#9A5700") ?? .black,
+        dark: SlateRGB(hex: "#FFD08A") ?? .black
+    )
+
     /// Succes / tache cochee. Equivalent `semantic.success`.
     public static let semanticSuccess = slateAdaptiveColor(
         light: SlateRGB(hex: "#34C759") ?? .black,

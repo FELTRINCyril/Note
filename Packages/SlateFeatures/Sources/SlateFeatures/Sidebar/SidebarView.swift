@@ -29,6 +29,7 @@ public struct SidebarView: View {
     @State private var iconPickerTarget: Folder?
     @State private var deletionCandidate: Folder?
     @State private var showsNewSpaceComingSoonAlert = false
+    @State private var showsTrash = false
 
     public init() {}
 
@@ -82,11 +83,15 @@ public struct SidebarView: View {
 
             SidebarFooterView(
                 canCreateNote: appState.selectedFolder != nil,
+                onOpenTrash: { showsTrash = true },
                 onNewFolder: createNewFolder,
                 onNewNote: createNewNote
             )
         }
         .slateSidebarBackground()
+        .sheet(isPresented: $showsTrash) {
+            TrashView()
+        }
         .sheet(item: $namePromptContext) { context in
             FolderNamePromptSheet(context: context) { name in
                 submitNamePrompt(context: context, name: name)
