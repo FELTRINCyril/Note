@@ -45,7 +45,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
 | 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
 | 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `89c3d55` |
-| 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `PHASE9` |
+| 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `4c27bf6` |
 | 10 | Glisser-déposer & colonnes | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 11 | Organisation des notes | ⬜ | — | — |
 | 12 | Verrouillage de note | ⬜ | — | — |
