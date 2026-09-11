@@ -49,7 +49,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 10 | Glisser-déposer & colonnes | ✅ | 🎨 ✔️ | `6462112` |
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
 | 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `e04d5f8` |
-| 13 | Thèmes & apparence | ✅ | 🎨 ✔️ | `PH13` |
+| 13 | Thèmes & apparence | ✅ | 🎨 ✔️ | `2be8452` |
 | 14 | Raccourcis clavier | ⏳ **prochaine** | — | — |
 
 ### Jalon v2 — Puissance Notion
