@@ -1,16 +1,22 @@
 import SwiftUI
 
-/// Valeurs RGB brutes de l'accent par defaut et de ses derives.
+/// Valeurs RGB brutes de l'accent COURANT et de ses derives.
 ///
 /// Expose separement de `SlateColor` (qui rend des `Color`) parce que les calculs de
-/// contraste (tests, futur `AccentPicker` en Phase 13) ont besoin des composantes brutes,
-/// pas d'un `Color` opaque. `defaultLightRGB` / `defaultDarkRGB` sont amenes a devenir
-/// des parametres (accent choisi par l'utilisateur) plutot que des constantes : le calcul
-/// `selectionFill*` doit rester une regle, pas une valeur figee, pour continuer a
-/// garantir l'AA quel que soit l'accent (voir `ContrastRatio.swift`).
+/// contraste (tests, `AccentPicker` de la fenetre de reglages) ont besoin des composantes
+/// brutes, pas d'un `Color` opaque.
+///
+/// `defaultLightRGB` / `defaultDarkRGB` sont des PROPRIETES CALCULEES (Phase 13, accent
+/// personnalisable) : elles lisent `slateCurrentAccent()` -- donc `ThemeManager.shared.
+/// accent` -- a chaque acces, comme `SlateColor.textSecondary` lit "Increase Contrast".
+/// Idem pour `selectionFill*`, qui en decoulent : le calcul reste une REGLE reappliquee a
+/// chaque accent choisi, jamais une valeur figee, pour continuer a garantir l'AA quel que
+/// soit l'accent (voir `ContrastRatio.swift`). Pour la couleur de l'accent BLEU par
+/// defaut specifiquement (independamment du choix utilisateur), voir `SlateAccentColor.
+/// blue`.
 public enum SlateAccent {
-    public static let defaultLightRGB = SlateRGB(hex: "#007AFF") ?? .black
-    public static let defaultDarkRGB = SlateRGB(hex: "#0A84FF") ?? .black
+    public static var defaultLightRGB: SlateRGB { slateCurrentAccent().lightRGB }
+    public static var defaultDarkRGB: SlateRGB { slateCurrentAccent().darkRGB }
 
     /// Premier plan SECONDAIRE pose sur l'aplat de selection (spec E3 : l'extrait de la
     /// cellule de note, "blanc 95%"). C'est ce premier plan -- pas le principal, opaque --
@@ -20,40 +26,33 @@ public enum SlateAccent {
     /// calee sur le premier plan le plus facile, blanc opaque).
     public static let selectionForegroundSecondary = SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.95)
 
-    /// Accent clair assombri jusqu'a 4,5:1 pour le premier plan secondaire (blanc 95%).
-    /// Ordre de grandeur attendu (voir `ContrastRatio.swift`) : proche de `#006DE3`
-    /// (~4,58:1 pour le blanc 95%, ~4,91:1 pour le blanc opaque).
-    public static let selectionFillLightRGB = WCAGContrast.darkening(
-        defaultLightRGB,
-        toReachContrast: 4.5,
-        with: selectionForegroundSecondary
-    )
+    /// Accent clair courant assombri jusqu'a 4,5:1 pour le premier plan secondaire (blanc
+    /// 95%). Pour l'accent bleu par defaut, ordre de grandeur attendu (voir
+    /// `ContrastRatio.swift`) : proche de `#006DE3` (~4,58:1 pour le blanc 95%, ~4,91:1
+    /// pour le blanc opaque).
+    public static var selectionFillLightRGB: SlateRGB {
+        WCAGContrast.darkening(defaultLightRGB, toReachContrast: 4.5, with: selectionForegroundSecondary)
+    }
 
-    /// Accent sombre assombri jusqu'a 4,5:1 pour le premier plan secondaire. Ordre de
-    /// grandeur attendu : proche de `#0870D9` (~4,53:1 pour le blanc 95%, ~4,84:1 pour le
-    /// blanc opaque).
-    public static let selectionFillDarkRGB = WCAGContrast.darkening(
-        defaultDarkRGB,
-        toReachContrast: 4.5,
-        with: selectionForegroundSecondary
-    )
+    /// Accent sombre courant assombri jusqu'a 4,5:1 pour le premier plan secondaire. Pour
+    /// l'accent bleu par defaut, ordre de grandeur attendu : proche de `#0870D9`
+    /// (~4,53:1 pour le blanc 95%, ~4,84:1 pour le blanc opaque).
+    public static var selectionFillDarkRGB: SlateRGB {
+        WCAGContrast.darkening(defaultDarkRGB, toReachContrast: 4.5, with: selectionForegroundSecondary)
+    }
 
     /// Variante "Increase Contrast" : cible 7:1 au lieu de 4,5:1 (spec E2/E3). Assombrit
-    /// nettement plus (accent clair -> proche de `#0051A8`, ~34% plus sombre) : c'est un
-    /// bleu visiblement different de l'accent par defaut, pas une simple nuance -- voir le
-    /// rapport de livraison pour le jugement sur ce rendu.
-    public static let selectionFillLightRGBIncreasedContrast = WCAGContrast.darkening(
-        defaultLightRGB,
-        toReachContrast: 7.0,
-        with: selectionForegroundSecondary
-    )
+    /// nettement plus (accent bleu par defaut -> proche de `#0051A8`, ~34% plus sombre) :
+    /// un bleu visiblement different de l'accent par defaut, pas une simple nuance -- voir
+    /// le rapport de livraison de la phase 4 pour le jugement sur ce rendu.
+    public static var selectionFillLightRGBIncreasedContrast: SlateRGB {
+        WCAGContrast.darkening(defaultLightRGB, toReachContrast: 7.0, with: selectionForegroundSecondary)
+    }
 
     /// Variante sombre "Increase Contrast", cible 7:1.
-    public static let selectionFillDarkRGBIncreasedContrast = WCAGContrast.darkening(
-        defaultDarkRGB,
-        toReachContrast: 7.0,
-        with: selectionForegroundSecondary
-    )
+    public static var selectionFillDarkRGBIncreasedContrast: SlateRGB {
+        WCAGContrast.darkening(defaultDarkRGB, toReachContrast: 7.0, with: selectionForegroundSecondary)
+    }
 }
 
 /// Opacites de `text.secondary` (design/tokens.md §2), separees en constantes pures pour

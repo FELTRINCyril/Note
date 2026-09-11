@@ -13,6 +13,7 @@ import SlateUI
 public struct SidebarView: View {
     @Environment(\.appState) private var appState
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.openSettings) private var openSettings
 
     @Query(sort: [SortDescriptor(\Space.sortIndex), SortDescriptor(\Space.name)])
     private var allSpaces: [Space]
@@ -83,6 +84,7 @@ public struct SidebarView: View {
 
             SidebarFooterView(
                 canCreateNote: appState.selectedFolder != nil,
+                onOpenSettings: { openSettings() },
                 onOpenTrash: { showsTrash = true },
                 onNewFolder: createNewFolder,
                 onNewNote: createNewNote

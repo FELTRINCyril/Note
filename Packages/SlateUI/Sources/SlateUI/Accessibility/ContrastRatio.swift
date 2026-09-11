@@ -39,6 +39,12 @@ public struct SlateRGB: Sendable, Equatable {
     public static let white = SlateRGB(red: 1, green: 1, blue: 1)
     public static let black = SlateRGB(red: 0, green: 0, blue: 0)
 
+    /// Meme teinte, nouvelle opacite -- pratique pour deriver une variante `.subtle`/
+    /// `focusRing`/selection de texte d'un aplat opaque sans repeter ses 3 composantes.
+    public func withAlpha(_ alpha: Double) -> SlateRGB {
+        SlateRGB(red: red, green: green, blue: blue, alpha: alpha)
+    }
+
     /// Representation SwiftUI, pour construire les tokens de couleur exposes par `SlateColor`.
     public var color: Color {
         Color(red: red, green: green, blue: blue, opacity: alpha)
@@ -161,6 +167,35 @@ public enum WCAGContrast {
                 green: background.green * brightness,
                 blue: background.blue * brightness,
                 alpha: background.alpha
+            )
+        }
+        return candidate
+    }
+
+    /// Eclaircit progressivement `foreground` (melange vers le blanc) jusqu'a ce que son
+    /// contraste avec `background` (opaque, fixe) atteigne au moins `target`. N'assombrit
+    /// jamais : si `foreground` satisfait deja `target`, il est retourne inchange.
+    ///
+    /// Pendant de `darkening(_:toReachContrast:with:)`, pour le cas ou c'est le PREMIER
+    /// PLAN qu'il faut ajuster contre un fond fixe -- typiquement un accent pose EN TEXTE
+    /// sur `bg.editor` en theme sombre (`text.link`, design/tokens.md, "Couleur de texte
+    /// derivee de l'accent") : assombrir davantage un accent deja sombre ne le detache pas
+    /// d'un fond lui-meme tres sombre, il faut au contraire l'eclaircir.
+    public static func lightening(
+        _ foreground: SlateRGB,
+        toReachContrast target: Double,
+        with background: SlateRGB,
+        step: Double = 0.01
+    ) -> SlateRGB {
+        var mix = 0.0
+        var candidate = foreground
+        while ratio(candidate, background) < target, mix < 1.0 {
+            mix += step
+            candidate = SlateRGB(
+                red: foreground.red + (1 - foreground.red) * mix,
+                green: foreground.green + (1 - foreground.green) * mix,
+                blue: foreground.blue + (1 - foreground.blue) * mix,
+                alpha: foreground.alpha
             )
         }
         return candidate

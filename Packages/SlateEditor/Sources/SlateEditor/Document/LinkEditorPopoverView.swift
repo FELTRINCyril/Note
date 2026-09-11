@@ -67,7 +67,7 @@ struct LinkEditorPopoverView: View {
             TextField(EditorStrings.linkPopoverNoteSearchPlaceholder, text: .constant(""))
                 .textFieldStyle(.roundedBorder)
                 .disabled(true)
-                .opacity(0.4)
+                .opacity(SlateOpacity.disabled)
 
             HStack {
                 Spacer()

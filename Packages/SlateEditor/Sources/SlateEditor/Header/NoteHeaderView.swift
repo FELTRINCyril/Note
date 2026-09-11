@@ -22,11 +22,34 @@ struct NoteHeaderView: View {
     let onAddCover: () -> Void
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(ThemeManager.self) private var themeManager
     @State private var isHoveringHeader = false
+
+    /// "Afficher la couverture des notes" (design P4, artboard A) : ce reglage n'efface
+    /// pas la couverture de la note (`note.coverImageData` reste intact, l'action
+    /// "Ajouter une couverture" continue donc de se baser sur la DONNEE, pas sur ce
+    /// booleen) -- il en masque seulement l'AFFICHAGE, ici et ici seulement (perimetre
+    /// exceptionnel de la Phase 13 pour ce fichier : uniquement cette lecture).
+    private var displaysCover: Bool {
+        Self.shouldDisplayCover(
+            showsNoteCover: themeManager.showsNoteCover,
+            hasCoverImageData: note.coverImageData != nil
+        )
+    }
+
+    /// Regle pure derriere `displaysCover`, extraite pour rester testable SANS rendre la
+    /// vue : lire `@Environment(ThemeManager.self)` hors d'une hierarchie SwiftUI
+    /// reellement rendue declenche un crash (aucun ancetre `.environment(ThemeManager.
+    /// shared)`) -- cette fonction statique n'a, elle, aucune dependance a l'environnement.
+    /// Pas `private` : verifiee par `NoteHeaderViewCoverVisibilityTests` via
+    /// `@testable import SlateEditor`.
+    static func shouldDisplayCover(showsNoteCover: Bool, hasCoverImageData: Bool) -> Bool {
+        showsNoteCover && hasCoverImageData
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if let coverImageData = note.coverImageData {
+            if displaysCover, let coverImageData = note.coverImageData {
                 NoteCoverView(imageData: coverImageData, accessibilityLabel: strings.noteCoverAccessibilityLabel)
             }
 
@@ -35,7 +58,7 @@ struct NoteHeaderView: View {
                     if let iconName = note.iconName {
                         NoteIconView(iconName: iconName, accessibilityLabel: strings.noteIconAccessibilityLabel)
                             .padding(.leading, SlateGeometry.editorGutter)
-                            .padding(.top, note.coverImageData == nil ? Spacing.sm : -SlateGeometry.editorIconOverlap)
+                            .padding(.top, displaysCover ? -SlateGeometry.editorIconOverlap : Spacing.sm)
                             .padding(.bottom, Spacing.sm)
                     }
 
@@ -52,7 +75,7 @@ struct NoteHeaderView: View {
                         .padding(.top, Spacing.md)
                         .padding(.leading, SlateGeometry.editorGutter)
                 }
-                .padding(.top, note.coverImageData == nil ? SlateGeometry.editorContentTopPadding : 0)
+                .padding(.top, displaysCover ? 0 : SlateGeometry.editorContentTopPadding)
                 .padding(.bottom, SlateGeometry.editorHeaderToBodySpacing)
             }
         }
@@ -126,6 +149,7 @@ struct NoteHeaderView: View {
     .frame(width: 900)
     .background(SlateColor.bgEditor)
     .environment(\.colorScheme, .light)
+    .environment(ThemeManager.shared)
 }
 
 #Preview("NoteHeaderView - sombre, avec icone") {
@@ -140,4 +164,5 @@ struct NoteHeaderView: View {
     .frame(width: 900)
     .background(SlateColor.bgEditor)
     .environment(\.colorScheme, .dark)
+    .environment(ThemeManager.shared)
 }

@@ -156,8 +156,14 @@ private struct SlateFontModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
+        // Phase 13 : "Taille du texte" (design P4) est un multiplicateur LOCAL a Slate,
+        // cumule avec la taille systeme deja appliquee par `@ScaledMetric` ci-dessus --
+        // pas une alternative a Dynamic Type. "Police du corps" (SF Pro / New York serif)
+        // ne s'applique qu'aux styles restes `.default` : `mono` (SF Mono) garde son
+        // dessin monospace explicite quel que soit ce choix.
+        let resolvedDesign = design == .default ? slateCurrentBodyFontDesign() : design
         content
-            .font(.system(size: scaledSize, weight: weight, design: design))
+            .font(.system(size: scaledSize * slateCurrentTextSizeMultiplier(), weight: weight, design: resolvedDesign))
             .tracking(tracking)
             .modifier(TabularNumsModifier(isEnabled: tabularNums))
     }

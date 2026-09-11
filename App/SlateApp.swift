@@ -3,6 +3,7 @@ import SwiftData
 import SlateModel
 import SlateFeatures
 import SlateServices
+import SlateUI
 
 /// Point d'entree de l'application Slate (macOS).
 ///
@@ -38,15 +39,33 @@ struct SlateApp: App {
 
     var body: some Scene {
         WindowGroup {
-            switch containerResult {
-            case .success(let container):
-                MainWindowView()
-                    .environment(\.appState, appState)
-                    .modelContainer(container)
-                    .task { appDelegate.appState = appState }
-            case .failure(let error):
-                ContainerErrorView(error: error)
+            // Phase 13 : `ThemeManager.shared.preferredColorScheme` pilote le theme
+            // (Systeme/Clair/Sombre choisi dans les reglages) pour TOUTE la fenetre
+            // principale -- `Group` regroupe les deux branches du `switch` pour
+            // n'appliquer le modificateur qu'une fois. `nil` (theme "Systeme") laisse
+            // macOS decider, comme documente sur `ThemeManager.preferredColorScheme`.
+            Group {
+                switch containerResult {
+                case .success(let container):
+                    MainWindowView()
+                        .environment(\.appState, appState)
+                        .environment(ThemeManager.shared)
+                        .modelContainer(container)
+                        .task { appDelegate.appState = appState }
+                case .failure(let error):
+                    ContainerErrorView(error: error)
+                }
             }
+            .preferredColorScheme(ThemeManager.shared.preferredColorScheme)
+        }
+
+        // Phase 13 : fenetre de reglages standard macOS (Menu Slate > Reglages,
+        // Cmd+,). `SettingsWindowView` ne depend d'aucun `ModelContainer` explicite
+        // (elle lit `SlateContainer.isCloudKitEnabled`, un fait de compilation, pas
+        // le container lui-meme) : pas besoin de la brancher au `containerResult`.
+        Settings {
+            SettingsWindowView()
+                .preferredColorScheme(ThemeManager.shared.preferredColorScheme)
         }
     }
 }

@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 12.
+**Dernière mise à jour :** fin de la phase 13.
 
 ---
 
 ## En un coup d'œil
 
-**12 / 21 phases terminées.**
+**13 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         █████████░  83 %   (10/12) ⏳ en cours
+App v1         █████████░  92 %   (11/12) ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 12 (verrouillage de note) validée, avec sa revue de sécurité dédiée. Mot de passe unique d'app vérifié par PBKDF2 dans le Keychain, Touch ID avec repli mot de passe, écran de verrou, re-verrouillage automatique sur quatre déclencheurs. **Une faille réelle trouvée en revue et corrigée** : dupliquer une note verrouillée produisait une copie déverrouillée avec tout son contenu en clair.
-- **Prochaine étape :** **Phase 13 — Thèmes & apparence** (clair/sombre/système, accent personnalisable, fenêtre de réglages). Design déjà livré (artboards P4 A-C).
-- **Qualité au dernier point (phase 12) :** 700 tests verts (101 `SlateModel` · 325 `SlateEditor` · 84 `SlateUI` · 94 `SlateServices` · 96 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
+- **Où on en est :** phase 13 (thèmes & apparence) validée. Fenêtre de réglages macOS à 4 onglets, thème Système/Clair/Sombre, 8 accents personnalisables, police et taille de corps, et les trois options d'apparence réellement branchées. Deux corrections de fond livrées : `text.onAccent` et `text.link` sont désormais **dérivés de l'accent courant** au lieu d'être constants.
+- **Prochaine étape :** **Phase 14 — Raccourcis clavier**, dernière phase du jalon v1.
+- **Qualité au dernier point (phase 13) :** 724 tests verts (101 `SlateModel` · 329 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 98 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -49,8 +49,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 10 | Glisser-déposer & colonnes | ✅ | 🎨 ✔️ | `6462112` |
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
 | 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `e04d5f8` |
-| 13 | Thèmes & apparence | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 14 | Raccourcis clavier | ⬜ | — | — |
+| 13 | Thèmes & apparence | ✅ | 🎨 ✔️ | `PH13` |
+| 14 | Raccourcis clavier | ⏳ **prochaine** | — | — |
 
 ### Jalon v2 — Puissance Notion
 | # | Phase | Statut | Design | Commit |
@@ -132,6 +132,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 12 — FAILLE TROUVÉE EN REVUE : duplication d'une note verrouillée.** `NoteActionsService.duplicate` forçait `isLocked: false` sur la copie. Comme `lock()` ne vide jamais les blocs (seulement les dérivés), la copie recevait l'intégralité du contenu en clair et `refreshDerivedText()` repeuplait extrait et index de recherche. Contournement complet du verrou, en deux clics, sans authentification, par une action anodine du menu contextuel. La copie hérite désormais de `isLocked`, et comme le mot de passe est unique au niveau de l'app, elle reste déverrouillable normalement. Test de régression ajouté. ✅
 - **Phase 12 — Quatre déclencheurs de re-verrouillage :** fermeture de la note, inactivité (5 min par défaut), verrouillage de l'écran macOS, et extinction de l'app. Ce dernier ne peut être observé que depuis `App/SlateApp.swift` : un package ne voit pas le cycle de vie `NSApplication`. Sans lui, déverrouiller une note puis quitter Slate la laissait déverrouillée **en base**, donc de nouveau visible et indexée au lancement suivant. ✅
 
+- **Phase 13 — `text.onAccent` est une fonction de l'accent, plus une constante.** Le blanc ne tient pas sur orange, jaune, vert ni graphite : ces teintes imposent du texte noir à 85 %, et le graphite ne bascule qu'en thème sombre. Le code ne basculait jusqu'ici que pour le jaune. Les 8 accents sont désormais couverts et vérifiés par test dans les deux thèmes. ✅
+- **Phase 13 — `text.link` est dérivé de l'accent courant.** Le token `textLink` de la phase 7 portait déjà la note "à dériver quand l'accent deviendra personnalisable" : c'était maintenant. Sans ça un accent vert donnait un lien à 2,0:1 sur le fond d'éditeur. La dérivation assombrit en clair, éclaircit en sombre, et ne touche pas un accent qui tient déjà l'AA. ✅
+- **Phase 13 — Les ratios calculés ne reproduisent pas exactement ceux annoncés par le design** (écarts de 0,1 à 1,3 point, dans les deux sens). Les tests **n'ont pas été ajustés** pour retomber sur les chiffres de la maquette : c'est la règle de choix de couleur qui est reproduite fidèlement et verrouillée, pas les valeurs annoncées. Le même calcul WCAG avait déjà détecté une erreur de la spec en phase 3/4. À trancher à l'oeil si l'écart gêne. ✅
+- **Phase 13 — PIÈGE DE CONCURRENCE, à ne jamais rouvrir : pas de `MainActor.assumeIsolated` dans le calcul des tokens.** Swift Testing exécute les tests non isolés sur des threads d'arrière-plan, et un `assumeIsolated` y provoque un **SIGTRAP**. Ce n'est pas théorique : la première version de la lecture d'accent a fait planter des tests préexistants et inchangés. Solution retenue, à réutiliser pour tout nouvel état global lu par un token : un miroir `SlateThemeState` protégé par `NSLock`, alimenté par les `didSet` du `ThemeManager`. La même mine dormait dans `slateCurrentlyIncreasesContrast()` : désamorcée dans la foulée. ✅
+- **Phase 13 — Les trois options d'apparence sont réellement branchées**, pas seulement persistées : transparence de la barre latérale, contraste des séparateurs et affichage de la couverture. Un réglage affiché, actif et sans effet est exactement ce que la règle d'honnêteté d'interface interdit. Les deux réglages d'accessibilité s'**ajoutent** à leur équivalent système (l'un ou l'autre suffit), sans jamais l'écraser. ✅
+- **Phase 13 — `SlateFolderColor` délègue à `SlateAccentColor`** au lieu de dupliquer les mêmes 8 valeurs hexadécimales : une source unique, plus de risque de désynchronisation. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -185,10 +192,16 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Pas de date "Défini le..."** dans les réglages : le service ne persiste aucune date de définition, et je préfère un champ absent à une date inventée.
 - **Fenêtre de réglages non construite** : seul le contenu de l'onglet Verrouillage existe, prêt à être intégré. La fenêtre complète est le sujet de la phase 13.
 - **Biométrie et verrouillage d'écran non testables ici** : pas de matériel biométrique ni de session graphique. Seules la logique environnante et le câblage des notifications ont été relus.
+- **Case "Suivre l'accent du système" non livrée** : le design la prévoit, mais `ThemeManager.accent` n'est pas optionnel et aucune notion d'accent système n'existe. L'ajouter sans le mécanisme derrière aurait été une fausse interactivité.
+- **Onglets IA et Général entièrement désactivés** : l'IA est la phase 18, et les réglages généraux n'ont pas encore de mécanisme. Le "1 284 notes indexées" de la maquette n'a volontairement **pas** été reproduit, c'eût été un chiffre inventé. "Synchroniser via iCloud" reflète le fait de compilation réel, pas un réglage utilisateur.
+- **`SlateUI` n'a toujours aucun catalogue de localisation** : ses `displayName` d'accent et de police sont en français figé, et `SlateFeatures` recompose donc ses propres libellés bilingues. Dette déjà signalée en phase 8, désormais plus visible.
+- **`LockSettingsTabView` garde sa largeur propre de 460 pt** dans une fenêtre de 620 pt : centré, non retouché.
+- **Couleurs en dur signalées hors périmètre et laissées telles quelles** : `Workspace.accentColorHex` et `Tag.colorHex` dupliquent des valeurs de `SlateAccentColor` comme défauts de données persistées. Ce sont des données, pas du rendu, mais la source n'est plus unique.
+- **Aucune vérification visuelle de la phase 13** : alignements de la fenêtre de réglages, rendu des pastilles d'accent, bascule clair/sombre réelle, aperçu en direct de la taille de texte. Aucune fenêtre disponible. C'est d'autant plus gênant ici que la phase est entièrement visuelle.
 
 ## Prochaine action concrète
-La **phase 13 — Thèmes & apparence**. Design déjà livré : artboards **A** (onglet Apparence et les trois autres onglets), **B** (les 8 accents avec leurs contrastes mesurés) et **C** (le même écran sous trois accents) de `design/_design_complet/Slate P4 - Réglages & apparence.dc.html`.
+La **phase 14 — Raccourcis clavier**, dernière du jalon v1. Aucun design requis.
 
-C'est la phase où la fenêtre de réglages se construit enfin (largeur fixe 620 pt, onglets en haut, pas de barre latérale, grammaire "un réglage = une ligne"), et elle récupère l'onglet Verrouillage déjà écrit en phase 12.
+C'est une phase de **consolidation** : elle rassemble les raccourcis déjà posés au fil des phases 5 à 13 et comble les manques, plutôt que d'inventer des fonctionnalités. Trois chantiers : un registre centralisé, les entrées de **menu bar macOS** (Fichier, Édition, Format, Affichage - attendues sur une app native), et `docs/RACCOURCIS.md` qui documente la liste.
 
-Deux points de vigilance. D'abord `text.onAccent` doit devenir **une fonction de l'accent** : le design a mesuré que le blanc ne tient pas sur orange, jaune, vert et graphite, qui imposent du texte noir - or `SlateAccent.onAccent` ne bascule aujourd'hui qu'en jaune. Ensuite `text.link` doit être **dérivé** de l'accent courant et non plus constant, sinon un accent vert donnerait un lien à 2,0:1 (le token `textLink` de la phase 7 porte déjà cette note). Le doc demande enfin un audit des couleurs codées en dur accumulées depuis la phase 3.
+Points connus à traiter : les raccourcis du menu contextuel de la phase 11 (⌃⌘P, ⌘D, ⌘⌫) ne sont actifs que menu ouvert, faute de `CommandGroup` au niveau de l'app. Et `docs/14` signale un conflit à arbitrer : **⌘K est revendiqué à la fois par l'insertion de lien (phase 7, déjà livrée) et par la palette de commandes globale** que ce doc propose.

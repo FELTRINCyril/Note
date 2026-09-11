@@ -21,12 +21,17 @@ private struct SidebarMaterialBackground: NSViewRepresentable {
 /// Applique le fond de barre laterale : materiau natif `.sidebar`, ou repli sur l'aplat
 /// `SlateColor.bgSidebarOpaque` quand "Reduce Transparency" est actif (spec E2
 /// Accessibilite : "le materiau .sidebar retombe sur l'aplat #F2F2F5 / #232326").
+///
+/// Phase 13 : le reglage Slate "Reduire la transparence de la barre laterale" (design P4)
+/// S'AJOUTE au reglage systeme (`accessibilityReduceTransparency`) -- l'un OU l'autre
+/// suffit a opacifier, ni l'un ni l'autre ne l'emporte silencieusement sur son
+/// complement (voir la note de `ThemeManager.reducesSidebarTransparency`).
 private struct SlateSidebarBackgroundModifier: ViewModifier {
-    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.accessibilityReduceTransparency) private var systemReducesTransparency
 
     func body(content: Content) -> some View {
         content.background {
-            if reduceTransparency {
+            if systemReducesTransparency || slateReducesSidebarTransparencyOverride() {
                 SlateColor.bgSidebarOpaque
             } else {
                 SidebarMaterialBackground()

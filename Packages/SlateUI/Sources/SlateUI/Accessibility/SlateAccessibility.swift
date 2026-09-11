@@ -63,6 +63,7 @@ public final class SlateAccessibility {
 
     private init() {
         isIncreaseContrastEnabled = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+        slatePublishIncreasesContrast(isIncreaseContrastEnabled)
         observer = NotificationCenter.default.addObserver(
             forName: NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,
             object: NSWorkspace.shared,
@@ -82,5 +83,6 @@ public final class SlateAccessibility {
 
     private func refresh() {
         isIncreaseContrastEnabled = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+        slatePublishIncreasesContrast(isIncreaseContrastEnabled)
     }
 }

@@ -39,29 +39,24 @@ public enum SlateFolderColor: String, CaseIterable, Sendable {
     case green
     case graphite
 
-    private var rgb: (light: SlateRGB, dark: SlateRGB) {
+    /// Delegue au type qui porte desormais ces 8 teintes en SOURCE UNIQUE (Phase 13,
+    /// accent personnalisable) : `SlateFolderColor` et `SlateAccentColor` couvraient la
+    /// meme palette (design/tokens.md §7/§8) avec deux jeux de constantes hex dupliques
+    /// (violet/rose ici, purple/pink cote accent -- memes valeurs, noms differents).
+    /// CORRIGE en Phase 13 pour eliminer ce risque de desynchronisation.
+    private var accent: SlateAccentColor {
         switch self {
-        case .blue:
-            (SlateRGB(hex: "#007AFF") ?? .black, SlateRGB(hex: "#0A84FF") ?? .black)
-        case .violet:
-            (SlateRGB(hex: "#AF52DE") ?? .black, SlateRGB(hex: "#BF5AF2") ?? .black)
-        case .rose:
-            (SlateRGB(hex: "#FF2D55") ?? .black, SlateRGB(hex: "#FF375F") ?? .black)
-        case .red:
-            (SlateRGB(hex: "#FF3B30") ?? .black, SlateRGB(hex: "#FF453A") ?? .black)
-        case .orange:
-            (SlateRGB(hex: "#FF9500") ?? .black, SlateRGB(hex: "#FF9F0A") ?? .black)
-        case .yellow:
-            (SlateRGB(hex: "#FFCC00") ?? .black, SlateRGB(hex: "#FFD60A") ?? .black)
-        case .green:
-            (SlateRGB(hex: "#34C759") ?? .black, SlateRGB(hex: "#30D158") ?? .black)
-        case .graphite:
-            (SlateRGB(hex: "#8E8E93") ?? .black, SlateRGB(hex: "#98989D") ?? .black)
+        case .blue: .blue
+        case .violet: .purple
+        case .rose: .pink
+        case .red: .red
+        case .orange: .orange
+        case .yellow: .yellow
+        case .green: .green
+        case .graphite: .graphite
         }
     }
 
     /// Couleur adaptative clair/sombre de ce dossier, hors etat de selection.
-    public var color: Color {
-        slateAdaptiveColor(light: rgb.light, dark: rgb.dark)
-    }
+    public var color: Color { accent.color }
 }

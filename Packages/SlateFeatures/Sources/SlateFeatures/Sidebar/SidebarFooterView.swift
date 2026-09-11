@@ -4,24 +4,23 @@ import SlateUI
 /// Pied de la sidebar (spec E2 : "Pied : 40 pt, separateur 1 pt : Reglages - Corbeille
 /// - puis nouveau dossier (Cmd+Maj+N) - nouvelle note (Cmd+N)").
 ///
-/// Reglages reste un placeholder desactive (aucune phase dediee dans ce document).
-/// Corbeille est fonctionnelle depuis la Phase 11 (`onOpenTrash`, presente `TrashView`
-/// - voir `SidebarView`). Nouveau dossier/nouvelle note sont fonctionnels, operant dans
-/// le dossier selectionne (voir `SidebarView`).
+/// Reglages ouvre la fenetre `SettingsWindowView` (Phase 13, voir `SidebarView`) via
+/// `onOpenSettings`. Corbeille est fonctionnelle depuis la Phase 11 (`onOpenTrash`,
+/// presente `TrashView` - voir `SidebarView`). Nouveau dossier/nouvelle note sont
+/// fonctionnels, operant dans le dossier selectionne (voir `SidebarView`).
 struct SidebarFooterView: View {
     let canCreateNote: Bool
+    let onOpenSettings: () -> Void
     let onOpenTrash: () -> Void
     let onNewFolder: () -> Void
     let onNewNote: () -> Void
 
     var body: some View {
         HStack(spacing: Spacing.md) {
-            Button {
-            } label: {
+            Button(action: onOpenSettings) {
                 Image(systemName: "gearshape")
             }
             .buttonStyle(.plain)
-            .disabled(true)
             .help(String(localized: "sidebar.footer.settings.help", bundle: .module))
             .accessibilityLabel(String(localized: "sidebar.footer.settings", bundle: .module))
 
@@ -66,14 +65,26 @@ struct SidebarFooterView: View {
 }
 
 #Preview("SidebarFooterView") {
-    SidebarFooterView(canCreateNote: true, onOpenTrash: {}, onNewFolder: {}, onNewNote: {})
-        .frame(width: 240)
-        .slateSidebarBackground()
+    SidebarFooterView(
+        canCreateNote: true,
+        onOpenSettings: {},
+        onOpenTrash: {},
+        onNewFolder: {},
+        onNewNote: {}
+    )
+    .frame(width: 240)
+    .slateSidebarBackground()
 }
 
 #Preview("SidebarFooterView - sans dossier selectionne") {
-    SidebarFooterView(canCreateNote: false, onOpenTrash: {}, onNewFolder: {}, onNewNote: {})
-        .frame(width: 240)
-        .slateSidebarBackground()
-        .preferredColorScheme(.dark)
+    SidebarFooterView(
+        canCreateNote: false,
+        onOpenSettings: {},
+        onOpenTrash: {},
+        onNewFolder: {},
+        onNewNote: {}
+    )
+    .frame(width: 240)
+    .slateSidebarBackground()
+    .preferredColorScheme(.dark)
 }

@@ -60,15 +60,19 @@ extension SlateColor {
     ///
     /// `tokens.md` §2 le donne egal a `accent.default`, mais la note de §7 impose une
     /// variante assombrie (clair) / eclaircie (sombre) des que l'accent est pose EN TEXTE
-    /// sur `bg.editor` : l'accent brut peut tomber tres bas (vert #34C759 = 2,0:1). Avec
-    /// l'accent bleu par defaut, les valeurs ci-dessous sont deja la variante lisible.
-    /// Quand l'accent deviendra personnalisable (phase 13), ce token devra etre DERIVE de
-    /// l'accent courant et non plus constant -- c'est exactement le role de
-    /// `SlateContrast.darkened(_:toMeet:with:)` deja disponible.
+    /// sur `bg.editor` : l'accent brut peut tomber tres bas (vert #34C759 = 2,0:1).
+    ///
+    /// CORRIGE en Phase 13 (l'accent est desormais personnalisable, design/tokens.md §7,
+    /// "Couleur de texte derivee de l'accent") : propriete CALCULEE, DERIVEE de l'accent
+    /// COURANT (`ThemeManager.shared.accent`) via `SlateAccentColor.linkRGB(dark:)`, et non
+    /// plus une constante bleue -- sans quoi un accent vert donnerait un lien a 2,0:1 sur
+    /// `bg.editor`. Voir `SlateAccentColor.linkRGB(dark:)` pour le calcul (assombrissement
+    /// en clair via `WCAGContrast.darkening`, eclaircissement en sombre via
+    /// `WCAGContrast.lightening`).
     ///
     /// Un lien n'est jamais signale par la seule couleur : il reste souligne (design P1 D).
-    public static let textLink = slateAdaptiveColor(
-        light: SlateRGB(hex: "#0A66C2") ?? .black,
-        dark: SlateRGB(hex: "#6CB6FF") ?? .black
-    )
+    public static var textLink: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.linkRGB(dark: false), dark: accent.linkRGB(dark: true))
+    }
 }

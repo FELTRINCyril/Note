@@ -22,7 +22,13 @@ import SwiftUI
 /// (main thread egalement, `SlateAccessibility` n'est jamais touchee depuis une tache
 /// en arriere-plan). Pas `private` : reutilise par `SlateAccent.swift`.
 func slateCurrentlyIncreasesContrast() -> Bool {
-    MainActor.assumeIsolated { SlateAccessibility.shared.isIncreaseContrastEnabled }
+    // Passe par le miroir verrouille de `SlateThemeState` et NON par un
+    // `MainActor.assumeIsolated` sur `SlateAccessibility.shared` : cette fonction est
+    // appelee pendant le calcul des tokens de couleur, qui n'est pas garanti sur le
+    // thread principal. `assumeIsolated` y provoque un SIGTRAP (plantage constate en
+    // phase 13 sur des tests preexistants et inchanges). Voir
+    // `slateCurrentIncreasesContrast()`.
+    slateCurrentIncreasesContrast()
 }
 
 /// Pas `private` : reutilise par `SlateAccent.swift`, `SlateFolderColor.swift` et
@@ -197,11 +203,20 @@ public enum SlateColor {
         dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.25)
     )
 
-    /// Texte sur fond d'accent. Equivalent `text.onAccent`.
+    /// Texte (ou icone) pose sur l'APLAT PLEIN de l'accent courant (checkbox cochee,
+    /// badge, bouton plein... -- PAS `accentSelectionFill`, qui est deja assombri pour
+    /// garantir l'AA et reste blanc, voir la note de `ContrastRatio.swift`). Equivalent
+    /// `text.onAccent`.
     ///
-    /// Cette constante reste blanche : c'est le fond (`accentSelectionFill`) qui est
-    /// ajuste pour garantir l'AA, pas ce texte (voir la note de `ContrastRatio.swift`).
-    public static let textOnAccent = Color.white
+    /// CORRIGE en Phase 13 (design/tokens.md §7) : ce n'est PAS toujours du blanc -- sur
+    /// les aplats clairs (orange, jaune, vert, et le graphite en theme sombre), le blanc
+    /// tombe entre 1,7:1 et 2,1:1. Propriete CALCULEE (pas `let`) : elle doit refleter
+    /// l'accent COURANT (`ThemeManager.shared.accent`), qui peut changer a tout moment --
+    /// voir `SlateAccentColor.onAccentRGB(dark:)` pour la regle complete.
+    public static var textOnAccent: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.onAccentRGB(dark: false), dark: accent.onAccentRGB(dark: true))
+    }
 
     /// Texte inverse (tooltips). Equivalent `text.inverse`.
     public static let textInverse = slateAdaptiveColor(
@@ -213,29 +228,32 @@ public enum SlateColor {
 
     /// Accent principal. Equivalent `accent.default`. A utiliser partout ou l'accent ne
     /// porte PAS de texte (teintes d'icones, anneau de focus, indicateur de depot) : le
-    /// seuil AA y est 3:1, `#007AFF`/`#0A84FF` le satisfont deja.
-    public static let accentDefault = slateAdaptiveColor(
-        light: SlateAccent.defaultLightRGB,
-        dark: SlateAccent.defaultDarkRGB
-    )
+    /// seuil AA y est 3:1, chacun des 8 accents le satisfait deja sur ses propres fonds
+    /// habituels.
+    ///
+    /// Propriete CALCULEE (Phase 13, accent personnalisable) : reflete l'accent COURANT
+    /// (`ThemeManager.shared.accent`) a chaque acces, comme `textOnAccent`.
+    public static var accentDefault: Color {
+        slateAdaptiveColor(light: SlateAccent.defaultLightRGB, dark: SlateAccent.defaultDarkRGB)
+    }
 
-    /// Accent au survol. Equivalent `accent.hover`.
-    public static let accentHover = slateAdaptiveColor(
-        light: SlateRGB(hex: "#0A6CE0") ?? .black,
-        dark: SlateRGB(hex: "#3D9BFF") ?? .black
-    )
+    /// Accent au survol. Equivalent `accent.hover`. Calcule, voir `accentDefault`.
+    public static var accentHover: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.hoverRGB(dark: false), dark: accent.hoverRGB(dark: true))
+    }
 
-    /// Accent presse. Equivalent `accent.pressed`.
-    public static let accentPressed = slateAdaptiveColor(
-        light: SlateRGB(hex: "#0857B8") ?? .black,
-        dark: SlateRGB(hex: "#2E7FE0") ?? .black
-    )
+    /// Accent presse. Equivalent `accent.pressed`. Calcule, voir `accentDefault`.
+    public static var accentPressed: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.pressedRGB(dark: false), dark: accent.pressedRGB(dark: true))
+    }
 
-    /// Fond d'accent atenue. Equivalent `accent.subtle`.
-    public static let accentSubtle = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 122.0 / 255, blue: 255.0 / 255, alpha: 0.12),
-        dark: SlateRGB(red: 10.0 / 255, green: 132.0 / 255, blue: 255.0 / 255, alpha: 0.22)
-    )
+    /// Fond d'accent atenue. Equivalent `accent.subtle`. Calcule, voir `accentDefault`.
+    public static var accentSubtle: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.subtleRGB(dark: false), dark: accent.subtleRGB(dark: true))
+    }
 
     /// Fond de selection quand la ligne PORTE du texte (ex: libelle de ligne de sidebar,
     /// titre/extrait de cellule de note).
@@ -277,7 +295,8 @@ public enum SlateColor {
     /// Ligne/bloc selectionne, fenetre active. Equivalent `state.selected` (=
     /// `accent.default`, PAS `accentSelectionFill` : ce token est reserve aux blocs qui
     /// ne portent pas de texte directement dessus, ex: bloc selectionne dans l'editeur).
-    public static let stateSelected = accentDefault
+    /// Calcule (pas `let`) : `accentDefault` l'est desormais aussi (Phase 13).
+    public static var stateSelected: Color { accentDefault }
 
     /// Selection quand la fenetre est inactive. Equivalent `state.selectedInactive`.
     public static let stateSelectedInactive = slateAdaptiveColor(
@@ -285,17 +304,22 @@ public enum SlateColor {
         dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.13)
     )
 
-    /// Selection de texte. Equivalent `state.selectedText`.
-    public static let stateSelectedText = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 122.0 / 255, blue: 255.0 / 255, alpha: 0.28),
-        dark: SlateRGB(red: 10.0 / 255, green: 132.0 / 255, blue: 255.0 / 255, alpha: 0.35)
-    )
+    /// Selection de texte. Equivalent `state.selectedText`. Meme alpha que la valeur
+    /// macOS d'origine (0,28 clair / 0,35 sombre) posee sur l'accent COURANT (Phase 13,
+    /// accent personnalisable) plutot que sur le bleu fige -- une selection de texte doit
+    /// se teinter de l'accent choisi, pas rester bleue quand l'utilisateur en choisit un
+    /// autre.
+    public static var stateSelectedText: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.lightRGB.withAlpha(0.28), dark: accent.darkRGB.withAlpha(0.35))
+    }
 
-    /// Contour de focus clavier. Equivalent `focusRing`.
-    public static let focusRing = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 122.0 / 255, blue: 255.0 / 255, alpha: 0.60),
-        dark: SlateRGB(red: 10.0 / 255, green: 132.0 / 255, blue: 255.0 / 255, alpha: 0.65)
-    )
+    /// Contour de focus clavier. Equivalent `focusRing`. Meme raisonnement que
+    /// `stateSelectedText` : teinte de l'accent courant, pas fige sur le bleu.
+    public static var focusRing: Color {
+        let accent = slateCurrentAccent()
+        return slateAdaptiveColor(light: accent.lightRGB.withAlpha(0.60), dark: accent.darkRGB.withAlpha(0.65))
+    }
 
     // MARK: - Semantiques (design/tokens.md §4)
 
@@ -311,22 +335,47 @@ public enum SlateColor {
     // MARK: - Separateurs & bordures (design/tokens.md §5)
 
     /// Separateur standard. Equivalent `separator`.
-    public static let separator = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.10),
-        dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.15)
-    )
+    ///
+    /// Propriete CALCULEE (Phase 13, "Augmenter le contraste des separateurs") : comme
+    /// `textSecondary`/`textPlaceholder`, elle lit l'etat combine (reglage systeme OU
+    /// reglage Slate, voir `slateSeparatorsUseIncreasedContrast()`) a chaque acces.
+    public static var separator: Color {
+        slateSeparatorsUseIncreasedContrast()
+            ? slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.25),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.32)
+            )
+            : slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.10),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.15)
+            )
+    }
 
-    /// Bordure de champs/cartes. Equivalent `border.default`.
-    public static let borderDefault = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.12),
-        dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.15)
-    )
+    /// Bordure de champs/cartes. Equivalent `border.default`. Calculee, voir `separator`.
+    public static var borderDefault: Color {
+        slateSeparatorsUseIncreasedContrast()
+            ? slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.28),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.32)
+            )
+            : slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.12),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.15)
+            )
+    }
 
-    /// Bordure accentuee. Equivalent `border.strong`.
-    public static let borderStrong = slateAdaptiveColor(
-        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.22),
-        dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.28)
-    )
+    /// Bordure accentuee. Equivalent `border.strong`. Calculee, voir `separator`.
+    public static var borderStrong: Color {
+        slateSeparatorsUseIncreasedContrast()
+            ? slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.42),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.48)
+            )
+            : slateAdaptiveColor(
+                light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.22),
+                dark: SlateRGB(red: 1, green: 1, blue: 1, alpha: 0.28)
+            )
+    }
 
     // MARK: - Tokens barre laterale (design/tokens.md §17)
 
@@ -341,44 +390,4 @@ public enum SlateColor {
 
     /// Fond d'une ligne survolee. Equivalent `sidebar.item.hover.bg` (= `state.hover`).
     public static let sidebarItemHoverBackground = stateHover
-
-    // MARK: - Premier plan sur aplat d'accent
-
-    /// Couleur de premier plan a utiliser pour TOUT contenu (icone, glyphe, texte) pose
-    /// sur `accentSelectionFill` (= la pastille de selection active). Alias de
-    /// `textOnAccent` sous un nom generique : ce token ne parle pas que de texte, il sert
-    /// aussi aux icones (chevron, icone de dossier, etoile de favori...) qui doivent
-    /// suivre la meme regle (spec E2, icone de dossier : "teinte = couleur du dossier ;
-    /// passe en blanc sur selection active"). Voir `foreground(_:onAccentFill:)` pour la
-    /// facon recommandee de le consommer depuis un composant.
-    public static let foregroundOnAccentFill = textOnAccent
-
-    /// Choisit entre `base` et `foregroundOnAccentFill` selon que le contenu est
-    /// actuellement pose sur l'aplat d'accent de selection (`EnvironmentValues.slateIsOnAccentFill`).
-    ///
-    /// Point d'entree unique recommande pour tout composant qui doit rester lisible a la
-    /// fois hors selection (sa teinte habituelle, `base`) et sur la selection active
-    /// (bascule automatique en blanc/`text.onAccent`). Exemple :
-    /// ```swift
-    /// @Environment(\.slateIsOnAccentFill) private var isOnAccentFill
-    /// ...
-    /// .foregroundStyle(SlateColor.foreground(SlateColor.textTertiary, onAccentFill: isOnAccentFill))
-    /// ```
-    public static func foreground(_ base: Color, onAccentFill isOnAccentFill: Bool) -> Color {
-        isOnAccentFill ? foregroundOnAccentFill : base
-    }
-
-    /// Premier plan SECONDAIRE a utiliser sur `accentSelectionFill` (spec E3 : l'extrait
-    /// de la cellule de note, "blanc 95%"). Distinct de `foregroundOnAccentFill` (le
-    /// premier plan PRINCIPAL, blanc opaque) : la spec cree une hierarchie a deux niveaux
-    /// sur la selection, et c'est CE token, le plus exigeant des deux, qui contraint le
-    /// calcul de `accentSelectionFill` (voir `SlateAccent.selectionForegroundSecondary`).
-    public static let foregroundSecondaryOnAccentFill = Color.white.opacity(0.95)
-
-    /// Choisit entre `base` et `foregroundSecondaryOnAccentFill` selon
-    /// `EnvironmentValues.slateIsOnAccentFill`. Pendant de `foreground(_:onAccentFill:)`
-    /// pour le contenu SECONDAIRE (extrait, metadonnee) plutot que principal (titre).
-    public static func foregroundSecondary(_ base: Color, onAccentFill isOnAccentFill: Bool) -> Color {
-        isOnAccentFill ? foregroundSecondaryOnAccentFill : base
-    }
 }
