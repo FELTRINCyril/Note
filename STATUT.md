@@ -48,7 +48,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `4c27bf6` |
 | 10 | Glisser-déposer & colonnes | ✅ | 🎨 ✔️ | `6462112` |
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
-| 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `PH12` |
+| 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `e04d5f8` |
 | 13 | Thèmes & apparence | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 14 | Raccourcis clavier | ⬜ | — | — |
 
