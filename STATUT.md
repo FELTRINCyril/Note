@@ -50,7 +50,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
 | 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `e04d5f8` |
 | 13 | Thèmes & apparence | ✅ | 🎨 ✔️ | `2be8452` |
-| 14 | Raccourcis clavier | ✅ | — | `PH14` |
+| 14 | Raccourcis clavier | ✅ | — | `1927ce8` |
 
 ### Jalon v2 — Puissance Notion
 | # | Phase | Statut | Design | Commit |
