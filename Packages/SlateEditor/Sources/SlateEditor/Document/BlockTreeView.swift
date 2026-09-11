@@ -130,6 +130,44 @@ struct BlockTreeView: View {
                 editorController.handleEnterOnSelectedBlock()
                 return .handled
             }
+            // Opt+Left/Opt+Right sur une image SELECTIONNEE (Phase 9, artboard A) : un
+            // palier de largeur/alignement a la fois, annonce VoiceOver dediee -- voir
+            // `EditorController.cycleImageAlignment(forward:in:)`. `NSEvent.
+            // modifierFlags` plutot que le parametre `KeyPress` (meme convention que
+            // `plainSelectTapGesture` ci-dessous pour Maj) : ce module lit deja les
+            // modificateurs ainsi ailleurs dans ce fichier.
+            .onKeyPress(.leftArrow) {
+                guard block.type == .image, editorController.selectedBlockID == block.id,
+                      NSEvent.modifierFlags.contains(.option)
+                else { return .ignored }
+                if let result = editorController.cycleImageAlignment(forward: false, in: block) {
+                    AccessibilityNotification.Announcement(result.accessibilityAnnouncement).post()
+                }
+                return .handled
+            }
+            .onKeyPress(.rightArrow) {
+                guard block.type == .image, editorController.selectedBlockID == block.id,
+                      NSEvent.modifierFlags.contains(.option)
+                else { return .ignored }
+                if let result = editorController.cycleImageAlignment(forward: true, in: block) {
+                    AccessibilityNotification.Announcement(result.accessibilityAnnouncement).post()
+                }
+                return .handled
+            }
+            // Coller (Cmd+V) sur une image SELECTIONNEE (Phase 9) : couvre uniquement
+            // ce cas -- coller une image PENDANT LA SAISIE d'un bloc texte (pour creer
+            // un nouveau bloc image a la volee, comportement Notion) exigerait
+            // d'intercepter le collage AU NIVEAU DE `RichTextEditingTextView`
+            // (TextKit), hors perimetre assume de cette passe -- voir le rapport de fin
+            // de tache.
+            .onKeyPress(KeyEquivalent("v")) {
+                guard block.type == .image, editorController.selectedBlockID == block.id,
+                      NSEvent.modifierFlags.contains(.command),
+                      let data = NSPasteboard.general.data(forType: .png) ?? NSPasteboard.general.data(forType: .tiff)
+                else { return .ignored }
+                editorController.importImageData(data, filename: EditorStrings.imageUnnamedFilename, into: block)
+                return .handled
+            }
             .onChange(of: editorController.selectedBlockID) { _, newValue in
                 isSelectionKeyCaptureFocused = newValue == block.id
             }

@@ -16,20 +16,19 @@ import SlateModel
 ///   `BlockRenderRouting`.
 /// - `advanced` : `code`, `table` (Phase 8, structure en sous-blocs -- voir
 ///   `EditorController+SlashMenu.executeTableCommand(in:leftoverIsEmpty:)`), meme raison.
-/// - `media` : VOLONTAIREMENT VIDE. `image`/`file` ont un `BlockType` reserve mais
-///   retombent aujourd'hui sur `.unsupported` dans `BlockRenderRouting` -- leur rendu
-///   riche (import de fichier, apercu) arrive en Phase 9. Les proposer maintenant
-///   ouvrirait une commande qui "marche" en apparence (elle change bien `block.type`)
-///   mais affiche `UnsupportedBlockContentView`, exactement la classe de mensonge
-///   d'interface que ce projet refuse depuis la 5.4/5.5.
+/// - `media` : `image`, `file` (Phase 9). Rendu REEL desormais (`ImageBlockContentView`/
+///   `FileBlockContentView`, routes par `BlockRenderRouting`), meme insertion "toujours
+///   un nouveau bloc en dessous + paragraphe vide focalise" que `table`
+///   (`EditorController+SlashMenu.executeMediaCommand(targetType:in:)`) -- ni `image` ni
+///   `file` ne portent de `RichText`, aucune conversion en place possible.
 /// - EXCLUS explicitement, meme motif : `columnList`/`column` (Phase 10),
 ///   `bookmark`/`embed`/`databaseView`/`pageLink` (v2), et `tableRow`/`tableCell`
 ///   (JAMAIS proposes, meme une fois `table` rendu : ce sont des blocs de structure
 ///   INTERNE d'un tableau, jamais un point d'insertion valide pour l'utilisateur -- voir
 ///   `BlockRenderKind.unsupported`, cas `.tableRow`/`.tableCell`). Chaque type qui
 ///   gagnera un rendu reel dans une phase ulterieure devra rejoindre `allCommands` a ce
-///   moment-la (et sa categorie `media` alors cessera d'etre vide) -- jamais avant.
-///   Cette liste est donc EXTENSIBLE par construction, pas fermee.
+///   moment-la -- jamais avant. Cette liste est donc EXTENSIBLE par construction, pas
+///   fermee.
 ///
 /// ## Convention des alias
 /// Chaque `aliases` couvre le FRANCAIS et l'ANGLAIS, en minuscules SANS accents (ex.
@@ -64,10 +63,33 @@ public enum SlashCommandRegistry {
         case .basic:
             basicCommands
         case .media:
-            []
+            mediaCommands
         case .advanced:
             advancedCommands
         }
+    }
+
+    private static var mediaCommands: [SlashCommand] {
+        [
+            SlashCommand(
+                id: "image",
+                title: EditorStrings.blockTypeLabel(.image),
+                subtitle: EditorStrings.slashCommandSubtitle(.image),
+                aliases: ["image", "photo", "picture", "img"],
+                systemImage: "photo",
+                category: .media,
+                targetType: .image
+            ),
+            SlashCommand(
+                id: "file",
+                title: EditorStrings.blockTypeLabel(.file),
+                subtitle: EditorStrings.slashCommandSubtitle(.file),
+                aliases: ["fichier", "piece jointe", "file", "attachment", "document"],
+                systemImage: "paperclip",
+                category: .media,
+                targetType: .file
+            )
+        ]
     }
 
     private static var basicCommands: [SlashCommand] {

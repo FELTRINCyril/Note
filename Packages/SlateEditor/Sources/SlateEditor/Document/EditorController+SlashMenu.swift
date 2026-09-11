@@ -312,17 +312,14 @@ extension EditorController {
     /// Execute `command` : retire `/` + la requete du texte du bloc (JAMAIS en
     /// reconstruisant `RichText` depuis une `String`, voir `RichText.
     /// removingCharacters(in:)`), puis convertit `block` en place s'il devient vide,
-    /// sinon insere un nouveau bloc du type demande en dessous -- voir la documentation
-    /// de tete de `EditorController+SlashMenu.swift` et le cas particulier `divider`
-    /// traite par `executeDividerCommand(in:leftoverIsEmpty:)`.
+    /// sinon insere un nouveau bloc du type demande en dessous -- cas particuliers
+    /// `divider`/`table`/`image`/`file` traites par leurs `execute*Command` dedies.
     ///
     /// ## Ecart delibere avec `convertBlock(_:to:)`/`duplicateBlock(_:)`
     /// Ces deux actions du menu de bloc laissent le bloc concerne SELECTIONNE (pas
     /// focalise en edition) apres coup -- voir leur documentation. Ici, le bloc
-    /// resultant reste EN EDITION, caret place (`applyFocus(_:)`) : l'utilisateur est en
-    /// train de TAPER quand il valide une commande "/", l'interrompre pour le forcer a
-    /// recliquer avant de continuer serait absurde. Les deux comportements sont donc
-    /// volontairement differents, chacun adapte au geste qui le declenche.
+    /// resultant reste EN EDITION, caret place (`applyFocus(_:)`) : l'utilisateur tape
+    /// quand il valide une commande "/", l'interrompre serait absurde.
     private func executeSlashCommand(_ command: SlashCommand, in block: Block, state: SlashMenuState) {
         let currentText = block.text ?? RichText()
         let removalRange = RichTextRange(
@@ -337,6 +334,8 @@ extension EditorController {
             executeDividerCommand(in: block, leftoverIsEmpty: trimmedText.isEmpty)
         } else if command.targetType == .table {
             executeTableCommand(in: block)
+        } else if command.targetType == .image || command.targetType == .file {
+            executeMediaCommand(targetType: command.targetType, in: block)
         } else if trimmedText.isEmpty {
             BlockConversion.convert(block, to: command.targetType)
             applyFocus(EditorCaretRequest(blockID: block.id, placement: .offset(0)))

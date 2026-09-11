@@ -24,10 +24,18 @@ public enum BlockRenderKind: Equatable, Sendable {
     /// point de vue du rendu, meme si elles restent des `Block` a part entiere cote
     /// modele (voir `Block+Table.swift`).
     case table
+    /// Bloc image (Phase 9, artboard A) : 4 etats (vide/depot, survol de depot,
+    /// chargement, affichee/selectionnee), voir `ImageBlockContentView`. Ne porte
+    /// aucun `RichText` -- ni convertible (`BlockConversion.convertibleTypes`), ni
+    /// destinataire du caret, meme motif que `.divider`/`.table`.
+    case image
+    /// Bloc fichier joint (Phase 9, artboard B) : une seule piece jointe par bloc, voir
+    /// `FileBlockContentView`. Memes exclusions que `.image` ci-dessus.
+    case file
     /// Type de bloc dont le rendu riche n'est pas encore construit (hors perimetre de
     /// la phase en cours, ou reserve a une phase ulterieure : `columnList`/`column`
-    /// (Phase 10), `image`/`file`/`bookmark`/`embed`/`databaseView`/`pageLink`), ou
-    /// bloc de structure interne jamais rendu directement (`tableRow`/`tableCell`, voir
+    /// (Phase 10), `bookmark`/`embed`/`databaseView`/`pageLink` (v2)), ou bloc de
+    /// structure interne jamais rendu directement (`tableRow`/`tableCell`, voir
     /// `.table` ci-dessus). Porte le `BlockType` d'origine pour que le rendu de repli
     /// reste identifiable plutot qu'invisible.
     case unsupported(BlockType)
@@ -63,17 +71,18 @@ public enum BlockRenderRouting {
             return .callout
         case .table:
             return .table
-        case .tableRow, .tableCell:
-            // Jamais rendus individuellement (voir la documentation de `BlockRenderKind`
-            // -- structure interne d'un `.table`, portee par `TableBlockContentView`) :
-            // ce cas n'est atteint en pratique par aucun appelant de ce module
-            // (`BlockTreeView` ne recurse pas dans les enfants d'un `table`), mais doit
-            // rester couvert pour la compilation exhaustive de ce `switch`.
-            return .unsupported(type)
-        case .image, .file, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
-            // Colonnes (Phase 10), pieces jointes et v2 (bookmark/embed/databaseView/
-            // pageLink) : hors perimetre, rendu de repli identifiable via
-            // `UnsupportedBlockContentView`.
+        case .image, .file:
+            return type == .image ? .image : .file
+        case .tableRow, .tableCell, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
+            // Un seul cas fusionne (complexite cyclomatique, `CLAUDE.md` Sec.5) pour
+            // deux familles distinctes qui partagent la MEME reponse : structure
+            // interne d'un tableau jamais rendue individuellement
+            // (`tableRow`/`tableCell`, voir la documentation de `BlockRenderKind`) et
+            // types reserves a une phase ulterieure (colonnes -- Phase 10 -- et v2 --
+            // bookmark/embed/databaseView/pageLink). `tableRow`/`tableCell` ne sont en
+            // pratique jamais atteints par un appelant de ce module (`BlockTreeView` ne
+            // recurse pas dans les enfants d'un `table`), mais doivent rester couverts
+            // pour la compilation exhaustive de ce `switch`.
             return .unsupported(type)
         }
     }

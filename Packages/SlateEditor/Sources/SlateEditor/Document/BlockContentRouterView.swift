@@ -62,6 +62,10 @@ struct BlockContentRouterView: View {
             CalloutBlockContentView(block: block, editorController: editorController)
         case .table:
             TableBlockContentView(block: block, editorController: editorController)
+        case .image:
+            ImageBlockContentView(block: block, editorController: editorController)
+        case .file:
+            FileBlockContentView(block: block, editorController: editorController)
         case let .unsupported(type):
             UnsupportedBlockContentView(typeRawValue: type.rawValue, labelPrefix: strings.unsupportedBlockLabelPrefix)
         }

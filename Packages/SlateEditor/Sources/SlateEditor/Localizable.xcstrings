@@ -222,6 +222,23 @@
         }
       }
     },
+    "editor.blockType.callout": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Callout"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encadré"
+          }
+        }
+      }
+    },
     "editor.blockType.code": {
       "extractionState": "manual",
       "localizations": {
@@ -252,6 +269,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Séparateur"
+          }
+        }
+      }
+    },
+    "editor.blockType.file": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fichier"
           }
         }
       }
@@ -358,6 +392,23 @@
         }
       }
     },
+    "editor.blockType.image": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
+        }
+      }
+    },
     "editor.blockType.numberedList": {
       "extractionState": "manual",
       "localizations": {
@@ -409,6 +460,23 @@
         }
       }
     },
+    "editor.blockType.table": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Table"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau"
+          }
+        }
+      }
+    },
     "editor.blockType.todo": {
       "extractionState": "manual",
       "localizations": {
@@ -422,6 +490,125 @@
           "stringUnit": {
             "state": "translated",
             "value": "Liste de tâches"
+          }
+        }
+      }
+    },
+    "editor.callout.iconAccessibilityLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Callout icon"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Icône de l'encadré"
+          }
+        }
+      }
+    },
+    "editor.callout.variant.info": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Information"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Information"
+          }
+        }
+      }
+    },
+    "editor.callout.variant.neutral": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutral"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neutre"
+          }
+        }
+      }
+    },
+    "editor.callout.variant.success": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Success"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Succès"
+          }
+        }
+      }
+    },
+    "editor.callout.variant.warning": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attention"
+          }
+        }
+      }
+    },
+    "editor.callout.variantMenu.accessibilityLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Callout variant"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Variante de l'encadré"
+          }
+        }
+      }
+    },
+    "editor.codeBlock.copiedAnnouncement": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copied"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copié"
           }
         }
       }
@@ -1004,6 +1191,176 @@
         }
       }
     },
+    "editor.media.file.chooseFile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose on your Mac"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir sur le Mac"
+          }
+        }
+      }
+    },
+    "editor.media.file.emptyLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add a file"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter un fichier"
+          }
+        }
+      }
+    },
+    "editor.media.file.metadata": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@"
+          }
+        }
+      }
+    },
+    "editor.media.file.metadata.withPages": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@ · %lld pages"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@ · %lld pages"
+          }
+        }
+      }
+    },
+    "editor.media.file.missingReason": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File not found - not synced to this device"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fichier introuvable - non synchronise depuis cet appareil"
+          }
+        }
+      }
+    },
+    "editor.media.image.unnamedFilename": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untitled image"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image sans nom"
+          }
+        }
+      }
+    },
+    "editor.media.menu.delete": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        }
+      }
+    },
+    "editor.media.menu.rename": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renommer"
+          }
+        }
+      }
+    },
+    "editor.media.menu.replace": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Replace"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remplacer"
+          }
+        }
+      }
+    },
+    "editor.media.menu.revealInFinder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reveal in Finder"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revele dans le Finder"
+          }
+        }
+      }
+    },
     "editor.slashCommand.category.advanced": {
       "extractionState": "manual",
       "localizations": {
@@ -1089,6 +1446,23 @@
         }
       }
     },
+    "editor.slashCommand.subtitle.callout": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Highlighted box with an icon to call out text"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encadré avec icône pour mettre en avant un texte"
+          }
+        }
+      }
+    },
     "editor.slashCommand.subtitle.code": {
       "extractionState": "manual",
       "localizations": {
@@ -1119,6 +1493,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Trace une ligne de séparation horizontale"
+          }
+        }
+      }
+    },
+    "editor.slashCommand.subtitle.file": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Any file, with icon and size"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un fichier quelconque, avec icone et taille"
           }
         }
       }
@@ -1225,6 +1616,23 @@
         }
       }
     },
+    "editor.slashCommand.subtitle.image": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image with resizing and caption"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image avec redimensionnement et legende"
+          }
+        }
+      }
+    },
     "editor.slashCommand.subtitle.numberedList": {
       "extractionState": "manual",
       "localizations": {
@@ -1276,74 +1684,6 @@
         }
       }
     },
-    "editor.slashCommand.subtitle.todo": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Checkbox list"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Liste à cocher"
-          }
-        }
-      }
-    },
-    "editor.blockType.callout": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Callout"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encadré"
-          }
-        }
-      }
-    },
-    "editor.blockType.table": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Table"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tableau"
-          }
-        }
-      }
-    },
-    "editor.slashCommand.subtitle.callout": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Highlighted box with an icon to call out text"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Encadré avec icône pour mettre en avant un texte"
-          }
-        }
-      }
-    },
     "editor.slashCommand.subtitle.table": {
       "extractionState": "manual",
       "localizations": {
@@ -1361,36 +1701,19 @@
         }
       }
     },
-    "editor.callout.iconAccessibilityLabel": {
+    "editor.slashCommand.subtitle.todo": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Callout icon"
+            "value": "Checkbox list"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Icône de l'encadré"
-          }
-        }
-      }
-    },
-    "editor.codeBlock.copiedAnnouncement": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copied"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copié"
+            "value": "Liste à cocher"
           }
         }
       }
@@ -1412,36 +1735,19 @@
         }
       }
     },
-    "editor.table.insertRowAbove.title": {
+    "editor.table.deleteColumn.title": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Insert row above"
+            "value": "Delete column"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Insérer une ligne au-dessus"
-          }
-        }
-      }
-    },
-    "editor.table.insertRowBelow.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insert row below"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insérer une ligne en dessous"
+            "value": "Supprimer la colonne"
           }
         }
       }
@@ -1497,104 +1803,36 @@
         }
       }
     },
-    "editor.table.deleteColumn.title": {
+    "editor.table.insertRowAbove.title": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Delete column"
+            "value": "Insert row above"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Supprimer la colonne"
+            "value": "Insérer une ligne au-dessus"
           }
         }
       }
     },
-    "editor.callout.variantMenu.accessibilityLabel": {
+    "editor.table.insertRowBelow.title": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Callout variant"
+            "value": "Insert row below"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Variante de l'encadré"
-          }
-        }
-      }
-    },
-    "editor.callout.variant.neutral": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neutral"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Neutre"
-          }
-        }
-      }
-    },
-    "editor.callout.variant.info": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Information"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Information"
-          }
-        }
-      }
-    },
-    "editor.callout.variant.warning": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Warning"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Attention"
-          }
-        }
-      }
-    },
-    "editor.callout.variant.success": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Success"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Succès"
+            "value": "Insérer une ligne en dessous"
           }
         }
       }

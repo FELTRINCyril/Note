@@ -71,6 +71,24 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
     /// Texte alternatif (accessibilite) de l'image.
     public var imageAltText: String?
 
+    /// Legende affichee sous l'image (style `caption`, editable au clic). `nil` =
+    /// aucune legende. Distincte de `imageAltText` : la legende est un contenu
+    /// editorial visible, le texte alternatif est une description d'accessibilite qui
+    /// peut ne jamais s'afficher a l'ecran.
+    public var imageCaption: String?
+
+    /// Alignement/palier de largeur de l'image, identifiant textuel (pas d'enum ici :
+    /// `SlateModel` ne porte pas de logique de mise en page, seule l'UI interprete cet
+    /// identifiant, meme motif que `calloutVariant` ci-dessus). Le design (artboard A)
+    /// n'expose pas deux axes independants : une seule barre de cinq choix melange
+    /// position et palier de largeur, reproduite cote `SlateUI` par
+    /// `SlateImageAlignment` (`left`, `center`, `right`, `overflow`, `fullWidth`) ;
+    /// cette propriete stocke directement son `rawValue`. `left`/`center`/`right`
+    /// partagent le meme palier de largeur (colonne, 720 pt) et ne different que par la
+    /// position ; `overflow` (960 pt) et `fullWidth` sont des paliers de largeur
+    /// distincts. `nil` = defaut (`left`).
+    public var imageAlignment: String?
+
     // MARK: Colonnes (`BlockType.columnList` / `BlockType.column`)
 
     /// Proportion relative (0...1) occupee par une `column` au sein de son `columnList`.
@@ -111,6 +129,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         imageWidth: Double? = nil,
         imageHeight: Double? = nil,
         imageAltText: String? = nil,
+        imageCaption: String? = nil,
+        imageAlignment: String? = nil,
         columnWidthRatio: Double? = nil,
         columnCount: Int? = nil,
         isHeaderRow: Bool = false,
@@ -126,6 +146,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         self.imageWidth = imageWidth
         self.imageHeight = imageHeight
         self.imageAltText = imageAltText
+        self.imageCaption = imageCaption
+        self.imageAlignment = imageAlignment
         self.columnWidthRatio = columnWidthRatio
         self.columnCount = columnCount
         self.isHeaderRow = isHeaderRow
@@ -143,6 +165,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         case imageWidth
         case imageHeight
         case imageAltText
+        case imageCaption
+        case imageAlignment
         case columnWidthRatio
         case columnCount
         case isHeaderRow
@@ -161,6 +185,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         imageWidth = try container.decodeIfPresent(Double.self, forKey: .imageWidth)
         imageHeight = try container.decodeIfPresent(Double.self, forKey: .imageHeight)
         imageAltText = try container.decodeIfPresent(String.self, forKey: .imageAltText)
+        imageCaption = try container.decodeIfPresent(String.self, forKey: .imageCaption)
+        imageAlignment = try container.decodeIfPresent(String.self, forKey: .imageAlignment)
         columnWidthRatio = try container.decodeIfPresent(Double.self, forKey: .columnWidthRatio)
         columnCount = try container.decodeIfPresent(Int.self, forKey: .columnCount)
         isHeaderRow = try container.decodeIfPresent(Bool.self, forKey: .isHeaderRow) ?? false
@@ -179,6 +205,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         try container.encodeIfPresent(imageWidth, forKey: .imageWidth)
         try container.encodeIfPresent(imageHeight, forKey: .imageHeight)
         try container.encodeIfPresent(imageAltText, forKey: .imageAltText)
+        try container.encodeIfPresent(imageCaption, forKey: .imageCaption)
+        try container.encodeIfPresent(imageAlignment, forKey: .imageAlignment)
         try container.encodeIfPresent(columnWidthRatio, forKey: .columnWidthRatio)
         try container.encodeIfPresent(columnCount, forKey: .columnCount)
         try container.encode(isHeaderRow, forKey: .isHeaderRow)

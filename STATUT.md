@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 8.
+**Dernière mise à jour :** fin de la phase 9.
 
 ---
 
 ## En un coup d'œil
 
-**8 / 21 phases terminées.**
+**9 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         █████░░░░░  50 %   (6/12)  ⏳ en cours
+App v1         ██████░░░░  58 %   (7/12)  ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 8 (blocs spéciaux) validée. Listes à puces/numérotées/à cocher éditables avec imbrication Tab/⇧Tab et renumérotation, bloc de code avec coloration syntaxique maison et débordement horizontal, citation, callout en 4 variantes, séparateur, et tableaux (insertion, lignes/colonnes, redimensionnement, navigation clavier). Deux fuites de données réelles trouvées en revue et corrigées (voir Décisions).
-- **Prochaine étape :** **Phase 9 — Médias & pièces jointes**. Design déjà livré (artboards P2 A-D).
-- **Qualité au dernier point (phase 8) :** 494 tests verts (96 `SlateModel` · 271 `SlateEditor` · 55 `SlateUI` · 57 `SlateFeatures` · 15 `SlateServices`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
+- **Où on en est :** phase 9 (médias & pièces jointes) validée. Import d'image (redimensionnement et recompression bornés à l'entrée), blocs image et fichier joint réellement rendus, légende, paliers de largeur, ouverture et révélation dans le Finder, refus motivés. Les binaires restent hors base via `externalStorage`. Un crash réel trouvé en revue (suppression d'un bloc pendant un import en vol) et corrigé.
+- **Prochaine étape :** **Phase 10 — Glisser-déposer & colonnes**. Elle reprend deux reports explicites de la phase 9, voir ci-dessous.
+- **Qualité au dernier point (phase 9) :** 536 tests verts (96 `SlateModel` · 285 `SlateEditor` · 61 `SlateUI` · 37 `SlateServices` · 57 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -45,8 +45,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
 | 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
 | 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `89c3d55` |
-| 9 | Médias & pièces jointes | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 10 | Glisser-déposer & colonnes | ⬜ | — | — |
+| 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `PHASE9` |
+| 10 | Glisser-déposer & colonnes | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 11 | Organisation des notes | ⬜ | — | — |
 | 12 | Verrouillage de note | ⬜ | — | — |
 | 13 | Thèmes & apparence | ⬜ | 🎨 ✔️ | — |
@@ -105,6 +105,14 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 8 — Trois ponts par `rawValue` verrouillés par test :** `SyntaxTokenRole` <-> `SlateSyntaxToken`, `calloutVariant` <-> `SlateCalloutVariant`, `SyntaxLanguage` <-> `BlockAttributes.language`. Une divergence de renommage ne lèverait aucune erreur : elle rendrait simplement l'affichage monochrome ou la variante fausse. C'est le risque structurel du découpage `SlateModel` neutre / `SlateUI` porteur des couleurs. ✅
 - **Phase 8 — `Tab` a deux usages disjoints :** indentation de liste via `RichTextEditingTextView.insertTab(_:)` (AppKit) et navigation entre cellules via `TableBlockContentView.onKeyPress` (SwiftUI). Deux mondes de vue séparés, aucune collision possible. ✅
 
+- **Phase 9 — Stockage par `externalStorage`, pas de `CKAsset` manuel :** `Attachment.data` porte déjà `@Attribute(.externalStorage)` depuis la phase 2, et SwiftData le traduit lui-même en `CKAsset` à la synchronisation. Rien à écrire côté CloudKit : la base ne contient que métadonnées et référence. Vérifié en revue qu'aucun chemin ne recopie un binaire dans un champ ordinaire, ni dans `BlockAttributes`, ni dans `plainText`/`snippetText`. ✅
+- **Phase 9 — Bornes d'import :** côté le plus long à 2000 px, qualité JPEG 0,72, PNG conservé si l'image a un canal alpha, refus au-delà de 2 Go. 2000 px couvre le palier de débord (960 pt en Retina 2x = 1920 px) sans stocker les 4000 à 6000 px d'un capteur récent. La lecture de taille passe par `resourceValues`, et le redimensionnement par `CGImageSourceCreateThumbnailAtIndex` : le fichier n'est jamais chargé en entier juste pour être mesuré. ✅
+- **Phase 9 — Un GIF n'est jamais recompressé :** `CGImageDestination` n'encode qu'une image par appel, donc repasser un GIF par le pipeline détruirait silencieusement son animation. Il est seulement borné en taille comme tout fichier. ✅
+- **Phase 9 — Un `block.attachment = nil` laisse la ligne orpheline :** même classe de bug que celle corrigée en phase 8 sur les blocs, mais sur des binaires, donc bien plus coûteuse. `AttachmentService.removeAttachment`/`replaceAttachment` encapsulent le bon ordre d'opérations. L'ordre compte : `context.delete(old)` **avant** de détacher la relation provoque un crash SwiftData réel (`Never access a full future backing data`). ✅
+- **Phase 9 — Garde contre la suppression d'un bloc pendant un import en vol :** l'import est asynchrone ; si l'utilisateur supprime le bloc entre-temps, le retour d'import touchait un `Block` déjà retiré du contexte et faisait planter le process. Piège découvert au passage : **`block.isDeleted` redevient `false` après un `save()`** qui a pourtant supprimé l'objet (SwiftData ne le maintient à `true` que dans la fenêtre non sauvegardée). Le seul signal fiable est `block.modelContext == nil`. ✅
+- **Phase 9 — Alignement et palier de largeur sont un seul réglage :** le design n'expose qu'une barre unique mêlant les deux, d'où un unique `imageAlignment` (5 cas) plutôt que deux champs parallèles. ✅
+- **Phase 9 — Locale paramétrable plutôt que figée :** `formattedFileSize` et les libellés de type forçaient `fr_FR` pour rendre les tests déterministes. Un utilisateur anglais aurait lu "1,8 Mo" au lieu de "1.8 MB". La locale est devenue un paramètre (défaut `.current`) : le déterminisme d'un test vient de la locale qu'il injecte, jamais d'une locale figée en production. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -134,8 +142,21 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Pas de protection anti-cycle dans `refreshDerivedText()`** : aucun chemin de code ne peut construire un cycle parent/enfant aujourd'hui, le risque est théorique.
 - **`---` vers séparateur** non implémenté : raccourci markdown réservé à la phase 15.
 - **Rendu visuel de la phase 8 non vérifié** (coloration syntaxique, débordement du bloc de code, glisser de redimensionnement de colonne, menu contextuel de cellule, apparition de la barre d'outils au survol) : aucune fenêtre disponible. Seule la logique pure est couverte par les tests.
+- **REPORT EXPLICITE EN PHASE 10 — dépôt de fichiers n'importe où dans l'éditeur** (artboard C de P2 : ligne d'insertion entre deux blocs, badge de comptage à partir de 2 fichiers, voile de dépôt sur la note entière, plusieurs fichiers déposés créant plusieurs blocs). Livré en phase 9 : le dépôt **sur la zone vide d'un bloc** média. Non livré : le dépôt libre dans l'éditeur, qui partage toute son infrastructure de détection de frontière avec le glisser-déposer de blocs, c'est-à-dire la phase 10. Les deux doivent être construits dans la même passe plutôt que deux fois.
+- **REPORT EXPLICITE EN PHASE 10 — paliers de largeur hors colonne** (débord 960 pt, pleine largeur). `EditorContentColumn` plafonne la largeur à 720 + 48 pt et enveloppe **toute la liste de blocs d'un coup**, pas chaque bloc : aucun bloc ne peut sortir de la colonne aujourd'hui. Les deux paliers ne sont donc volontairement **pas proposés** (`EditorController.availableImageAlignments`), plutôt qu'affichés sans effet - même règle d'honnêteté d'interface qu'en phase 6. Les largeurs restent calculées, prêtes à servir. La phase 10 doit de toute façon revoir ce conteneur pour la mise en colonnes.
+- **Barre de progression d'import sans pourcentage réel** : l'import est synchrone (décodage ImageIO), lancé en `Task.detached` pour ne pas geler l'interface, mais la barre ne progresse pas continûment.
+- **⌘V ne crée un bloc image que sur une image déjà sélectionnée**, pas pendant la frappe dans un bloc de texte. Intercepter le collage dans TextKit est un sous-système délicat, laissé de côté volontairement. Vérifié que le collage de texte ordinaire n'est pas cassé.
+- **"1 pages" au singulier** : le libellé de métadonnées PDF n'a pas de forme plurielle. Cosmétique, demanderait une pluralisation.
+- **`SlateServices` n'a aucun catalogue `.xcstrings`** : ses libellés de type de fichier et ses messages d'erreur passent par une table FR/EN interne, avec locale paramétrable. Cohérent et testable, mais ce n'est pas le mécanisme standard du projet. Chantier léger et distinct si tu veux l'aligner.
+- **Deux teintes dérivées faute de valeur au design** : la ligne de cause d'erreur en thème clair et la pastille de tableur en thème sombre n'ont pas de valeur dans les maquettes, elles ont été dérivées par cohérence. À valider à l'œil.
+- **Aucune vérification visuelle de la phase 9** : les 4 états du bloc image, le geste de redimensionnement, le popover de menu média et l'expérience VoiceOver ne sont couverts que par lecture de code et tests de logique. Aucune fenêtre n'était disponible, ni pour les agents livreurs, ni pour la revue.
 
 ## Prochaine action concrète
-La **phase 9 — Médias & pièces jointes** (images : insertion, redimensionnement, légende, alignement ; fichiers joints : icône par type, ouverture, révélation dans le Finder). Design déjà livré : artboards **A à D** de `design/_design_complet/Slate P2 - Médias & pièces jointes.dc.html`, avec les tokens §16 quater.
+La **phase 10 — Glisser-déposer & colonnes**. Design déjà livré : artboards **I** (drag & drop de blocs) et **J** (mise en colonnes) de `design/_design_complet/Slate P1 - Formatage & blocs.dc.html`, plus le composant `ColumnsBlockView` de `design/_design_complet/SlateUI/BlockViews.swift` (fractions, pas des points ; empilement sous 560 pt ou dès `.accessibility1`).
 
-Le modèle est déjà prêt : `Attachment` existe (`@Attribute(.externalStorage) data`, `uti`, `width`, `height`) et `Block.attachment` est en place avec sa cascade depuis la phase 2. C'est la phase la plus à risque côté stockage : le doc insiste sur la séparation binaire/métadonnées (`externalStorage` et/ou `CKAsset`, jamais de gros binaire en base) et sur l'empreinte mémoire. Un `AttachmentService` est à créer dans `SlateServices`.
+Trois chantiers à mener dans la même passe, parce qu'ils partagent tous la même infrastructure de détection de frontière de dépôt :
+1. le glisser-déposer de blocs (réordonnancement, indicateur d'insertion, multi-blocs) ;
+2. la mise en colonnes (`columnList`/`column` existent déjà dans `BlockType` depuis la phase 2) ;
+3. **les deux reports de la phase 9** : le dépôt de fichiers n'importe où dans l'éditeur, et la sortie de colonne d'`EditorContentColumn` qui débloquera les paliers de largeur d'image.
+
+Le doc signale deux points de vigilance : la stabilité du focus pendant le drag, et l'intégrité `order`/`parent` avec le cas de dissolution d'une colonne vidée.

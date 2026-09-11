@@ -19,6 +19,8 @@ struct BlockAttributesTests {
             imageWidth: 320,
             imageHeight: 200,
             imageAltText: "Un schema",
+            imageCaption: "Architecture des blocs",
+            imageAlignment: "center",
             columnWidthRatio: 0.5,
             columnCount: 2,
             isHeaderRow: true,
@@ -47,6 +49,8 @@ struct BlockAttributesTests {
         #expect(decoded.isChecked == false)
         #expect(decoded.headingLevel == nil)
         #expect(decoded.imageWidth == nil)
+        #expect(decoded.imageCaption == nil)
+        #expect(decoded.imageAlignment == nil)
         #expect(decoded.linkedNoteID == nil)
         #expect(decoded.isHeaderRow == false)
         #expect(decoded.columnWidth == nil)

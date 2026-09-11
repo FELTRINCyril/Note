@@ -5,8 +5,9 @@ import Testing
 
 /// `SlashCommandRegistry` : registre PUR des commandes du menu "/" (docs/06, sous-etape
 /// 6.1). Verifie l'exhaustivite/l'honnetete d'interface documentee dans sa doc de tete
-/// (aucun type sans rendu reel, `media` vide aujourd'hui) et l'integrite structurelle
-/// que le controleur/la vue popover supposent deja (id uniques, ordre par categorie).
+/// (aucun type sans rendu reel -- `media` couvre desormais `image`/`file`, Phase 9) et
+/// l'integrite structurelle que le controleur/la vue popover supposent deja (id
+/// uniques, ordre par categorie).
 @MainActor
 @Suite("SlashCommandRegistry")
 struct SlashCommandRegistryTests {
@@ -26,10 +27,10 @@ struct SlashCommandRegistryTests {
         }
     }
 
-    @Test("La categorie media est vide aujourd'hui, sans section fantome")
-    func mediaCategoryIsEmpty() {
-        let mediaCommands = SlashCommandRegistry.allCommands.filter { $0.category == .media }
-        #expect(mediaCommands.isEmpty)
+    @Test("La categorie media couvre desormais image et fichier (Phase 9), tous deux a rendu reel")
+    func mediaCategoryCoversImageAndFile() {
+        let mediaTargetTypes = Set(SlashCommandRegistry.allCommands.filter { $0.category == .media }.map(\.targetType))
+        #expect(mediaTargetTypes == [.image, .file])
     }
 
     @Test("Les commandes sont regroupees par categorie, dans l'ordre de SlashCommandCategory.allCases")
@@ -48,7 +49,7 @@ struct SlashCommandRegistryTests {
         #expect(encountered == expectedEncountered)
     }
 
-    @Test("Le registre couvre exactement les 15 types de bloc a rendu reel (Phase 8 : callout, table)")
+    @Test("Le registre couvre exactement les 17 types de bloc a rendu reel (Phase 9 : image, fichier)")
     func registryCoversExpectedTypes() {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let expected: Set<BlockType> = [
@@ -56,7 +57,8 @@ struct SlashCommandRegistryTests {
             .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
             .bulletedList, .numberedList, .todo,
             .quote, .divider, .code,
-            .callout, .table
+            .callout, .table,
+            .image, .file
         ]
         #expect(targetTypes == expected)
     }
@@ -65,7 +67,7 @@ struct SlashCommandRegistryTests {
     func registryExcludesFutureTypes() {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let excluded: [BlockType] = [
-            .image, .file, .tableRow, .tableCell, .columnList, .column,
+            .tableRow, .tableCell, .columnList, .column,
             .bookmark, .embed, .databaseView, .pageLink
         ]
         for type in excluded {

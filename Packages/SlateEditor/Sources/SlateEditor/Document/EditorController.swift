@@ -101,6 +101,15 @@ public final class EditorController {
     /// `EditorController+Formatting.swift`.
     public internal(set) var linkEditRequest: LinkEditRequest?
 
+    /// Cause d'echec d'import d'une piece jointe (Phase 9), tenue PAR bloc et
+    /// UNIQUEMENT en memoire -- jamais persistee : un `AttachmentImportError` decrit un
+    /// evenement transitoire ("ce fichier a ete refuse"), pas un etat durable du
+    /// modele. `ImageBlockContentView`/`FileBlockContentView` lisent cette table pour
+    /// afficher la cause exacte (`AttachmentImportError.errorDescription`) le temps que
+    /// l'utilisateur reessaie ou choisisse un autre fichier -- voir
+    /// `EditorController+Attachments.swift`.
+    public internal(set) var attachmentImportFailures: [UUID: String] = [:]
+
     /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
     /// autre fichier de ce type -- voir sa documentation de tete de fichier).
     let note: Note

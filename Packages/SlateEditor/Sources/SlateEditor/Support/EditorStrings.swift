@@ -81,6 +81,9 @@ enum EditorStrings {
         if let headingLabel = headingTypeLabel(type) {
             return headingLabel
         }
+        if let mediaLabel = mediaTypeLabel(type) {
+            return mediaLabel
+        }
         switch type {
         case .paragraph:
             return String(localized: "editor.blockType.paragraph", bundle: .module)
@@ -177,6 +180,9 @@ enum EditorStrings {
     static func slashCommandSubtitle(_ type: BlockType) -> String {
         if let headingSubtitle = headingSlashCommandSubtitle(type) {
             return headingSubtitle
+        }
+        if let mediaSubtitle = mediaSlashCommandSubtitle(type) {
+            return mediaSubtitle
         }
         switch type {
         case .paragraph:

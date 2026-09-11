@@ -48,12 +48,18 @@ struct BlockRenderRoutingTests {
     @Test("Les blocs riches hors perimetre routent vers le rendu de repli, avec leur type d'origine")
     func outOfScopeTypesRouteToUnsupported() {
         let outOfScope: [BlockType] = [
-            .image, .file, .columnList, .column,
+            .columnList, .column,
             .bookmark, .embed, .databaseView, .pageLink
         ]
         for type in outOfScope {
             #expect(BlockRenderRouting.kind(for: type) == .unsupported(type))
         }
+    }
+
+    @Test("L'image et le fichier joint (Phase 9) routent desormais vers un rendu reel")
+    func imageAndFileRouteToRealKinds() {
+        #expect(BlockRenderRouting.kind(for: .image) == .image)
+        #expect(BlockRenderRouting.kind(for: .file) == .file)
     }
 
     @Test("tableRow/tableCell routent vers le rendu de repli : jamais rendus individuellement")
