@@ -44,7 +44,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
 | 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
-| 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `PHASE8` |
+| 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `89c3d55` |
 | 9 | Médias & pièces jointes | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 10 | Glisser-déposer & colonnes | ⬜ | — | — |
 | 11 | Organisation des notes | ⬜ | — | — |
