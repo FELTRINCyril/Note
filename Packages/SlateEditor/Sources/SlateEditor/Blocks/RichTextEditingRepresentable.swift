@@ -1,6 +1,7 @@
 import AppKit
 import os
 import SlateModel
+import SlateServices
 import SlateUI
 import SwiftData
 import SwiftUI
@@ -33,7 +34,7 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
         // sans ce second appel ICI, un titre nouvellement monte afficherait son texte
         // avec la police du corps jusqu'a la prochaine modification (`syncModelIfNeeded`
         // ne repousse rien tant que `block.text` n'a pas change depuis l'exterieur).
-        textView.applyTypography(for: block.type)
+        textView.applyTypography(for: block.type, isChecked: block.attributes.isChecked)
         context.coordinator.applyInitialContent(to: textView)
         textView.freezesCaretForReduceMotion = reduceMotion
         return textView
@@ -42,7 +43,7 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
     func updateNSView(_ nsView: RichTextEditingTextView, context: Context) {
         context.coordinator.updateModelContext(modelContext)
         nsView.freezesCaretForReduceMotion = reduceMotion
-        nsView.applyTypography(for: block.type)
+        nsView.applyTypography(for: block.type, isChecked: block.attributes.isChecked)
         context.coordinator.syncModelIfNeeded(into: nsView)
         // Cycle de vie des blocs (sous-etape 5.3) : si l'`EditorController` a une
         // requete de caret en attente pour CE bloc (nouveau bloc cree par Entree,
@@ -81,9 +82,13 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
     /// utilisees ici sont deja appelees sur le fil principal par AppKit.
     @MainActor
     final class Coordinator: NSObject, NSTextViewDelegate, RichTextBlockLifecycleDelegate {
-        private let block: Block
-        private let editorController: EditorController
-        private var modelContext: ModelContext
+        // Pas `private` (contrairement a la 5.2/7) : `RichTextEditingRepresentable+Rendering.swift`,
+        // extension de ce meme type dans un fichier VOISIN (limite de longueur de
+        // fichier de `CLAUDE.md` §5, Phase 8), a besoin d'y acceder. Reste `internal` --
+        // ce type n'est de toute facon jamais expose hors de ce module.
+        let block: Block
+        let editorController: EditorController
+        var modelContext: ModelContext
         private let debouncer = BlockSaveDebouncer()
 
         /// Dernier contenu connu comme etant IDENTIQUE entre le modele et la vue.
@@ -94,6 +99,18 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
         /// `syncModelIfNeeded`.
         private var lastSyncedText: RichText?
 
+        /// Dernier `BlockAttributes.isChecked` connu comme deja reflete dans le contenu
+        /// affiche (Phase 8) : `syncModelIfNeeded` compare `block.text` ET cette valeur,
+        /// car une bascule de case a cocher (`ChecklistItemView`, hors `NSTextView`) ne
+        /// touche jamais `block.text` -- sans ce suivi separe, le texte DEJA affiche ne
+        /// se barrerait/estomperait qu'a la prochaine frappe, jamais immediatement au
+        /// clic sur la case. Ignore pour tout bloc autre qu'un `.todo` (toujours `nil`
+        /// dans ce cas, jamais compare). Non-optionnel (`discouraged_optional_boolean`,
+        /// `.swiftlint.yml`) : `false` par defaut n'introduit aucune ambiguite, ce champ
+        /// est de toute facon reecrit explicitement des `applyInitialContent(to:)`,
+        /// avant toute comparaison reelle.
+        private var lastSyncedIsChecked = false
+
         /// Vrai pendant qu'on ecrit programmatiquement dans le `NSTextStorage` (mise a
         /// jour venue du modele, pas de l'utilisateur). Garde-fou defensif contre un
         /// double traitement dans `textDidChange` -- `NSTextStorage.setAttributedString`
@@ -101,7 +118,7 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
         /// (elle est postee par `NSTextView.didChangeText()`, jamais appele ici), mais ce
         /// drapeau documente explicitement l'intention plutot que de compter
         /// silencieusement sur ce detail d'implementation AppKit.
-        private var isApplyingModelToView = false
+        var isApplyingModelToView = false
 
         /// `true` une fois qu'une premiere tentative de restauration du focus a ete
         /// faite pour l'instance ACTUELLE de ce `Coordinator` (une par montage de
@@ -130,16 +147,22 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
             let text = block.text ?? RichText()
             apply(text, to: textView)
             lastSyncedText = text
+            lastSyncedIsChecked = block.attributes.isChecked
         }
 
         /// Repousse le contenu du modele dans la vue SEULEMENT s'il a change depuis
-        /// l'exterieur (voir la documentation de `lastSyncedText`). Appele a chaque
+        /// l'exterieur (voir la documentation de `lastSyncedText`), OU si l'etat coche
+        /// d'un `.todo` a change depuis la derniere synchronisation (voir la
+        /// documentation de `lastSyncedIsChecked`, Phase 8). Appele a chaque
         /// `updateNSView`, donc a chaque re-rendu SwiftUI de ce bloc.
         func syncModelIfNeeded(into textView: RichTextEditingTextView) {
             let currentModelText = block.text ?? RichText()
-            guard currentModelText != lastSyncedText else { return }
+            let currentIsChecked = block.attributes.isChecked
+            let checkedStateChanged = block.type == .todo && currentIsChecked != lastSyncedIsChecked
+            guard currentModelText != lastSyncedText || checkedStateChanged else { return }
             apply(currentModelText, to: textView)
             lastSyncedText = currentModelText
+            lastSyncedIsChecked = currentIsChecked
         }
 
         /// Execute immediatement toute sauvegarde en attente. Voir la documentation de
@@ -339,61 +362,21 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
             editorController.handleSlashMenuEscape(in: block)
         }
 
+        // MARK: - Indentation d'un item de liste (Phase 8, docs/08_blocs_speciaux.md)
+
+        func richTextViewShouldHandleIndent() -> Bool {
+            editorController.indentBlock(block)
+        }
+
+        func richTextViewShouldHandleOutdent() -> Bool {
+            editorController.outdentBlock(block)
+        }
+
         // MARK: - Ecriture modele -> vue
-
-        /// Logger dedie a ce pont AppKit <-> `AttributedString` (voir `apply(_:to:)` et
-        /// `textDidChange(_:)`) : les deux SEULS points de ce fichier qui traversent la
-        /// frontiere `NSAttributedString`, donc les deux SEULS ou une perte silencieuse
-        /// d'attribut custom pourrait se reproduire si le scope explicite etait oublie
-        /// un jour.
-        private static let logger = Logger(subsystem: "com.gemaddis.slate.SlateEditor", category: "RichTextBridging")
-
-        private func apply(_ text: RichText, to textView: NSTextView) {
-            // Pont AttributedString -> NSAttributedString AVEC le scope explicite
-            // (symmetrique de `textDidChange(_:)` ci-dessus, meme raison, meme risque
-            // de perte silencieuse sans `including:`). Throwing : geree explicitement.
-            // Si la conversion echoue, on NE POUSSE RIEN dans le `NSTextView` -- le
-            // contenu affiche reste celui d'avant plutot qu'une version amputee.
-            let bridged: NSAttributedString
-            do {
-                bridged = try NSAttributedString(text.attributedString, including: AttributeScopes.SlateAttributes.self)
-            } catch {
-                Self.logger.error("Pont AttributedString -> NSAttributedString echoue, contenu NON repousse : \(error)")
-                return
-            }
-
-            // Rendu des marques (Phase 7) : `bridged` porte les attributs Slate/Foundation
-            // comme des cles CUSTOM, sans effet visuel propre pour TextKit -- voir la
-            // documentation de tete de `RichTextDisplayAttributes`. Cette traduction
-            // AJOUTE des attributs de rendu reels sans jamais retirer les cles Slate,
-            // donc sans risque pour le prochain `textDidChange(_:)` (qui ne relit que le
-            // scope `AttributeScopes.SlateAttributes`, voir sa documentation).
-            let displayString = NSMutableAttributedString(attributedString: bridged)
-            let baseFont = textView.font ?? NSFont.systemFont(ofSize: SlateFont.body.size)
-            RichTextDisplayAttributes.apply(to: displayString, from: text, baseFont: baseFont)
-
-            // Caret/selection (qualite de saisie -- CLAUDE.md §1) : `setAttributedString`
-            // reinitialise sinon la selection a `(0, 0)`, ce qui deplacerait le caret ou
-            // effacerait la selection de l'utilisateur a CHAQUE bascule de marque
-            // (`EditorController.toggleMark`/`setHighlight`/... passent TOUJOURS par ce
-            // chemin, voir `syncModelIfNeeded`) -- capturee avant, restauree apres,
-            // bornee a la nouvelle longueur (une marque ne change jamais le nombre de
-            // caracteres, mais rester defensif ici ne coute rien).
-            let savedSelection = textView.selectedRange()
-            isApplyingModelToView = true
-            textView.textStorage?.setAttributedString(displayString)
-            isApplyingModelToView = false
-            let clampedLocation = min(savedSelection.location, displayString.length)
-            let clampedLength = min(savedSelection.length, displayString.length - clampedLocation)
-            textView.setSelectedRange(NSRange(location: clampedLocation, length: clampedLength))
-        }
-
-        /// Le point de sauvegarde UNIQUE (voir `BlockTextCommit`) : recalcule les champs
-        /// derives de la note, horodate la modification, puis ecrit reellement sur
-        /// disque. Invoque uniquement au flush du debounce -- jamais a chaque frappe.
-        private func persist() {
-            BlockTextCommit.flush(block: block)
-            try? modelContext.save()
-        }
+        //
+        // `apply(_:to:)`/`persist()` et leurs helpers (`applySyntaxHighlighting`, le
+        // `Logger` dedie) : voir `RichTextEditingRepresentable+Rendering.swift`, extrait
+        // de ce fichier pour rester sous la limite de longueur de `CLAUDE.md` §5 (Phase
+        // 8) -- meme motif exact que `RichTextEditingTextView+Typography.swift`.
     }
 }

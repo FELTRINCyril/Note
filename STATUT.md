@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 7.
+**Dernière mise à jour :** fin de la phase 8.
 
 ---
 
 ## En un coup d'œil
 
-**7 / 21 phases terminées.**
+**8 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         ████░░░░░░  42 %   (5/12)  ⏳ en cours
+App v1         █████░░░░░  50 %   (6/12)  ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 7 (typographie & formatage) validée. Les 8 marques inline (gras, italique, souligné, barré, code en ligne, surlignage, couleur de texte, lien), la barre de formatage flottante, les palettes de couleur, le popover de lien, les raccourcis ⌘B/I/U/⇧X/E/K et ⌥⌘0-3, et les titres H1–H6 enfin **réellement éditables**.
-- **Prochaine étape :** **Phase 8 — Blocs spéciaux** (code, citation, callout, listes, tableaux). Design déjà livré (artboards P1 E-H), plus aucun aller-retour design nécessaire pour aucune phase.
-- **Qualité au dernier point (phase 7) :** 411 tests verts (73 `SlateModel` · 232 `SlateEditor` · 48 `SlateUI` · 57 `SlateFeatures` · 1 `SlateServices`) · build complet sans avertissement nouveau · 0 violation SwiftLint.
+- **Où on en est :** phase 8 (blocs spéciaux) validée. Listes à puces/numérotées/à cocher éditables avec imbrication Tab/⇧Tab et renumérotation, bloc de code avec coloration syntaxique maison et débordement horizontal, citation, callout en 4 variantes, séparateur, et tableaux (insertion, lignes/colonnes, redimensionnement, navigation clavier). Deux fuites de données réelles trouvées en revue et corrigées (voir Décisions).
+- **Prochaine étape :** **Phase 9 — Médias & pièces jointes**. Design déjà livré (artboards P2 A-D).
+- **Qualité au dernier point (phase 8) :** 494 tests verts (96 `SlateModel` · 271 `SlateEditor` · 55 `SlateUI` · 57 `SlateFeatures` · 15 `SlateServices`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -44,8 +44,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 5 | Éditeur de blocs (cœur) | ✅ | 🎨 ✔️ | `964379c` |
 | 6 | Menu de commandes `/` | ✅ | — | `b7433ed` |
 | 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
-| 8 | Blocs spéciaux | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 9 | Médias & pièces jointes | ⬜ | 🎨 ✔️ | — |
+| 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `PHASE8` |
+| 9 | Médias & pièces jointes | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 10 | Glisser-déposer & colonnes | ⬜ | — | — |
 | 11 | Organisation des notes | ⬜ | — | — |
 | 12 | Verrouillage de note | ⬜ | — | — |
@@ -96,6 +96,15 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 7 — `text.placeholder` corrigé :** l'ancienne valeur (opacité 0,25) donnait 1,83:1, très loin de l'AA. Portée à 0,55 clair / 0,60 sombre (0,70/0,78 en Increase Contrast). `text.disabled` reste à 0,25, c'est son rôle. ✅
 - **Phase 7 — `design/tokens.md` resynchronisé :** `design/_design_complet/uploads/tokens.md` était une version plus récente (315 lignes contre 263). Reportée dans `design/tokens.md`, qui reste la source de vérité unique : §16 bis (callouts), §16 ter (`code.syntax.*`), §16 quater (médias), table `text.onAccent` par accent. ✅
 
+- **Phase 8 — Coloration syntaxique maison, aucune dépendance tierce :** `docs/08` laissait le choix entre une bibliothèque (Highlightr, Splash) et un colorateur minimal. Retenu : maison, dans `SlateServices/SyntaxHighlighting/`. `CLAUDE.md` §6 interdit d'ajouter une dépendance tierce sans accord préalable, et le besoin réel est modeste (5 langages, 6 rôles de token) là où ces bibliothèques embarquent des centaines de langages et leurs propres thèmes, qu'il faudrait de toute façon remapper sur les tokens `code.syntax.*`. C'est un lexeur, pas un parseur : sur du code tordu il se trompe parfois de teinte, sans conséquence. ✅
+- **Phase 8 — Tableau en sous-blocs, pas en grille d'attributs :** `table` -> `tableRow` -> `tableCell`. Raison technique dure : `BlockAttributes` est une propriété `@Model` sérialisée en Codable, et une grille imbriquée y produirait un conteneur *unkeyed*, ce qui déclenche le `fatalError` du composite coder de SwiftData (`docs/DEV_ENV.md`, piège n°2, déjà rencontré en phase 2 sur `RichText`). Suit en plus le précédent de `columnList`/`column`. ✅
+- **Phase 8 — Suppression de la dernière ligne/colonne refusée par le modèle :** `Block+Table.swift` garde l'invariant "un tableau a toujours au moins 1 ligne et 1 colonne" et lève `.cannotRemoveLastRow`/`.cannotRemoveLastColumn`. Que devient le texte de la dernière cellule, faut-il confirmer : ce sont des questions d'interface, pas de modèle. L'éditeur traduit ce refus en dissolution du tableau entier. ✅
+- **Phase 8 — `refreshDerivedText()` rendu récursif (bug préexistant) :** il ne lisait que `note.blocks` à plat, donc le texte de **tout bloc imbriqué** n'entrait jamais dans `plainText`/`snippetText` - y compris les items de liste imbriqués, en place depuis la phase 5. La recherche ne les aurait jamais trouvés. Corrigé, et `tableCell` ajouté à `textBearingTypes` pour que le contenu des cellules soit trouvable. ✅
+- **Phase 8 — Purge réelle du store à la suppression d'un bloc (fuite de données) :** `BlockOperations` ne faisait que **détacher** un bloc du graphe en mémoire, sans jamais le supprimer du `ModelContext`. Chaque bloc supprimé depuis la phase 5 restait donc persisté indéfiniment, invisible dans l'interface mais bien réel, et destiné à être synchronisé vers CloudKit. Le cas du tableau était le plus grave (table + lignes + cellules orphelines d'un coup). Corrigé sur les trois chemins : menu de bloc, suppression multi-blocs, dissolution de tableau. Les enfants promus survivent bien (leur `parent` change avant la cascade), verrouillé par test. ✅
+- **Phase 8 — Variante de callout :** `BlockAttributes.calloutVariant: String?` ajouté (identifiant neutre, `nil` = neutre, résolu par `SlateUI` via `SlateCalloutVariant`, repli sur `.neutral` pour une valeur inconnue). Sans ce champ, une seule variante sur les quatre du design aurait été livrable : un sélecteur sans persistance aurait été un contrôle d'apparence fonctionnelle sans effet, ce que le projet s'interdit. ✅
+- **Phase 8 — Trois ponts par `rawValue` verrouillés par test :** `SyntaxTokenRole` <-> `SlateSyntaxToken`, `calloutVariant` <-> `SlateCalloutVariant`, `SyntaxLanguage` <-> `BlockAttributes.language`. Une divergence de renommage ne lèverait aucune erreur : elle rendrait simplement l'affichage monochrome ou la variante fausse. C'est le risque structurel du découpage `SlateModel` neutre / `SlateUI` porteur des couleurs. ✅
+- **Phase 8 — `Tab` a deux usages disjoints :** indentation de liste via `RichTextEditingTextView.insertTab(_:)` (AppKit) et navigation entre cellules via `TableBlockContentView.onKeyPress` (SwiftUI). Deux mondes de vue séparés, aucune collision possible. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -115,8 +124,18 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Interligne des titres uniforme** : `applyTypography` applique 1,5 à tous les niveaux, alors que `tokens.md` §9 spécifie 1,2 à 1,4 selon le niveau. Simplification héritée de la phase 5, pas une régression de la 7.
 - **Barre flottante et popovers : positionnement pixel non vérifié** (pas de fenêtre disponible), même limite que le menu `/` en phase 6. La logique de bascule au-dessus/en-dessous est, elle, testée unitairement.
 - **`HeadingBlockContentView` est devenu du code mort** : les titres passent désormais par `RichTextBlockView`. Conservé pour ses previews SwiftUI, à supprimer si elles cessent de servir.
+- **Suppression générique d'un bloc simple hors éditeur** : `BlockOperations.remove(_:from:)` continue de ne faire que détacher ; c'est désormais `EditorController` qui purge le contexte. Tout futur appelant de `BlockOperations` devra faire de même, ou la logique de purge devra descendre dans `BlockOperations`.
+- **Callout : les trois variantes non neutres ont un glyphe et un libellé figés** (conformément au design, qui ne laisse l'icône libre que pour la variante neutre). `CalloutBlockView` de `SlateUI` n'a pas de point d'injection d'icône : l'éditeur reconstruit la même mise en page avec les mêmes tokens plutôt que de réutiliser le composant.
+- **Tableau : pas de sélecteur n x m à l'insertion** (3x3 fixe, puis menu contextuel). Aucune maquette ne le spécifiait.
+- **Texte de cellule de tableau en texte simple**, pas en texte riche : la spec le remet explicitement à plus tard. L'édition de cellule n'est pas débouncée non plus (sauvegarde à chaque frappe), négligeable sur un tableau usuel mais à revoir pour un très gros tableau.
+- **Citation non réellement en italique** : `QuoteBlockView.italic()` est un modificateur SwiftUI, sans effet sur le rendu interne d'un `NSTextView`. Non exigé par les critères d'acceptation.
+- **Pas de previews SwiftUI sur les nouvelles vues éditables** (liste, tâche, citation, code, callout, tableau) : chacune demanderait un `ModelContainer` de test, comme `RichTextBlockView`.
+- **Accessibilité de `SlateUI` non localisée** : les `accessibilityLabel` de `QuoteBlockView`, `ChecklistItemView`, `DividerBlockView`, `BlockHandle` sont des chaînes françaises en dur. Le package n'a aucun catalogue `.xcstrings`. Dette antérieure à la phase 8.
+- **Pas de protection anti-cycle dans `refreshDerivedText()`** : aucun chemin de code ne peut construire un cycle parent/enfant aujourd'hui, le risque est théorique.
+- **`---` vers séparateur** non implémenté : raccourci markdown réservé à la phase 15.
+- **Rendu visuel de la phase 8 non vérifié** (coloration syntaxique, débordement du bloc de code, glisser de redimensionnement de colonne, menu contextuel de cellule, apparition de la barre d'outils au survol) : aucune fenêtre disponible. Seule la logique pure est couverte par les tests.
 
 ## Prochaine action concrète
-La **phase 8 — Blocs spéciaux** (code avec coloration syntaxique, citation, callout, listes puces/numéros/tâches, tableaux). Le design est déjà là : artboards **E à H** de `design/_design_complet/Slate P1 - Formatage & blocs.dc.html`, et les composants SwiftUI de référence `design/_design_complet/SlateUI/BlockViews.swift` + `BlockTokens.swift` couvrent callout, citation, code, listes, checklist et divider. Seule la vue de tableau est à écrire de zéro.
+La **phase 9 — Médias & pièces jointes** (images : insertion, redimensionnement, légende, alignement ; fichiers joints : icône par type, ouverture, révélation dans le Finder). Design déjà livré : artboards **A à D** de `design/_design_complet/Slate P2 - Médias & pièces jointes.dc.html`, avec les tokens §16 quater.
 
-Deux décisions ouvertes dans `docs/08` à trancher au passage : la structure de données du tableau (attributs dédiés ou sous-blocs) et la coloration syntaxique (bibliothèque tierce ou colorateur maison minimal). Rappel `CLAUDE.md` §6 : aucune dépendance tierce sans accord préalable de Cyril.
+Le modèle est déjà prêt : `Attachment` existe (`@Attribute(.externalStorage) data`, `uti`, `width`, `height`) et `Block.attachment` est en place avec sa cascade depuis la phase 2. C'est la phase la plus à risque côté stockage : le doc insiste sur la séparation binaire/métadonnées (`externalStorage` et/ou `CKAsset`, jamais de gros binaire en base) et sur l'empreinte mémoire. Un `AttachmentService` est à créer dans `SlateServices`.

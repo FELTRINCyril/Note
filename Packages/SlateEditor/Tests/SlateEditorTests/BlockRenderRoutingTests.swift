@@ -19,7 +19,9 @@ struct BlockRenderRoutingTests {
             // COMPILATION dans BlockRenderRouting.kind(for:), pas un echec ici).
             _ = BlockRenderRouting.kind(for: type)
         }
-        #expect(BlockType.allCases.count == 23)
+        // 25 depuis la Phase 8 : `tableRow`/`tableCell` s'ajoutent aux 23 types
+        // preexistants (voir `BlockType.swift`).
+        #expect(BlockType.allCases.count == 25)
     }
 
     @Test("Le paragraphe et les titres routent vers les cas attendus")
@@ -46,11 +48,23 @@ struct BlockRenderRoutingTests {
     @Test("Les blocs riches hors perimetre routent vers le rendu de repli, avec leur type d'origine")
     func outOfScopeTypesRouteToUnsupported() {
         let outOfScope: [BlockType] = [
-            .callout, .image, .file, .table, .columnList, .column,
+            .image, .file, .columnList, .column,
             .bookmark, .embed, .databaseView, .pageLink
         ]
         for type in outOfScope {
             #expect(BlockRenderRouting.kind(for: type) == .unsupported(type))
         }
+    }
+
+    @Test("tableRow/tableCell routent vers le rendu de repli : jamais rendus individuellement")
+    func tableStructuralTypesRouteToUnsupported() {
+        #expect(BlockRenderRouting.kind(for: .tableRow) == .unsupported(.tableRow))
+        #expect(BlockRenderRouting.kind(for: .tableCell) == .unsupported(.tableCell))
+    }
+
+    @Test("Le callout et le tableau (Phase 8) routent desormais vers un rendu reel")
+    func calloutAndTableRouteToRealKinds() {
+        #expect(BlockRenderRouting.kind(for: .callout) == .callout)
+        #expect(BlockRenderRouting.kind(for: .table) == .table)
     }
 }

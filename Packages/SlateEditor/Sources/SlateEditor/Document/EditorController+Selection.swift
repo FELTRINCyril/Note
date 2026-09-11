@@ -124,6 +124,12 @@ extension EditorController {
         }
 
         BlockSelectionOperations.deleteRange(range, in: note)
+        // Meme purge du store que dans `deleteBlock(_:)`, appliquee a tout le lot :
+        // `deleteRange` detache sans supprimer. Les enfants hors plage ont ete promus,
+        // ils ne sont donc pas emportes par la cascade.
+        for block in ordered {
+            modelContext?.delete(block)
+        }
 
         let fallbackID = neighborID ?? BlockOrdering.flattenedBlocks(of: note).first?.id
         blockSelectionRange = fallbackID.map { BlockSelectionRange(single: $0) }

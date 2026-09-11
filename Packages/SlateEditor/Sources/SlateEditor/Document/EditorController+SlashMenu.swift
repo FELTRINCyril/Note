@@ -335,6 +335,8 @@ extension EditorController {
 
         if command.targetType == .divider {
             executeDividerCommand(in: block, leftoverIsEmpty: trimmedText.isEmpty)
+        } else if command.targetType == .table {
+            executeTableCommand(in: block)
         } else if trimmedText.isEmpty {
             BlockConversion.convert(block, to: command.targetType)
             applyFocus(EditorCaretRequest(blockID: block.id, placement: .offset(0)))
@@ -368,6 +370,31 @@ extension EditorController {
 
         let trailingParagraph = Block(type: .paragraph, text: RichText())
         BlockOrdering.insert(trailingParagraph, after: dividerBlock)
+        applyFocus(EditorCaretRequest(blockID: trailingParagraph.id, placement: .offset(0)))
+    }
+
+    /// Cas particulier `table` (voir la documentation de tete de fichier) : comme
+    /// `divider`, `.table` n'appartient PAS a `BlockConversion.convertibleTypes` (pas de
+    /// `RichText` propre a transporter, voir sa documentation) et ne peut PAS accueillir
+    /// le caret. Un tableau 3x3 par defaut (`Block.makeTable`, `SlateModel`) est TOUJOURS
+    /// insere en dessous de `block` -- jamais en conversion "en place", `block` reste tel
+    /// quel (vide ou non, la ou `divider` distingue les deux cas : un tableau n'a jamais
+    /// eu de raison de "remplacer" un bloc texte existant, contrairement a un
+    /// separateur). Un paragraphe VIDE est ensuite insere apres le tableau et recoit le
+    /// focus -- meme motif que `executeDividerCommand`, un tableau n'a pas de `NSTextView`
+    /// propre a focaliser (voir `TableBlockContentView`, edition par `TextField` par
+    /// cellule).
+    ///
+    /// Dimensions par defaut choisies pour rester utile immediatement sans imposer de
+    /// choix supplementaire a l'utilisateur au moment de l'insertion -- l'ajout/le
+    /// retrait de lignes/colonnes ensuite (`EditorController+Table.swift`) couvre le
+    /// reste du besoin "n x m" de la spec (docs/08_blocs_speciaux.md).
+    private func executeTableCommand(in block: Block) {
+        let table = Block.makeTable(rows: 3, columns: 3)
+        BlockOrdering.insert(table, after: block)
+
+        let trailingParagraph = Block(type: .paragraph, text: RichText())
+        BlockOrdering.insert(trailingParagraph, after: table)
         applyFocus(EditorCaretRequest(blockID: trailingParagraph.id, placement: .offset(0)))
     }
 }

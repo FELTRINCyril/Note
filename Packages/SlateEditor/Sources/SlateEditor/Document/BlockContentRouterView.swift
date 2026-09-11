@@ -9,20 +9,30 @@ import SwiftUI
 /// exhaustive sur `BlockType`, voir `BlockRenderRouting.kind(for:)`) : le compilateur
 /// empeche d'oublier un cas si `BlockRenderKind` gagne un cas plus tard.
 ///
-/// ## Continuite avec l'edition (5.2)
-/// Seul `.paragraph` est desormais EDITABLE (`RichTextBlockView`, TextKit 2) : c'est le
-/// seul type demande par la sous-etape 5.2 (docs/05_editeur_blocs.md). Tous les autres
-/// cas restent en lecture seule -- la 5.5 (conversion de type) et les phases
-/// ulterieures des blocs riches remplaceront les autres cas au meme endroit, un a un,
-/// sans toucher a `BlockTreeView` ni `NoteDocumentView` qui appellent ce routeur.
+/// ## Continuite avec l'edition (5.2, 7, 8)
+/// Depuis la Phase 8, TOUS les types de bloc rendus (hormis `.divider`, sans texte) sont
+/// EDITABLES via `RichTextBlockView` (TextKit 2) : les items de liste, la citation et le
+/// bloc code enveloppent desormais `RichTextBlockView` dans le composant de presentation
+/// `SlateUI` correspondant (`ListItemView`/`ChecklistItemView`/`QuoteBlockView`),
+/// exactement comme les titres depuis la Phase 7 -- meme motif, applique un cran plus
+/// loin. Le tableau (`.table`) et le callout (`.callout`) sont routes vers leurs
+/// propres vues dediees (`TableBlockContentView`/`CalloutBlockContentView`).
 struct BlockContentRouterView: View {
     let block: Block
     let numberedRank: Int
+    /// Profondeur d'imbrication de `block` (`BlockOrdering.indentLevel(of:)`, calculee
+    /// par `BlockTreeView`) : utilisee UNIQUEMENT par les 3 types d'item de liste, pour
+    /// choisir la forme de puce/le style de numerotation cyclique
+    /// (`SlateListMarker`/`ChecklistItemView`) ET porter leur propre indentation -- voir
+    /// la documentation de `BlockTreeView` pour pourquoi ces types n'ont pas EN PLUS
+    /// l'indentation generique du conteneur.
+    let indentLevel: Int
     let strings: NoteEditorStrings
-    /// Coordinateur de cycle de vie des blocs (sous-etape 5.3). Transite simplement
-    /// jusqu'a `RichTextBlockView` (seul type qui en a besoin, pour piloter
-    /// focus/caret/insertion/fusion) : ignore par tous les autres cas, encore en
-    /// lecture seule a ce stade de la Phase 5.
+    /// Coordinateur de cycle de vie des blocs (sous-etape 5.3). Transite jusqu'a chaque
+    /// vue de contenu EDITABLE (toutes, hormis `.divider`), qui l'utilise pour piloter
+    /// focus/caret/insertion/fusion et les actions dediees (case a cocher, langage de
+    /// code, icone de callout, structure de tableau -- voir
+    /// `EditorController+SpecialBlocks.swift`/`+Table.swift`).
     let editorController: EditorController
 
     var body: some View {
@@ -35,17 +45,23 @@ struct BlockContentRouterView: View {
             // previews mais plus route ici).
             RichTextBlockView(block: block, editorController: editorController)
         case .divider:
-            DividerBlockContentView()
+            DividerBlockView()
         case .bulletedListItem:
-            BulletedListItemContentView(text: block.text)
+            BulletedListItemContentView(block: block, editorController: editorController, level: indentLevel)
         case .numberedListItem:
-            NumberedListItemContentView(text: block.text, rank: numberedRank)
+            NumberedListItemContentView(
+                block: block, editorController: editorController, rank: numberedRank, level: indentLevel
+            )
         case .todoItem:
-            TodoItemContentView(text: block.text, isChecked: block.attributes.isChecked)
+            TodoItemContentView(block: block, editorController: editorController, level: indentLevel)
         case .quote:
-            QuoteBlockContentView(text: block.text)
+            QuoteBlockContentView(block: block, editorController: editorController)
         case .code:
-            CodeBlockContentView(text: block.text)
+            CodeBlockContentView(block: block, editorController: editorController)
+        case .callout:
+            CalloutBlockContentView(block: block, editorController: editorController)
+        case .table:
+            TableBlockContentView(block: block, editorController: editorController)
         case let .unsupported(type):
             UnsupportedBlockContentView(typeRawValue: type.rawValue, labelPrefix: strings.unsupportedBlockLabelPrefix)
         }

@@ -3,48 +3,102 @@ import SlateModel
 import SlateUI
 import SwiftUI
 
-/// Typographie de `RichTextEditingTextView` (docs/07_typographie_formatage.md) --
-/// extrait de `RichTextEditingTextView.swift` pour rester sous la limite de longueur de
-/// fichier de `CLAUDE.md` §5. Tous les helpers restent `private` : ils ne sont appeles
-/// QUE depuis `applyTypography(for:)`, dans ce meme fichier.
+/// Typographie de `RichTextEditingTextView` (docs/07_typographie_formatage.md,
+/// docs/08_blocs_speciaux.md) -- extrait de `RichTextEditingTextView.swift` pour rester
+/// sous la limite de longueur de fichier de `CLAUDE.md` §5. Tous les helpers restent
+/// `private` : ils ne sont appeles QUE depuis `applyTypography(for:isChecked:)`, dans ce
+/// meme fichier.
 extension RichTextEditingTextView {
-    /// Police et interligne du bloc (design/tokens.md §16, spec E4 : "Corps 15 pt,
-    /// interligne 1,5" ; design/tokens.md §9 pour H1-H6, Phase 7). Rappele a chaque
-    /// `updateNSView` (voir `RichTextBlockView`) avec le `BlockType` COURANT du bloc --
-    /// c'est la seule facon de suivre a la fois un changement de Dynamic Type systeme
-    /// ET une conversion de type de bloc (Cmd+Opt+1..3, `EditorController.convertBlock`)
-    /// en cours de vie de la meme instance de vue, AppKit n'offrant pas de notification
-    /// dediee equivalente a l'environnement SwiftUI `\.dynamicTypeSize`.
+    /// Police, interligne, enroulement de ligne et style "coche" du bloc
+    /// (design/tokens.md §16, spec E4 : "Corps 15 pt, interligne 1,5" ; §9 pour H1-H6 ;
+    /// §16 (Phase 8) pour la police mono du bloc code). Rappele a chaque `updateNSView`
+    /// (voir `RichTextEditingRepresentable`) avec le `BlockType`/etat COURANTS du bloc --
+    /// c'est la seule facon de suivre a la fois un changement de Dynamic Type systeme,
+    /// une conversion de type de bloc et une bascule de case a cocher en cours de vie de
+    /// la meme instance de vue, AppKit n'offrant pas de notification dediee equivalente
+    /// a l'environnement SwiftUI.
     ///
-    /// `blockType` par defaut a `.paragraph` : conserve la signature utilisable sans
+    /// `blockType`/`isChecked` par defaut : conserve la signature utilisable sans
     /// argument pour `configureAppearance()` (appele avant que le premier `Block` ne
     /// soit connu de ce type, purement generique -- voir la documentation de tete de
     /// `RichTextEditingTextView.swift`).
-    func applyTypography(for blockType: BlockType = .paragraph) {
+    ///
+    /// ## Bloc a cocher barre/estompe (Phase 8, docs/08 : "texte barre et estompe quand
+    /// cochee")
+    /// `isChecked` ne pilote QUE `typingAttributes` ici -- c'est-a-dire l'apparence des
+    /// caracteres qui seraient tapes MAINTENANT. Le style du contenu DEJA affiche est
+    /// applique separement, sur tout le `NSTextStorage`, par
+    /// `RichTextEditingRepresentable.Coordinator.apply(_:to:)` (seul endroit qui
+    /// reconstruit l'attribut `NSAttributedString` complet) : les deux chemins doivent
+    /// rester coherents, voir sa documentation pour le detail du declenchement (le
+    /// contenu affiche n'est repousse que si le modele texte OU l'etat coche a change
+    /// depuis la derniere synchronisation).
+    ///
+    /// ## Bloc code non enroule (Phase 8, docs/08 : "jamais de retour a la ligne force")
+    /// Pour tout type SAUF `.code`, le conteneur de texte suit la largeur du bloc
+    /// (`widthTracksTextView = true`, comportement historique depuis la Phase 5). Pour
+    /// `.code`, il est fixe a une largeur INFINIE une fois pour toutes : aucune ligne ne
+    /// retombe jamais, le debordement horizontal est gere par un `ScrollView(.horizontal)`
+    /// SwiftUI parent (`CodeBlockContentView`), jamais par un `NSScrollView` autour de ce
+    /// `NSTextView` (exclu par la doc de tache de la Phase 5). Voir
+    /// `intrinsicSize(forProposedWidth:)` pour la remontee de la largeur NATURELLE du
+    /// contenu dans ce cas.
+    func applyTypography(for blockType: BlockType = .paragraph, isChecked: Bool = false) {
         let style = Self.textStyle(for: blockType)
-        let scaledFont = Self.scaledFont(for: style)
+        let scaledFont = Self.font(for: style, blockType: blockType)
         let paragraphStyle = Self.paragraphStyle(for: scaledFont)
+        let isDoneTodo = blockType == .todo && isChecked
+        let color = isDoneTodo ? NSColor(SlateColor.todoTextDone) : NSColor(SlateColor.textPrimary)
+
         font = scaledFont
-        textColor = NSColor(SlateColor.textPrimary)
+        textColor = color
         defaultParagraphStyle = paragraphStyle
-        typingAttributes = [
+
+        var attributes: [NSAttributedString.Key: Any] = [
             .font: scaledFont,
-            .foregroundColor: NSColor(SlateColor.textPrimary),
+            .foregroundColor: color,
             .paragraphStyle: paragraphStyle
         ]
+        if isDoneTodo {
+            attributes[.strikethroughStyle] = NSUnderlineStyle.single.rawValue
+        }
+        typingAttributes = attributes
+
+        applyWrapping(for: blockType)
+    }
+
+    /// Configure l'enroulement du conteneur de texte -- voir la documentation de
+    /// `applyTypography(for:isChecked:)`, "Bloc code non enroule".
+    private func applyWrapping(for blockType: BlockType) {
+        let wraps = blockType != .code
+        guard let textContainer else { return }
+        textContainer.widthTracksTextView = wraps
+        if !wraps {
+            textContainer.size = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        }
+        isHorizontallyResizable = !wraps
     }
 
     /// `SlateTextStyle` du corps de texte, ou du titre correspondant si `blockType` est
-    /// l'un des 6 niveaux de titre (Phase 7, point 6 : "H1-H6 reellement editables").
-    /// Les autres types (liste, citation, code) restent hors perimetre de cette phase
-    /// (blocs speciaux, Phase 8) : ils retombent sur le corps de texte, ce qui n'a
-    /// aujourd'hui aucun effet observable puisqu'ils ne sont pas encore routes vers
-    /// `RichTextBlockView` (voir `BlockContentRouterView`).
+    /// l'un des 6 niveaux de titre (Phase 7, point 6). Les items de liste/citation/
+    /// callout retombent sur le corps de texte (aucune typographie propre demandee par
+    /// leur spec) ; le bloc code retombe aussi sur le corps pour sa TAILLE (sa police
+    /// devient mono via `font(for:blockType:)` ci-dessous, la taille de base reste
+    /// identique au corps de texte).
     private static func textStyle(for blockType: BlockType) -> SlateTextStyle {
         switch BlockRenderRouting.kind(for: blockType) {
         case let .heading(level): HeadingStyle.font(forLevel: level)
         default: SlateFont.body
         }
+    }
+
+    /// Police finale : la police systeme mise a l'echelle Dynamic Type
+    /// (`scaledFont(for:)`), remplacee par son equivalent a CHASSE FIXE pour un bloc
+    /// code (Phase 8, docs/08 : "Police mono, fond dedie").
+    private static func font(for style: SlateTextStyle, blockType: BlockType) -> NSFont {
+        let base = scaledFont(for: style)
+        guard blockType == .code else { return base }
+        return NSFont.monospacedSystemFont(ofSize: base.pointSize, weight: .regular)
     }
 
     /// Approxime la mise a l'echelle Dynamic Type d'un `SlateTextStyle`

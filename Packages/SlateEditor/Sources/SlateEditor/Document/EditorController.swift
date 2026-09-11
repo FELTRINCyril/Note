@@ -104,7 +104,11 @@ public final class EditorController {
     /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
     /// autre fichier de ce type -- voir sa documentation de tete de fichier).
     let note: Note
-    private var modelContext: ModelContext?
+    /// Pas `private` (acces necessaire depuis `EditorController+Table.swift`, seul autre
+    /// fichier qui doit ecrire directement dans le `ModelContext` -- `ModelContext.
+    /// delete(_:)` sur les blocs retires d'un tableau, voir sa documentation de tete de
+    /// fichier).
+    var modelContext: ModelContext?
 
     public init(note: Note, modelContext: ModelContext? = nil) {
         self.note = note
@@ -277,72 +281,6 @@ public final class EditorController {
         applyFocus(EditorCaretRequest(blockID: newBlock.id, placement: .offset(0)))
         persistEmptyBlockInsertion(emptyText)
     }
-
-    /// Action "Dupliquer" du menu de bloc (voir `BlockOperations.duplicate(_:)` pour la
-    /// copie profonde). Le double est SELECTIONNE (pas focalise en edition) : c'est
-    /// l'etat le plus proche du geste "je viens d'agir sur ce bloc precis" sans
-    /// pretendre y avoir deja tape du texte.
-    public func duplicateBlock(_ block: Block) {
-        let copy = BlockOperations.duplicate(block)
-        focusedBlockID = nil
-        blockSelectionRange = BlockSelectionRange(single: copy.id)
-        pendingCaretRequest = nil
-        persistStructuralChange()
-    }
-
-    /// Action "Supprimer" du menu de bloc (voir `BlockOperations.remove(_:from:)` pour
-    /// le sort des enfants et la garantie de non-vacuite de la note). Selectionne le
-    /// bloc voisin le plus proche (suivant, sinon precedent, sinon le premier bloc
-    /// restant -- necessairement le paragraphe de secours si `block` etait le dernier)
-    /// pour que l'utilisateur retrouve immediatement un point d'ancrage clavier.
-    public func deleteBlock(_ block: Block) {
-        guard let note = block.note else { return }
-        let neighborID = BlockOrdering.block(after: block)?.id ?? BlockOrdering.block(before: block)?.id
-
-        BlockOperations.remove(block, from: note)
-
-        if focusedBlockID == block.id { focusedBlockID = nil }
-        let fallbackID = neighborID ?? BlockOrdering.flattenedBlocks(of: note).first?.id
-        blockSelectionRange = fallbackID.map { BlockSelectionRange(single: $0) }
-        pendingCaretRequest = nil
-        persistStructuralChange()
-    }
-
-    /// Action "Convertir en..." du menu de bloc (sous-etape 5.5, voir `BlockConversion`
-    /// pour la regle de conservation/abandon des `BlockAttributes`, le texte riche
-    /// inchange, et le sort des enfants). Sans effet si `newType` ne fait pas partie de
-    /// `BlockConversion.availableTargets(for: block)` -- l'appelant (menu) ne devrait de
-    /// toute facon jamais proposer un type hors de cette liste. Le bloc reste
-    /// SELECTIONNE apres conversion (pas focalise en edition) : coherent avec
-    /// `duplicateBlock(_:)`, la meme action de menu qui ne pretend pas avoir ete
-    /// declenchee par une frappe dans le contenu.
-    public func convertBlock(_ block: Block, to newType: BlockType) {
-        BlockConversion.convert(block, to: newType)
-        focusedBlockID = nil
-        blockSelectionRange = BlockSelectionRange(single: block.id)
-        pendingCaretRequest = nil
-        persistStructuralChange()
-    }
-
-    /// Action "Deplacer vers le haut" du menu de bloc (voir `BlockOperations.moveUp(_:)`
-    /// pour la portee -- freres de meme niveau uniquement). `false` sans effet si
-    /// `block` est deja en tete de sa fratrie.
-    @discardableResult
-    public func moveBlockUp(_ block: Block) -> Bool {
-        guard BlockOperations.moveUp(block) else { return false }
-        persistStructuralChange()
-        return true
-    }
-
-    /// Symmetrique de `moveBlockUp(_:)` : un cran vers le bas.
-    @discardableResult
-    public func moveBlockDown(_ block: Block) -> Bool {
-        guard BlockOperations.moveDown(block) else { return false }
-        persistStructuralChange()
-        return true
-    }
-
-    // MARK: - Application interne
 
     /// Pas `private` (acces necessaire depuis `EditorController+SlashMenu.swift`, qui
     /// focalise le bloc converti/nouvellement insere apres l'execution d'une commande

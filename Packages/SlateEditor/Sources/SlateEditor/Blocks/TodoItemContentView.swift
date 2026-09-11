@@ -2,45 +2,31 @@ import SlateModel
 import SlateUI
 import SwiftUI
 
-/// Item de liste a cocher (`BlockType.todo`), lecture seule : la case affichee reflete
-/// `BlockAttributes.isChecked`, mais n'est pas interactive dans cette phase (cocher/
-/// decocher au clic est une capacite d'EDITION, hors perimetre 5.1 -- voir la regle
-/// d'honnetete d'interface du projet : un controle qui a l'air cliquable sans agir ne
-/// doit pas etre expose. Le glyphe est donc rendu comme un simple `Image`, jamais un
-/// `Button`/`Toggle`).
+/// Item de liste a cocher (`BlockType.todo`), EDITABLE depuis la Phase 8 (docs/08,
+/// "Case a cocher fonctionnelle... persistee"). La case est desormais un vrai controle
+/// (`ChecklistItemView`, `SlateUI`), plus un simple glyphe en lecture seule -- son
+/// `Binding` passe par `EditorController.setChecked(_:in:)`, seul point d'ecriture de
+/// `BlockAttributes.isChecked` (persistance immediate, pas de debounce -- meme motif que
+/// les autres actions ponctuelles de menu). Le texte barre/estompe une fois coche est
+/// applique au NIVEAU DU `NSTextView` lui-meme (voir `RichTextEditingTextView.
+/// applyTypography(for:isChecked:)` et `RichTextEditingRepresentable.Coordinator.apply(
+/// _:to:)`) : les modificateurs SwiftUI `.strikethrough`/`.foregroundStyle` de
+/// `ChecklistItemView` n'ont aucun effet sur le rendu INTERNE d'un `NSViewRepresentable`.
 struct TodoItemContentView: View {
-    let text: RichText?
-    let isChecked: Bool
+    let block: Block
+    let editorController: EditorController
+    let level: Int
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: Spacing.sm) {
-            Image(systemName: isChecked ? "checkmark.square.fill" : "square")
-                .slateIconFont(SlateGeometry.sidebarIconSize, relativeTo: .body)
-                .foregroundStyle(isChecked ? SlateColor.accentDefault : SlateColor.textSecondary)
-                .accessibilityHidden(true)
-            ParagraphBlockContentView(text: text, isStrikethrough: isChecked)
+        ChecklistItemView(isDone: isCheckedBinding, level: level) {
+            RichTextBlockView(block: block, editorController: editorController)
         }
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(isChecked ? "Tache cochee" : "Tache non cochee")
     }
-}
 
-#Preview("TodoItemContentView - clair") {
-    VStack(alignment: .leading, spacing: Spacing.sm) {
-        TodoItemContentView(text: RichText(plainText: "A faire"), isChecked: false)
-        TodoItemContentView(text: RichText(plainText: "Fait"), isChecked: true)
+    private var isCheckedBinding: Binding<Bool> {
+        Binding(
+            get: { block.attributes.isChecked },
+            set: { editorController.setChecked($0, in: block) }
+        )
     }
-    .padding()
-    .background(SlateColor.bgEditor)
-    .environment(\.colorScheme, .light)
-}
-
-#Preview("TodoItemContentView - sombre") {
-    VStack(alignment: .leading, spacing: Spacing.sm) {
-        TodoItemContentView(text: RichText(plainText: "A faire"), isChecked: false)
-        TodoItemContentView(text: RichText(plainText: "Fait"), isChecked: true)
-    }
-    .padding()
-    .background(SlateColor.bgEditor)
-    .environment(\.colorScheme, .dark)
 }

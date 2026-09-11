@@ -15,11 +15,14 @@ struct BlockAttributesTests {
             headingLevel: 2,
             isChecked: true,
             calloutIcon: "lightbulb",
+            calloutVariant: "warning",
             imageWidth: 320,
             imageHeight: 200,
             imageAltText: "Un schema",
             columnWidthRatio: 0.5,
             columnCount: 2,
+            isHeaderRow: true,
+            columnWidth: 184,
             linkedNoteID: UUID(),
             sourceURLString: "https://example.com"
         )
@@ -45,6 +48,9 @@ struct BlockAttributesTests {
         #expect(decoded.headingLevel == nil)
         #expect(decoded.imageWidth == nil)
         #expect(decoded.linkedNoteID == nil)
+        #expect(decoded.isHeaderRow == false)
+        #expect(decoded.columnWidth == nil)
+        #expect(decoded.calloutVariant == nil)
     }
 
     @Test

@@ -17,19 +17,29 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../SlateModel"),
-        .package(path: "../SlateUI")
+        .package(path: "../SlateUI"),
+        .package(path: "../SlateServices")
     ],
     targets: [
         .target(
             name: "SlateEditor",
             dependencies: [
                 .product(name: "SlateModel", package: "SlateModel"),
-                .product(name: "SlateUI", package: "SlateUI")
+                .product(name: "SlateUI", package: "SlateUI"),
+                .product(name: "SlateServices", package: "SlateServices")
             ],
             resources: [
                 .process("Localizable.xcstrings")
             ]
         ),
-        .testTarget(name: "SlateEditorTests", dependencies: ["SlateEditor"])
+        .testTarget(
+            name: "SlateEditorTests",
+            dependencies: [
+                "SlateEditor",
+                .product(name: "SlateModel", package: "SlateModel"),
+                .product(name: "SlateUI", package: "SlateUI"),
+                .product(name: "SlateServices", package: "SlateServices")
+            ]
+        )
     ]
 )

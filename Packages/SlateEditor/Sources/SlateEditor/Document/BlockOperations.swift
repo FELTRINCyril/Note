@@ -74,6 +74,44 @@ public enum BlockOperations {
         note.blocks = [fallback]
     }
 
+    /// Variante de `remove(_:from:)` reservee aux blocs de STRUCTURE INTERNE (`table`,
+    /// Phase 8) : supprime `block` et TOUT son sous-arbre SANS promouvoir ses enfants.
+    /// `BlockOrdering.remove(_:)` promeut les enfants directs a la place du bloc
+    /// supprime -- correct pour un item de liste (ses sous-items ont un sens en dehors
+    /// de lui), mais destructeur pour un `table` : ses `tableRow`/`tableCell` enfants
+    /// n'ont AUCUN sens promus au niveau du document (des lignes de tableau eparpillees
+    /// comme blocs racine). Meme garde de non-vacuite que `remove(_:from:)`.
+    ///
+    /// Ne supprime pas non plus `block` (ni son sous-arbre) du `ModelContext` -- comme
+    /// `remove(_:from:)`, cette fonction manipule uniquement le graphe en memoire. C'est
+    /// deja le comportement du reste de ce fichier (aucun `context.delete` n'existe
+    /// avant la Phase 8) ; les operations de tableau dediees
+    /// (`EditorController+Table.swift`), elles, appellent explicitement
+    /// `ModelContext.delete(_:)` sur les blocs qu'elles retirent -- une future revue
+    /// pourrait etendre cette meme rigueur a `remove(_:from:)`, hors perimetre ici.
+    public static func removeSubtree(_ block: Block, from note: Note) {
+        var siblings = BlockOrdering.siblings(of: block)
+        guard let index = siblings.firstIndex(where: { $0.id == block.id }) else { return }
+        siblings.remove(at: index)
+        for (newOrder, sibling) in siblings.enumerated() {
+            sibling.order = newOrder
+        }
+        if let parent = block.parent {
+            parent.children = siblings
+        } else {
+            let nested = (note.blocks ?? []).filter { $0.parent != nil }
+            note.blocks = siblings + nested
+        }
+        block.note = nil
+        block.parent = nil
+        BlockOrdering.invalidateCache(for: note)
+
+        guard (note.blocks ?? []).isEmpty else { return }
+        let fallback = Block(type: .paragraph, text: RichText())
+        fallback.note = note
+        note.blocks = [fallback]
+    }
+
     // MARK: - Deplacement parmi les freres de meme niveau
 
     /// Deplace `block` d'un cran vers le HAUT parmi ses freres de meme niveau.

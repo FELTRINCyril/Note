@@ -12,19 +12,24 @@ import SlateModel
 /// documentation de tete pour le principe general : "jamais une entree qui a l'air
 /// actionnable sans agir"). Concretement :
 /// - `basic` : `paragraph`, les 6 niveaux de titre, les 3 types de liste, `quote`,
-///   `divider`. Tous rendus via un cas NON `.unsupported` de `BlockRenderRouting`.
-/// - `advanced` : `code`, meme raison.
+///   `callout` (Phase 8), `divider`. Tous rendus via un cas NON `.unsupported` de
+///   `BlockRenderRouting`.
+/// - `advanced` : `code`, `table` (Phase 8, structure en sous-blocs -- voir
+///   `EditorController+SlashMenu.executeTableCommand(in:leftoverIsEmpty:)`), meme raison.
 /// - `media` : VOLONTAIREMENT VIDE. `image`/`file` ont un `BlockType` reserve mais
 ///   retombent aujourd'hui sur `.unsupported` dans `BlockRenderRouting` -- leur rendu
 ///   riche (import de fichier, apercu) arrive en Phase 9. Les proposer maintenant
 ///   ouvrirait une commande qui "marche" en apparence (elle change bien `block.type`)
 ///   mais affiche `UnsupportedBlockContentView`, exactement la classe de mensonge
 ///   d'interface que ce projet refuse depuis la 5.4/5.5.
-/// - EXCLUS explicitement, meme motif : `callout`, `table` (Phase 8), `columnList`/
-///   `column` (Phase 10), `bookmark`/`embed`/`databaseView`/`pageLink` (v2). Chaque type
-///   qui gagnera un rendu reel dans une phase ulterieure devra rejoindre `allCommands` a
-///   ce moment-la (et sa categorie `media`/`advanced` alors cessera d'etre vide) --
-///   jamais avant. Cette liste est donc EXTENSIBLE par construction, pas fermee.
+/// - EXCLUS explicitement, meme motif : `columnList`/`column` (Phase 10),
+///   `bookmark`/`embed`/`databaseView`/`pageLink` (v2), et `tableRow`/`tableCell`
+///   (JAMAIS proposes, meme une fois `table` rendu : ce sont des blocs de structure
+///   INTERNE d'un tableau, jamais un point d'insertion valide pour l'utilisateur -- voir
+///   `BlockRenderKind.unsupported`, cas `.tableRow`/`.tableCell`). Chaque type qui
+///   gagnera un rendu reel dans une phase ulterieure devra rejoindre `allCommands` a ce
+///   moment-la (et sa categorie `media` alors cessera d'etre vide) -- jamais avant.
+///   Cette liste est donc EXTENSIBLE par construction, pas fermee.
 ///
 /// ## Convention des alias
 /// Chaque `aliases` couvre le FRANCAIS et l'ANGLAIS, en minuscules SANS accents (ex.
@@ -144,6 +149,15 @@ public enum SlashCommandRegistry {
                 systemImage: "minus",
                 category: .basic,
                 targetType: .divider
+            ),
+            SlashCommand(
+                id: "callout",
+                title: EditorStrings.blockTypeLabel(.callout),
+                subtitle: EditorStrings.slashCommandSubtitle(.callout),
+                aliases: ["encadre", "callout", "note", "remarque", "attention", "highlight"],
+                systemImage: "text.bubble",
+                category: .basic,
+                targetType: .callout
             )
         ]
     }
@@ -158,6 +172,15 @@ public enum SlashCommandRegistry {
                 systemImage: "chevron.left.forwardslash.chevron.right",
                 category: .advanced,
                 targetType: .code
+            ),
+            SlashCommand(
+                id: "table",
+                title: EditorStrings.blockTypeLabel(.table),
+                subtitle: EditorStrings.slashCommandSubtitle(.table),
+                aliases: ["tableau", "table", "grille", "grid"],
+                systemImage: "tablecells",
+                category: .advanced,
+                targetType: .table
             )
         ]
     }

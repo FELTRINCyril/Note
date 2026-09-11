@@ -96,8 +96,12 @@ enum EditorStrings {
             return String(localized: "editor.blockType.code", bundle: .module)
         case .divider:
             return String(localized: "editor.blockType.divider", bundle: .module)
+        case .callout:
+            return String(localized: "editor.blockType.callout", bundle: .module)
+        case .table:
+            return String(localized: "editor.blockType.table", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .callout, .image, .file, .table, .columnList, .column,
+             .image, .file, .tableRow, .tableCell, .columnList, .column,
              .bookmark, .embed, .databaseView, .pageLink:
             return type.rawValue
         }
@@ -189,8 +193,12 @@ enum EditorStrings {
             return String(localized: "editor.slashCommand.subtitle.code", bundle: .module)
         case .divider:
             return String(localized: "editor.slashCommand.subtitle.divider", bundle: .module)
+        case .callout:
+            return String(localized: "editor.slashCommand.subtitle.callout", bundle: .module)
+        case .table:
+            return String(localized: "editor.slashCommand.subtitle.table", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .callout, .image, .file, .table, .columnList, .column,
+             .image, .file, .tableRow, .tableCell, .columnList, .column,
              .bookmark, .embed, .databaseView, .pageLink:
             return ""
         }

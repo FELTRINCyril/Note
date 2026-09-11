@@ -226,6 +226,15 @@
 | `column.gap` | 24 pt | — | Espace entre colonnes |
 | `column.resizer` | = `separator` | = `separator` | Séparateur de colonnes |
 | `pageLink.text` / `pageLink.icon` | = `text.link` / `accent` | idem | Lien de page interne |
+| `block.decoratedSpacing` | 8 pt (= `space.s`) | — | Marge verticale d'un bloc décoré (citation, callout, code, tableau, divider) |
+| `list.markerWidth` | 18 pt | — | Largeur de la colonne de marqueur (puce/numéro) — coïncide avec `handle.size`, tokens distincts |
+| `checkbox.hitSize` | 28 pt | — | Cible de clic d'une case à cocher (case visuelle = `checkbox.size`, 18 pt) |
+| `quote.barWidth` | 3 pt | — | Largeur de la barre latérale de citation |
+| `divider.hitHeight` | 24 pt (= `space.xl`) | — | Cible de sélection d'un bloc séparateur |
+| `column.minWidth` | 120 pt | — | Largeur minimale d'une colonne |
+| `column.maxCount` | 4 | — | Nombre maximal de colonnes |
+| `column.stackThreshold` | 560 pt | — | Largeur de colonne de texte sous laquelle les colonnes s'empilent |
+| `column.resizerWidth` | 4 pt | — | Largeur de la poignée de séparateur de colonnes au survol/saisie |
 
 ## 16 bis. Callouts — fond, bordure et libellé par variante
 > Les `semantic.*` de §4 posés en **texte** sur leur propre fond atténué tombent à 2,04:1 (orange), 2,00:1 (vert) et 3,51:1 (bleu). Ils restent valides pour les icônes et les aplats, jamais pour du texte. D'où une couleur de libellé dédiée par variante. Le **corps** d'un callout reste toujours `text.primary`.

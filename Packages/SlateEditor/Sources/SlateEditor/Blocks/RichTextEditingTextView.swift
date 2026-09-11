@@ -81,23 +81,39 @@ final class RichTextEditingTextView: NSTextView {
     /// passe a la ligne", sans `NSScrollView` ni hauteur figee. TextKit 2 calcule cette
     /// hauteur via `usageBoundsForTextContainer`, apres avoir force la mise en page du
     /// document entier (`ensureLayout(for:)`) a la largeur proposee.
+    /// `wraps` (voir `applyTypography(for:isChecked:)`) : `false` UNIQUEMENT pour un
+    /// bloc `.code` (Phase 8, docs/08_blocs_speciaux.md, "Debordement horizontal...
+    /// jamais de retour a la ligne force"). Dans ce cas, `textContainer.size.width` est
+    /// deja fixee a l'infini par `applyTypography` et ne doit JAMAIS etre reecrasee ici
+    /// par la largeur PROPOSEE (qui, elle, reste bornee a la largeur du bloc) : c'est la
+    /// largeur NATURELLE du contenu (`usageBoundsForTextContainer.width`) qui est
+    /// remontee a SwiftUI, pour qu'un `ScrollView(.horizontal)` parent (voir
+    /// `CodeBlockContentView`) puisse effectivement defiler au lieu de tronquer.
     func intrinsicSize(forProposedWidth proposedWidth: CGFloat?) -> CGSize? {
         guard let textContainer, let textLayoutManager,
               let documentRange = textLayoutManager.textContentManager?.documentRange else {
             return nil
         }
 
-        let width = (proposedWidth?.isFinite == true ? proposedWidth : nil) ?? textContainer.size.width
-        guard width > 0 else { return nil }
-
-        if textContainer.size.width != width {
-            textContainer.size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        let wraps = textContainer.widthTracksTextView
+        var reportedWidth = textContainer.size.width
+        if wraps {
+            let width = (proposedWidth?.isFinite == true ? proposedWidth : nil) ?? textContainer.size.width
+            guard width > 0 else { return nil }
+            if textContainer.size.width != width {
+                textContainer.size = CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+            }
+            reportedWidth = width
         }
         textLayoutManager.ensureLayout(for: documentRange)
 
-        let measuredHeight = textLayoutManager.usageBoundsForTextContainer.height
+        let bounds = textLayoutManager.usageBoundsForTextContainer
+        let measuredHeight = bounds.height
         let minimumHeight = defaultParagraphStyle?.maximumLineHeight ?? font?.pointSize ?? SlateFont.body.size
-        return CGSize(width: width, height: max(measuredHeight, minimumHeight))
+        if !wraps {
+            reportedWidth = max(bounds.width, minimumHeight)
+        }
+        return CGSize(width: reportedWidth, height: max(measuredHeight, minimumHeight))
     }
 
     /// Caret 2 pt (`SlateGeometry.editorCaretWidth`) au lieu du 1 pt natif -- seul point
@@ -214,6 +230,21 @@ final class RichTextEditingTextView: NSTextView {
             return
         }
         super.cancelOperation(sender)
+    }
+
+    /// Tab (Phase 8, docs/08_blocs_speciaux.md, "Imbrication") : indente l'item de liste
+    /// courant. Si le delegue ne prend pas la main (bloc pas un item de liste, ou pas de
+    /// frere precedent), le comportement natif s'execute -- insertion d'une tabulation
+    /// litterale, comme un `NSTextView` ordinaire.
+    override func insertTab(_ sender: Any?) {
+        if blockLifecycleDelegate?.richTextViewShouldHandleIndent() == true { return }
+        super.insertTab(sender)
+    }
+
+    /// Maj+Tab : symmetrique de `insertTab(_:)` pour la desindentation.
+    override func insertBacktab(_ sender: Any?) {
+        if blockLifecycleDelegate?.richTextViewShouldHandleOutdent() == true { return }
+        super.insertBacktab(sender)
     }
 
     // MARK: - Raccourcis de formatage (docs/07_typographie_formatage.md)

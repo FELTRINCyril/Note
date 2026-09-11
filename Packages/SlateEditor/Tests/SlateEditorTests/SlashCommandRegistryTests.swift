@@ -48,23 +48,24 @@ struct SlashCommandRegistryTests {
         #expect(encountered == expectedEncountered)
     }
 
-    @Test("Le registre couvre exactement les 13 types de bloc a rendu textuel reel")
+    @Test("Le registre couvre exactement les 15 types de bloc a rendu reel (Phase 8 : callout, table)")
     func registryCoversExpectedTypes() {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let expected: Set<BlockType> = [
             .paragraph,
             .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
             .bulletedList, .numberedList, .todo,
-            .quote, .divider, .code
+            .quote, .divider, .code,
+            .callout, .table
         ]
         #expect(targetTypes == expected)
     }
 
-    @Test("Aucun type reserve a une phase ulterieure n'apparait dans le registre")
+    @Test("Aucun type reserve a une phase ulterieure, ni tableRow/tableCell, n'apparait dans le registre")
     func registryExcludesFutureTypes() {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let excluded: [BlockType] = [
-            .callout, .image, .file, .table, .columnList, .column,
+            .image, .file, .tableRow, .tableCell, .columnList, .column,
             .bookmark, .embed, .databaseView, .pageLink
         ]
         for type in excluded {

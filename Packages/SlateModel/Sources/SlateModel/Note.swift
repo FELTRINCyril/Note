@@ -116,23 +116,48 @@ public final class Note {
     private static let snippetMaxLength = 160
 
     /// Types de bloc porteurs de texte, pris en compte pour `plainText`/`snippetText`.
-    /// Les autres types (`divider`, `table`, `columnList`, `column`, `image`, `file`,
-    /// `databaseView`, `pageLink`...) ne contribuent pas de texte brut ici.
+    /// Les autres types (`divider`, `table`, `tableRow`, `columnList`, `column`,
+    /// `image`, `file`, `databaseView`, `pageLink`...) ne contribuent pas de texte brut
+    /// eux-memes, mais un type non porteur peut quand meme avoir des descendants
+    /// porteurs (une `tableCell` sous un `table`/`tableRow`, un item de liste sous un
+    /// autre) : voir `collectText`, qui descend recursivement dans `children`.
+    ///
+    /// `tableCell` (Phase 8) est delibermement dans cet ensemble : le texte d'une
+    /// cellule de tableau doit rester trouvable par la recherche plein texte (Phase
+    /// 15), au meme titre qu'un paragraphe. Le risque d'un extrait de note "absurde"
+    /// (cellules concatenees sans structure visible) est juge acceptable : c'est deja
+    /// le comportement assume pour les items de liste imbriques (une puce ou une
+    /// sous-puce produit une ligne de plus dans `plainText`, sans marqueur visuel), et
+    /// preferable a une recherche qui ne trouve pas le contenu d'un tableau.
     private static let textBearingTypes: Set<BlockType> = [
         .paragraph, .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-        .bulletedList, .numberedList, .todo, .quote, .callout, .code
+        .bulletedList, .numberedList, .todo, .quote, .callout, .code, .tableCell
     ]
 
-    /// Recalcule `plainText` et `snippetText` a partir des blocs actuels, tries par
-    /// `order`. A appeler explicitement apres toute mutation de `blocks` ou du texte
-    /// d'un bloc (voir la documentation de ce type) - **point d'entree unique**, voir
-    /// la section dediee plus haut sur ce type.
+    /// Parcourt `blocks` en profondeur (tries par `order` a chaque niveau) et retourne
+    /// le texte brut de chaque bloc d'un type porteur de texte (`textBearingTypes`),
+    /// non vide. Descend dans `children` meme pour un bloc dont le propre type n'est
+    /// pas porteur (`table`, `tableRow`, `bulletedList` racine sans texte propre...) :
+    /// c'est ce qui permet au texte d'un item de liste imbrique ou d'une cellule de
+    /// tableau de remonter jusqu'a `plainText`, meme si `blocks` (la relation directe
+    /// `Note.blocks`) ne contient que les blocs racine de la note.
+    private static func collectText(from blocks: [Block]) -> [String] {
+        blocks.sorted { $0.order < $1.order }.flatMap { block -> [String] in
+            var texts: [String] = []
+            if textBearingTypes.contains(block.type), let text = block.text?.plainText, !text.isEmpty {
+                texts.append(text)
+            }
+            texts.append(contentsOf: collectText(from: block.children ?? []))
+            return texts
+        }
+    }
+
+    /// Recalcule `plainText` et `snippetText` a partir des blocs actuels (recursif, voir
+    /// `collectText`). A appeler explicitement apres toute mutation de `blocks` ou du
+    /// texte d'un bloc (voir la documentation de ce type) - **point d'entree unique**,
+    /// voir la section dediee plus haut sur ce type.
     public func refreshDerivedText() {
-        let orderedTexts = (blocks ?? [])
-            .filter { Self.textBearingTypes.contains($0.type) }
-            .sorted { $0.order < $1.order }
-            .compactMap { $0.text?.plainText }
-            .filter { !$0.isEmpty }
+        let orderedTexts = Self.collectText(from: blocks ?? [])
 
         plainText = orderedTexts.joined(separator: "\n")
 

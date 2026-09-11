@@ -85,12 +85,20 @@ struct BlockTreeView: View {
                     BlockContentRouterView(
                         block: block,
                         numberedRank: numberedRank,
+                        indentLevel: indentLevel,
                         strings: strings,
                         editorController: editorController
                     )
                 }
             )
-            .padding(.leading, CGFloat(indentLevel) * Self.indentStep)
+            // Les 3 types d'item de liste (Phase 8) portent DEJA leur propre indentation
+            // (`ListItemView`/`ChecklistItemView`, `SlateUI`, parametrees avec ce meme
+            // `indentLevel` via `BlockContentRouterView`) : leur appliquer CETTE
+            // indentation generique EN PLUS doublerait le decalage visuel a chaque
+            // niveau d'imbrication. Tous les autres types (paragraphe, titre, citation,
+            // code, callout, tableau...) n'ont pas d'indentation propre, elle reste donc
+            // portee ici comme avant.
+            .padding(.leading, isListItemType ? 0 : CGFloat(indentLevel) * Self.indentStep)
             .background(
                 GeometryReader { proxy in
                     Color.clear.preference(
@@ -135,7 +143,14 @@ struct BlockTreeView: View {
             // finale de Phase 5) : une liste imbriquee (item de liste a puces/numerotee)
             // peut elle aussi compter des centaines d'enfants directs, chacun capable de
             // porter son propre `RichTextBlockView`.
-            let childBlocks = BlockOrdering.children(of: block)
+            // `table` (Phase 8) : ses `tableRow`/`tableCell` enfants sont de la structure
+            // INTERNE de la grille, rendus ENTIEREMENT par `TableBlockContentView`
+            // (routee dans `BlockContentRouterView`) -- jamais par ce parcours recursif
+            // generique, qui leur donnerait chacun leur propre `BlockContainer` (chrome
+            // de selection, poignee de menu...) sans aucun sens pour une cellule de
+            // tableau. Tous les AUTRES types continuent de recurser normalement
+            // (imbrication d'un item de liste).
+            let childBlocks = block.type == .table ? [] : BlockOrdering.children(of: block)
             LazyVStack(alignment: .leading, spacing: 0) {
                 ForEach(childBlocks, id: \.id) { child in
                     BlockTreeView(
@@ -251,6 +266,15 @@ struct BlockTreeView: View {
         if editorController.focusedBlockID == block.id { return .focused }
         if rangePositions[block.id] != nil { return .selected }
         return .normal
+    }
+
+    /// Voir le commentaire du `.padding(.leading, ...)` ci-dessus : ces 3 types portent
+    /// leur propre indentation cote `SlateUI`.
+    private var isListItemType: Bool {
+        switch block.type {
+        case .bulletedList, .numberedList, .todo: true
+        default: false
+        }
     }
 
     private var numberedRank: Int {

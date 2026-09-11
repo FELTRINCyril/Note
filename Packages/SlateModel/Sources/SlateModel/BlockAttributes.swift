@@ -53,6 +53,15 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
     /// Icone/emoji affiche devant le contenu d'un callout.
     public var calloutIcon: String?
 
+    /// Variante de callout (neutre, information, attention, succes), qui determine le
+    /// fond, la bordure et la couleur de libelle. Voir `design/tokens.md` §16 bis.
+    ///
+    /// Stockee sous forme neutre (identifiant textuel) et non comme un type d'UI :
+    /// `SlateModel` ne connait aucune notion d'apparence, c'est `SlateUI` qui resout cet
+    /// identifiant en couleurs via `SlateCalloutVariant`. Meme motif que
+    /// `SlateHighlightColor` pour le surlignage inline. `nil` = variante neutre.
+    public var calloutVariant: String?
+
     // MARK: Image (`BlockType.image`)
 
     /// Largeur d'affichage souhaitee, en points. `nil` = largeur naturelle/auto.
@@ -70,6 +79,19 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
     /// depend du nombre de blocs `column` enfants).
     public var columnCount: Int?
 
+    // MARK: Tableau (`BlockType.table` / `tableRow` / `tableCell`)
+
+    /// Marque une `tableRow` comme ligne d'en-tete (fond distinct, texte en gras dans le
+    /// rendu). Non-optionnel par choix, meme raison que `isChecked` ci-dessus.
+    public var isHeaderRow: Bool = false
+
+    /// Largeur d'affichage d'une colonne, en points (ex. "184 pt" dans l'indicateur de
+    /// redimensionnement de l'artboard H). Portee par chaque `tableCell` de la colonne
+    /// plutot que par une entite colonne dediee (qui n'existe pas, cf.
+    /// `Block+Table.swift`) ; `Block.setTableColumnWidth(_:forColumnAt:)` la maintient
+    /// coherente sur toutes les lignes. `nil` = largeur naturelle/auto.
+    public var columnWidth: Double?
+
     // MARK: Lien vers une note (`BlockType.pageLink`)
 
     /// Identifiant de la `Note` ciblee par un bloc `pageLink`.
@@ -85,11 +107,14 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         headingLevel: Int? = nil,
         isChecked: Bool = false,
         calloutIcon: String? = nil,
+        calloutVariant: String? = nil,
         imageWidth: Double? = nil,
         imageHeight: Double? = nil,
         imageAltText: String? = nil,
         columnWidthRatio: Double? = nil,
         columnCount: Int? = nil,
+        isHeaderRow: Bool = false,
+        columnWidth: Double? = nil,
         linkedNoteID: UUID? = nil,
         sourceURLString: String? = nil
     ) {
@@ -97,11 +122,14 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         self.headingLevel = headingLevel
         self.isChecked = isChecked
         self.calloutIcon = calloutIcon
+        self.calloutVariant = calloutVariant
         self.imageWidth = imageWidth
         self.imageHeight = imageHeight
         self.imageAltText = imageAltText
         self.columnWidthRatio = columnWidthRatio
         self.columnCount = columnCount
+        self.isHeaderRow = isHeaderRow
+        self.columnWidth = columnWidth
         self.linkedNoteID = linkedNoteID
         self.sourceURLString = sourceURLString
     }
@@ -111,11 +139,14 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         case headingLevel
         case isChecked
         case calloutIcon
+        case calloutVariant
         case imageWidth
         case imageHeight
         case imageAltText
         case columnWidthRatio
         case columnCount
+        case isHeaderRow
+        case columnWidth
         case linkedNoteID
         case sourceURLString
     }
@@ -126,11 +157,14 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         headingLevel = try container.decodeIfPresent(Int.self, forKey: .headingLevel)
         isChecked = try container.decodeIfPresent(Bool.self, forKey: .isChecked) ?? false
         calloutIcon = try container.decodeIfPresent(String.self, forKey: .calloutIcon)
+        calloutVariant = try container.decodeIfPresent(String.self, forKey: .calloutVariant)
         imageWidth = try container.decodeIfPresent(Double.self, forKey: .imageWidth)
         imageHeight = try container.decodeIfPresent(Double.self, forKey: .imageHeight)
         imageAltText = try container.decodeIfPresent(String.self, forKey: .imageAltText)
         columnWidthRatio = try container.decodeIfPresent(Double.self, forKey: .columnWidthRatio)
         columnCount = try container.decodeIfPresent(Int.self, forKey: .columnCount)
+        isHeaderRow = try container.decodeIfPresent(Bool.self, forKey: .isHeaderRow) ?? false
+        columnWidth = try container.decodeIfPresent(Double.self, forKey: .columnWidth)
         linkedNoteID = try container.decodeIfPresent(UUID.self, forKey: .linkedNoteID)
         sourceURLString = try container.decodeIfPresent(String.self, forKey: .sourceURLString)
     }
@@ -141,11 +175,14 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         try container.encodeIfPresent(headingLevel, forKey: .headingLevel)
         try container.encode(isChecked, forKey: .isChecked)
         try container.encodeIfPresent(calloutIcon, forKey: .calloutIcon)
+        try container.encodeIfPresent(calloutVariant, forKey: .calloutVariant)
         try container.encodeIfPresent(imageWidth, forKey: .imageWidth)
         try container.encodeIfPresent(imageHeight, forKey: .imageHeight)
         try container.encodeIfPresent(imageAltText, forKey: .imageAltText)
         try container.encodeIfPresent(columnWidthRatio, forKey: .columnWidthRatio)
         try container.encodeIfPresent(columnCount, forKey: .columnCount)
+        try container.encode(isHeaderRow, forKey: .isHeaderRow)
+        try container.encodeIfPresent(columnWidth, forKey: .columnWidth)
         try container.encodeIfPresent(linkedNoteID, forKey: .linkedNoteID)
         try container.encodeIfPresent(sourceURLString, forKey: .sourceURLString)
     }

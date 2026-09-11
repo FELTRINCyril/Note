@@ -43,8 +43,19 @@ public enum BlockType: String, CaseIterable, Codable, Sendable {
     /// Fichier joint quelconque, binaire porte par `Block.attachment`.
     case file
 
-    /// Tableau (structure dediee, cf. Phase 8).
+    /// Tableau (cf. Phase 8). Racine d'une grille modelisee en sous-blocs : un `table`
+    /// porte des `tableRow` enfants (via `Block.parent`/`children`), qui portent chacune
+    /// des `tableCell` enfants. Decision structurante documentee sur `Block+Table.swift` :
+    /// la grille n'est PAS stockee dans `BlockAttributes` (conteneur imbrique interdit,
+    /// voir `docs/DEV_ENV.md` piege n°2), elle suit le meme principe que
+    /// `columnList`/`column` ci-dessous.
     case table
+    /// Ligne d'un `table`. Porte des `tableCell` enfants. Ligne d'en-tete marquee par
+    /// `BlockAttributes.isHeaderRow`.
+    case tableRow
+    /// Cellule d'une `tableRow`. Porte son propre `Block.text` (`RichText`), comme
+    /// n'importe quel bloc textuel.
+    case tableCell
 
     /// Conteneur de colonnes (cf. Phase 10). Porte des blocs enfants de type `column`.
     case columnList

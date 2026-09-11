@@ -298,4 +298,54 @@ public enum BlockOrdering {
         block.parent = nil
         block.children = []
     }
+
+    // MARK: - Indentation d'un item de liste (Phase 8, voir `BlockIndentation`)
+    //
+    // Deux operations extraites ici (plutot que dans `BlockIndentation.swift`, qui reste
+    // pur/sans acces aux helpers PRIVES de ce type) : detacher un bloc de sa fratrie SANS
+    // promouvoir ses enfants (contrairement a `remove(_:)`), et le rattacher ailleurs en
+    // conservant son sous-arbre INTACT. Utilisees UNIQUEMENT par `BlockIndentation.indent(_:)`/
+    // `outdent(_:)` -- Tab/Maj+Tab sur un item de liste doit deplacer l'item ET tous ses
+    // propres sous-items avec lui, jamais les dissoudre comme le ferait `remove(_:)`.
+
+    /// Detache `block` de sa fratrie ACTUELLE sans promouvoir ses enfants. Renumerote les
+    /// freres restants. Ne touche PAS `block.parent`/`block.note` : c'est a l'appelant de
+    /// les reassigner ensuite (`attachAsLastChild(_:of:)`/`attachAsSibling(_:after:)`).
+    static func detachPreservingChildren(_ block: Block) {
+        var siblings = siblingsCollection(of: block)
+        guard let index = siblings.firstIndex(where: { $0.id == block.id }) else { return }
+        let parent = block.parent
+        let note = block.note
+        siblings.remove(at: index)
+        renumber(siblings)
+        writeBack(siblings, parent: parent, note: note)
+    }
+
+    /// Rattache `block` (et son sous-arbre intact) comme DERNIER enfant de `newParent`,
+    /// apres un `detachPreservingChildren(_:)` -- voir `BlockIndentation.indent(_:)`.
+    static func attachAsLastChild(_ block: Block, of newParent: Block) {
+        block.parent = newParent
+        block.note = newParent.note
+        var newChildren = children(of: newParent)
+        newChildren.append(block)
+        renumber(newChildren)
+        newParent.children = newChildren
+        invalidateCache(for: newParent.note)
+    }
+
+    /// Rattache `block` (et son sous-arbre intact) comme frere juste APRES `anchor`, au
+    /// meme niveau que lui -- symmetrique de `attachAsLastChild(_:of:)` pour la
+    /// desindentation (`BlockIndentation.outdent(_:)`, qui remonte un item d'un niveau,
+    /// juste apres son ancien parent).
+    static func attachAsSibling(_ block: Block, after anchor: Block) {
+        block.parent = anchor.parent
+        block.note = anchor.note
+        var siblings = siblingsCollection(of: anchor)
+        siblings.removeAll { $0.id == block.id }
+        let anchorIndex = siblings.firstIndex(where: { $0.id == anchor.id }) ?? siblings.count
+        siblings.insert(block, at: anchorIndex + 1)
+        renumber(siblings)
+        writeBack(siblings, parent: anchor.parent, note: anchor.note)
+        invalidateCache(for: anchor.note)
+    }
 }

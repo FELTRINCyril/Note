@@ -196,10 +196,13 @@ struct BlockConversionTests {
 
         #expect(!targets.contains(.paragraph))
         #expect(!targets.contains(.table))
-        #expect(!targets.contains(.callout))
         #expect(!targets.contains(.image))
         #expect(targets.contains(.heading1))
         #expect(targets.contains(.todo))
+        // Phase 8 : `callout` porte un `RichText` comme un paragraphe/une citation,
+        // desormais offert a la conversion (voir la documentation de tete de
+        // `BlockConversion`).
+        #expect(targets.contains(.callout))
     }
 
     @Test("convert(_:to:) sans effet si le type cible n'est pas convertible")

@@ -13,11 +13,23 @@ public enum BlockRenderKind: Equatable, Sendable {
     case todoItem
     case quote
     case code
+    /// Encadre mis en avant (Phase 8, artboard F). `tableRow`/`tableCell` ne routent
+    /// JAMAIS ici individuellement : ce sont des blocs de STRUCTURE INTERNE d'un
+    /// `table`, rendus tous ensemble par `TableBlockContentView` -- voir `.table`
+    /// ci-dessous et `BlockTreeView` (qui ne recurse pas dans les enfants d'un
+    /// `table`, contrairement a un item de liste imbrique).
+    case callout
+    /// Tableau (Phase 8, artboard H). Un seul cas pour tout le tableau : ses lignes et
+    /// cellules (`tableRow`/`tableCell`) ne sont pas des blocs de premier niveau du
+    /// point de vue du rendu, meme si elles restent des `Block` a part entiere cote
+    /// modele (voir `Block+Table.swift`).
+    case table
     /// Type de bloc dont le rendu riche n'est pas encore construit (hors perimetre de
-    /// la phase en cours, ou reserve a une phase ulterieure : `callout`/`table`
-    /// (Phase 8), `columnList`/`column` (Phase 10), `image`/`file`/`bookmark`/`embed`/
-    /// `databaseView`/`pageLink`). Porte le `BlockType` d'origine pour que le rendu de
-    /// repli reste identifiable plutot qu'invisible.
+    /// la phase en cours, ou reserve a une phase ulterieure : `columnList`/`column`
+    /// (Phase 10), `image`/`file`/`bookmark`/`embed`/`databaseView`/`pageLink`), ou
+    /// bloc de structure interne jamais rendu directement (`tableRow`/`tableCell`, voir
+    /// `.table` ci-dessus). Porte le `BlockType` d'origine pour que le rendu de repli
+    /// reste identifiable plutot qu'invisible.
     case unsupported(BlockType)
 }
 
@@ -47,10 +59,21 @@ public enum BlockRenderRouting {
             return .code
         case .divider:
             return .divider
-        case .callout, .image, .file, .table, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
-            // Blocs riches speciaux (Phase 8), colonnes (Phase 10), pieces jointes et
-            // v2 (bookmark/embed/databaseView/pageLink) : hors perimetre de la 5.1,
-            // rendu de repli identifiable via `UnsupportedBlockContentView`.
+        case .callout:
+            return .callout
+        case .table:
+            return .table
+        case .tableRow, .tableCell:
+            // Jamais rendus individuellement (voir la documentation de `BlockRenderKind`
+            // -- structure interne d'un `.table`, portee par `TableBlockContentView`) :
+            // ce cas n'est atteint en pratique par aucun appelant de ce module
+            // (`BlockTreeView` ne recurse pas dans les enfants d'un `table`), mais doit
+            // rester couvert pour la compilation exhaustive de ce `switch`.
+            return .unsupported(type)
+        case .image, .file, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
+            // Colonnes (Phase 10), pieces jointes et v2 (bookmark/embed/databaseView/
+            // pageLink) : hors perimetre, rendu de repli identifiable via
+            // `UnsupportedBlockContentView`.
             return .unsupported(type)
         }
     }

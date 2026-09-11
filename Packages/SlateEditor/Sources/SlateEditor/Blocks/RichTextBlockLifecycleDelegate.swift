@@ -79,4 +79,16 @@ protocol RichTextBlockLifecycleDelegate: AnyObject {
     /// Cmd+Opt+1/2/3 : convertit le bloc en Titre `level` (1 a 3 uniquement -- voir
     /// docs/07_typographie_formatage.md, aucun raccourci demande pour H4-H6).
     func richTextViewShouldHandleConvertToHeadingLevel(_ level: Int) -> Bool
+
+    // MARK: - Indentation d'un item de liste (Phase 8, docs/08_blocs_speciaux.md)
+
+    /// Tab : indente l'item de liste courant (voir `BlockIndentation.indent(_:)`).
+    /// `false` si `block` n'est pas un item de liste ou n'a pas de frere precedent --
+    /// l'appelant doit alors laisser `super.insertTab(_:)` inserer une tabulation
+    /// litterale, comportement natif d'un `NSTextView` ordinaire.
+    func richTextViewShouldHandleIndent() -> Bool
+
+    /// Maj+Tab : desindente l'item de liste courant (voir `BlockIndentation.outdent(_:)`).
+    /// Meme regle de retour que `richTextViewShouldHandleIndent()`.
+    func richTextViewShouldHandleOutdent() -> Bool
 }

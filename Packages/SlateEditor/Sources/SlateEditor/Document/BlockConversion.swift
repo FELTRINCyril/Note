@@ -19,17 +19,26 @@ import SlateModel
 /// ## Types offerts a la conversion
 /// `convertibleTypes` est restreint aux types qui ont un rendu REEL et porteur de texte
 /// aujourd'hui (voir `BlockRenderRouting`/`BlockContentRouterView`) : paragraphe, les 6
-/// niveaux de titre, les 3 types de liste, citation, code. En sont exclus :
+/// niveaux de titre, les 3 types de liste, citation, callout (Phase 8), code. En sont
+/// exclus :
 /// - `divider`, `image`, `file` : pas de `RichText` porte par ces types (`divider`) ou
 ///   contenu principal non textuel (`image`/`file`, texte alternatif mis a part) -- une
 ///   conversion depuis/vers l'un de ces types detruirait ou masquerait du texte sans
 ///   qu'aucune UI ne le signale. Le choix le plus honnete est de ne PAS les proposer
 ///   (aucune confirmation a construire, aucune perte a risquer).
-/// - `callout`, `table`, `columnList`, `column`, `bookmark`, `embed`, `databaseView`,
-///   `pageLink` : reserves a des phases ulterieures (8, 10, v2 -- voir
-///   `BlockRenderRouting.kind(for:)`, cas `.unsupported`), sans rendu reel aujourd'hui.
-///   Cette liste est EXTENSIBLE : chaque type qui gagnera un rendu reel dans une phase
-///   ulterieure devra rejoindre `convertibleTypes` a ce moment-la, pas avant.
+/// - `table` (Phase 8) : memes raisons structurelles que `divider`/`image` -- un `table`
+///   ne porte PAS de `RichText` propre (son contenu vit dans les `RichText` de ses
+///   `tableCell` enfants, voir `Block+Table.swift`), et un paragraphe n'a ni lignes ni
+///   colonnes vers lesquelles se replier. Convertir "paragraphe -> tableau" ou l'inverse
+///   n'a donc pas de sens NI de RichText a transporter fidelement -- exactement le
+///   critere qui exclut deja `divider`/`image`/`file` ci-dessus. `tableRow`/`tableCell`
+///   n'atteignent de toute facon jamais ce type (voir `BlockRenderKind`, jamais rendus
+///   ni selectionnables individuellement).
+/// - `columnList`, `column`, `bookmark`, `embed`, `databaseView`, `pageLink` : reserves a
+///   des phases ulterieures (10, v2 -- voir `BlockRenderRouting.kind(for:)`, cas
+///   `.unsupported`), sans rendu reel aujourd'hui. Cette liste est EXTENSIBLE : chaque
+///   type qui gagnera un rendu reel dans une phase ulterieure devra rejoindre
+///   `convertibleTypes` a ce moment-la, pas avant.
 ///
 /// ## Conservation/abandon de `BlockAttributes` (le point delicat de la tache)
 /// Les `BlockAttributes` sont TYPE-DEPENDANTES (voir sa documentation dans `SlateModel`) :
@@ -81,6 +90,7 @@ public enum BlockConversion {
         .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
         .bulletedList, .numberedList, .todo,
         .quote,
+        .callout,
         .code
     ]
 

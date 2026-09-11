@@ -30,7 +30,7 @@
 - [x] 🎨 **Phase 5 — Éditeur de blocs (cœur)** (rendu, focus, saisie, navigation clavier) → `docs/05_editeur_blocs.md`
 - [x] **Phase 6 — Menu de commandes `/`** → `docs/06_slash_commandes.md`
 - [x] 🎨 **Phase 7 — Typographie & formatage** (gras, italique, souligné, barré, code inline, surlignage, liens, H1–H6) → `docs/07_typographie_formatage.md`
-- [ ] **Phase 8 — Blocs spéciaux** (code, citation, listes puces/numéros/tâches, tableaux, callout) → `docs/08_blocs_speciaux.md`
+- [x] **Phase 8 — Blocs spéciaux** (code, citation, listes puces/numéros/tâches, tableaux, callout) → `docs/08_blocs_speciaux.md`
 - [ ] 🎨 **Phase 9 — Médias & pièces jointes** (images insérer/redimensionner, fichiers) → `docs/09_medias_pieces_jointes.md`
 - [ ] **Phase 10 — Glisser-déposer & colonnes** (réorganiser les blocs, mise en colonnes) → `docs/10_dragdrop_colonnes.md`
 - [ ] **Phase 11 — Organisation des notes** (dupliquer, déplacer, épingler, supprimer, corbeille) → `docs/11_organisation_notes.md`

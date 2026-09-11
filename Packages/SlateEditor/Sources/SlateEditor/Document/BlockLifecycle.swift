@@ -93,6 +93,19 @@ public enum BlockLifecycle {
     public static func handleBackspaceAtStart(in block: Block) -> EditorCaretRequest? {
         guard let previous = BlockOrdering.block(before: block) else { return nil }
 
+        // Frontiere d'un tableau (Phase 8) : `previous` peut etre la DERNIERE `tableCell`
+        // de la DERNIERE `tableRow` d'un `table` qui precede `block` dans l'ordre visuel
+        // complet (`BlockOrdering` parcourt aussi la structure interne d'un tableau, elle
+        // n'est filtree qu'au niveau du RENDU par `BlockTreeView`). Ni fusionner du texte
+        // dedans (perdrait le sens de la grille) ni la supprimer comme un bloc non
+        // textuel ordinaire (`BlockOrdering.remove` la detacherait sans passer par
+        // `Block.removeTableColumn`/`removeTableRow`, cassant l'invariant de
+        // rectangularite et laissant un bloc orphelin jamais purge du `ModelContext`) :
+        // aucune operation, exactement comme "premier bloc de la note" ci-dessus. Les
+        // mutations de structure d'un tableau passent exclusivement par
+        // `EditorController+Table.swift`.
+        guard !isTableStructural(previous.type) else { return nil }
+
         guard isTextBearing(previous.type) else {
             BlockOrdering.remove(previous)
             return EditorCaretRequest(blockID: block.id, placement: .offset(0))
@@ -130,14 +143,24 @@ public enum BlockLifecycle {
     /// volontairement : ce fichier ne doit pas dependre d'un detail interne de
     /// `SlateModel` hors de son perimetre (voir `CLAUDE.md` §4, sens des dependances),
     /// et cette liste est stable dans le temps (voir la documentation de `BlockType` :
-    /// un `rawValue` existant ne se supprime jamais).
+    /// un `rawValue` existant ne se supprime jamais). `tableCell` est ici cote `true`
+    /// pour rester fidele a `Note.textBearingTypes`, meme si en pratique `previous.type`
+    /// ne peut jamais valoir `tableCell` a l'appel : `isTableStructural(_:)` l'exclut
+    /// AVANT le seul appelant de cette fonction (voir `handleBackspaceAtStart(in:)`).
     private static func isTextBearing(_ type: BlockType) -> Bool {
         switch type {
         case .paragraph, .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .bulletedList, .numberedList, .todo, .quote, .callout, .code:
+             .bulletedList, .numberedList, .todo, .quote, .callout, .code, .tableCell:
             return true
-        case .divider, .image, .file, .table, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
+        case .divider, .image, .file, .table, .tableRow,
+             .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
             return false
         }
+    }
+
+    /// `true` pour un `table`/`tableRow`/`tableCell` -- voir la documentation de
+    /// `handleBackspaceAtStart(in:)` ci-dessus, seul appelant.
+    private static func isTableStructural(_ type: BlockType) -> Bool {
+        type == .table || type == .tableRow || type == .tableCell
     }
 }
