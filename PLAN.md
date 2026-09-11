@@ -34,7 +34,7 @@
 - [x] 🎨 **Phase 9 — Médias & pièces jointes** (images insérer/redimensionner, fichiers) → `docs/09_medias_pieces_jointes.md`
 - [x] **Phase 10 — Glisser-déposer & colonnes** (réorganiser les blocs, mise en colonnes) → `docs/10_dragdrop_colonnes.md`
 - [x] **Phase 11 — Organisation des notes** (dupliquer, déplacer, épingler, supprimer, corbeille) → `docs/11_organisation_notes.md`
-- [ ] **Phase 12 — Verrouillage de note** (mot de passe / Touch ID / Face ID) → `docs/12_verrouillage.md`
+- [x] **Phase 12 — Verrouillage de note** (mot de passe / Touch ID / Face ID) → `docs/12_verrouillage.md`
 - [ ] 🎨 **Phase 13 — Thèmes & apparence** (sombre/clair, couleur d'accent personnalisable) → `docs/13_themes_apparence.md`
 - [ ] **Phase 14 — Raccourcis clavier** (navigation complète sans souris) → `docs/14_raccourcis_clavier.md`
 

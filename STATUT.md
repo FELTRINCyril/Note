@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 11.
+**Dernière mise à jour :** fin de la phase 12.
 
 ---
 
 ## En un coup d'œil
 
-**11 / 21 phases terminées.**
+**12 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         ████████░░  75 %   (9/12)  ⏳ en cours
+App v1         █████████░  83 %   (10/12) ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 11 (organisation des notes) validée. Menus contextuels avec sélection multiple et libellés comptés, duplication profonde réellement indépendante, déplacement vers un dossier, épinglage, favori, corbeille complète avec restauration, suppression définitive nommée et purge automatique à 30 jours.
-- **Prochaine étape :** **Phase 12 — Verrouillage de note** (Touch ID, mot de passe, Keychain). Design déjà livré (artboards P3 B-C).
-- **Qualité au dernier point (phase 11) :** 641 tests verts (96 `SlateModel` · 325 `SlateEditor` · 84 `SlateUI` · 57 `SlateServices` · 79 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
+- **Où on en est :** phase 12 (verrouillage de note) validée, avec sa revue de sécurité dédiée. Mot de passe unique d'app vérifié par PBKDF2 dans le Keychain, Touch ID avec repli mot de passe, écran de verrou, re-verrouillage automatique sur quatre déclencheurs. **Une faille réelle trouvée en revue et corrigée** : dupliquer une note verrouillée produisait une copie déverrouillée avec tout son contenu en clair.
+- **Prochaine étape :** **Phase 13 — Thèmes & apparence** (clair/sombre/système, accent personnalisable, fenêtre de réglages). Design déjà livré (artboards P4 A-C).
+- **Qualité au dernier point (phase 12) :** 700 tests verts (101 `SlateModel` · 325 `SlateEditor` · 84 `SlateUI` · 94 `SlateServices` · 96 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -48,8 +48,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `4c27bf6` |
 | 10 | Glisser-déposer & colonnes | ✅ | 🎨 ✔️ | `6462112` |
 | 11 | Organisation des notes | ✅ | 🎨 ✔️ | `d568887` |
-| 12 | Verrouillage de note | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 13 | Thèmes & apparence | ⬜ | 🎨 ✔️ | — |
+| 12 | Verrouillage de note | ✅ | 🎨 ✔️ | `PH12` |
+| 13 | Thèmes & apparence | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 14 | Raccourcis clavier | ⬜ | — | — |
 
 ### Jalon v2 — Puissance Notion
@@ -126,6 +126,12 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 11 — Confirmation de suppression reconstruite à la main :** le design exige que le bouton destructif ait le focus **sans** être déclenché par Entrée. Un `NSAlert` natif lie toujours son bouton par défaut à Entrée, d'où une confirmation reconstruite. Non vérifiable sans fenêtre. ✅
 - **Phase 11 — Favori ajouté au menu contextuel** bien que la maquette A ne le montre pas : `docs/11` en fait un livrable et un critère d'acceptation, et la section Favoris de la barre latérale existe depuis la phase 3 - sans cette action elle serait impossible à remplir, ce qui est plus gênant qu'un écart de maquette. ✅
 
+- **Phase 12 — PÉRIMÈTRE RÉEL DU VERROU, à énoncer honnêtement :** le contenu des blocs n'est **pas chiffré**. Le verrou protège contre un tiers qui utilise le Mac pendant que la session est ouverte : contenu, pièces jointes et extraits invisibles, contenu introuvable par la recherche. Il ne protège **pas** contre un accès au fichier du store SwiftData (disque démonté, sauvegarde Time Machine non chiffrée, accès root) ni contre un accès aux données CloudKit avec les identifiants iCloud : les blocs y sont en clair. FileVault et le compte iCloud sont la ligne de défense à ce niveau. Chiffrer coûterait la recherche plein texte sur ces notes, une migration de schéma, et introduirait un risque de **perte définitive** en cas d'oubli du mot de passe - alors qu'aujourd'hui oublier le mot de passe n'empêche que la relecture. Décision : ne pas chiffrer maintenant, et le dire clairement plutôt que de laisser croire à une protection plus forte. ✅
+- **Phase 12 — L'invariant de fuite est posé à la source, pas au point de lecture :** `plainText` et `snippetText` sont des champs dérivés **en clair**, stockés en base et synchronisés vers CloudKit, que la liste affiche et que la recherche interroge. Verrouiller sans les vider aurait donné un verrou en trompe-l'oeil. `refreshDerivedText()` fait donc respecter inconditionnellement "une note verrouillée n'a jamais d'extrait", quel que soit l'appelant - défense en profondeur plutôt que vérification dispersée chez chaque lecteur. ✅
+- **Phase 12 — Secret : vérificateur, jamais le mot de passe.** PBKDF2-HMAC-SHA256, 200 000 itérations, sel aléatoire de 16 octets, comparaison à temps constant, stocké au Keychain en `kSecAttrAccessibleWhenUnlockedThisDeviceOnly` - donc **jamais synchronisé vers iCloud**. Le mot de passe n'est ni stockable ni récupérable, seulement vérifiable. Conséquence bénigne à connaître : la suite de tests de `SlateServices` passe de 0,4 s à 40 s, c'est le coût normal d'une vraie dérivation de clé. ✅
+- **Phase 12 — FAILLE TROUVÉE EN REVUE : duplication d'une note verrouillée.** `NoteActionsService.duplicate` forçait `isLocked: false` sur la copie. Comme `lock()` ne vide jamais les blocs (seulement les dérivés), la copie recevait l'intégralité du contenu en clair et `refreshDerivedText()` repeuplait extrait et index de recherche. Contournement complet du verrou, en deux clics, sans authentification, par une action anodine du menu contextuel. La copie hérite désormais de `isLocked`, et comme le mot de passe est unique au niveau de l'app, elle reste déverrouillable normalement. Test de régression ajouté. ✅
+- **Phase 12 — Quatre déclencheurs de re-verrouillage :** fermeture de la note, inactivité (5 min par défaut), verrouillage de l'écran macOS, et extinction de l'app. Ce dernier ne peut être observé que depuis `App/SlateApp.swift` : un package ne voit pas le cycle de vie `NSApplication`. Sans lui, déverrouiller une note puis quitter Slate la laissait déverrouillée **en base**, donc de nouveau visible et indexée au lancement suivant. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -174,10 +180,15 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **"Déplacer vers" liste les dossiers à plat**, sans regroupement par section.
 - **Raccourcis du menu contextuel actifs seulement menu ouvert** (⌃⌘P, ⌘D, ⌘⌫) : un raccourci global demanderait une `CommandGroup` au niveau de l'app, ce qui relève de la phase 14.
 - **Sélection multiple par Cmd/Maj-clic lue via `NSEvent.modifierFlags`** : aucune autre voie SwiftUI sur macOS pour ce geste.
+- **Un arrêt brutal laisse une note déverrouillée en base** (plantage, `kill -9`, coupure de courant) : `applicationWillTerminate` n'est alors jamais appelé. La correction de fond serait de **ne jamais persister l'état déverrouillé** - garder `isLocked` vrai en permanence et ne porter le déverrouillage que dans l'état de session, façon Notes d'Apple. C'est un changement de modèle à part entière, pas un correctif ponctuel.
+- **Toggle Touch ID des réglages en lecture seule** : `LockService.setPassword` est le seul point d'écriture du secret, volontairement, donc changer l'autorisation biométrique impose de redéfinir le mot de passe. Le toggle est affiché et désactivé ; le vrai changement passe par "Modifier...".
+- **Pas de date "Défini le..."** dans les réglages : le service ne persiste aucune date de définition, et je préfère un champ absent à une date inventée.
+- **Fenêtre de réglages non construite** : seul le contenu de l'onglet Verrouillage existe, prêt à être intégré. La fenêtre complète est le sujet de la phase 13.
+- **Biométrie et verrouillage d'écran non testables ici** : pas de matériel biométrique ni de session graphique. Seules la logique environnante et le câblage des notifications ont été relus.
 
 ## Prochaine action concrète
-La **phase 12 — Verrouillage de note**. Design déjà livré : artboards **B** (cas de la note verrouillée en corbeille) et **C** (écran de note verrouillée, dialogue de définition du mot de passe) de `design/_design_complet/Slate P3 - Organisation & sécurité.dc.html`.
+La **phase 13 — Thèmes & apparence**. Design déjà livré : artboards **A** (onglet Apparence et les trois autres onglets), **B** (les 8 accents avec leurs contrastes mesurés) et **C** (le même écran sous trois accents) de `design/_design_complet/Slate P4 - Réglages & apparence.dc.html`.
 
-`Note.isLocked` existe depuis la phase 2, et la corbeille gère déjà le cas "Déverrouiller pour restaurer". Restent à construire : un `LockService` dans `SlateServices` basé sur `LocalAuthentication`, le stockage du secret dans le **Keychain** (jamais en clair, jamais dans SwiftData ni CloudKit), l'écran de verrou, et le re-verrouillage automatique.
+C'est la phase où la fenêtre de réglages se construit enfin (largeur fixe 620 pt, onglets en haut, pas de barre latérale, grammaire "un réglage = une ligne"), et elle récupère l'onglet Verrouillage déjà écrit en phase 12.
 
-C'est la phase la plus sensible du jalon : le doc réclame une **revue de sécurité dédiée**. Le risque principal n'est pas le déverrouillage lui-même mais la **fuite par les chemins latéraux** : `Note.plainText` et `snippetText` sont des champs dérivés en clair, alimentés par `refreshDerivedText()`, et la recherche de la phase 4 les interroge. Une note verrouillée ne doit exposer ni contenu, ni extrait, ni pièces jointes. Le niveau de chiffrement réel des blocs (au-delà de la simple exclusion) reste une décision ouverte de `docs/12`.
+Deux points de vigilance. D'abord `text.onAccent` doit devenir **une fonction de l'accent** : le design a mesuré que le blanc ne tient pas sur orange, jaune, vert et graphite, qui imposent du texte noir - or `SlateAccent.onAccent` ne bascule aujourd'hui qu'en jaune. Ensuite `text.link` doit être **dérivé** de l'accent courant et non plus constant, sinon un accent vert donnerait un lien à 2,0:1 (le token `textLink` de la phase 7 porte déjà cette note). Le doc demande enfin un audit des couleurs codées en dur accumulées depuis la phase 3.

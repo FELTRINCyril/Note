@@ -16,16 +16,31 @@ struct FavoriteNoteRow: View {
 
     var body: some View {
         SidebarRow(title: displayTitle) {
-            Image(systemName: "star.fill")
-                .slateIconFont(SlateGeometry.sidebarBadgeIconSize, relativeTo: .subheadline)
-                .foregroundStyle(SlateColor.foreground(SlateFolderColor.yellow.color, onAccentFill: isOnAccentFill))
+            HStack(spacing: Spacing.xs) {
+                // Cadenas (Phase 12, `docs/12_verrouillage.md` : "indicateur dans la liste
+                // ET la barre laterale"). Ne revele jamais rien du contenu -- seul
+                // `note.isLocked`, un booleen, est lu ici.
+                if note.isLocked {
+                    Image(systemName: "lock.fill")
+                        .slateIconFont(SlateGeometry.sidebarBadgeIconSize, relativeTo: .subheadline)
+                        .foregroundStyle(SlateColor.foreground(SlateColor.textSecondary, onAccentFill: isOnAccentFill))
+                }
+                Image(systemName: "star.fill")
+                    .slateIconFont(SlateGeometry.sidebarBadgeIconSize, relativeTo: .subheadline)
+                    .foregroundStyle(SlateColor.foreground(SlateFolderColor.yellow.color, onAccentFill: isOnAccentFill))
+            }
         }
-        .accessibilityLabel(
-            String(
-                format: String(localized: "sidebar.favorites.accessibilityLabel", bundle: .module),
-                displayTitle
-            )
+        .accessibilityLabel(accessibilityLabelText)
+    }
+
+    private var accessibilityLabelText: String {
+        let base = String(
+            format: String(localized: "sidebar.favorites.accessibilityLabel", bundle: .module),
+            displayTitle
         )
+        guard note.isLocked else { return base }
+        let lockedSuffix = String(localized: "noteList.cell.accessibility.locked", bundle: .module)
+        return "\(base), \(lockedSuffix)"
     }
 
     private var displayTitle: String {

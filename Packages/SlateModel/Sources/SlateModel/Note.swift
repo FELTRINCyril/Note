@@ -33,6 +33,20 @@ import SwiftData
 /// sur une relation `@Model`) : le recalcul est donc explicite plutot qu'automatique et
 /// silencieux.
 ///
+/// ## Verrouillage (Phase 12) : ces memes champs sont LE risque de fuite a traiter
+///
+/// `plainText`/`snippetText` sont stockes en clair dans le store SwiftData, donc
+/// synchronises tels quels vers CloudKit, et c'est precisement sur eux que
+/// `NoteListQuery` s'appuie pour l'extrait de la liste et la recherche plein texte.
+/// Verrouiller une note (`isLocked = true`) sans les vider laisserait son contenu
+/// parfaitement lisible par ces deux chemins detournes - un verrou en trompe-l'oeil.
+/// `refreshDerivedText()` fait donc respecter un invariant fort, verifie a chaque
+/// recalcul quel qu'en soit l'appelant : **une note verrouillee n'a jamais de
+/// `plainText`/`snippetText` non vides.** `lock()`/`unlock()` sont le point d'entree
+/// attendu pour changer `isLocked` (voir plus bas) ; le titre n'est deliberement pas
+/// touche, il reste visible note verrouillee ou non (choix explicite du design,
+/// signale dans le dialogue de definition du mot de passe).
+///
 /// ## `refreshDerivedText()` : point d'entree UNIQUE de recalcul (decision Cyril, Phase 4)
 ///
 /// Ce nom (renomme depuis `updateDerivedText()`) est volontairement descriptif d'un
@@ -156,7 +170,19 @@ public final class Note {
     /// `collectText`). A appeler explicitement apres toute mutation de `blocks` ou du
     /// texte d'un bloc (voir la documentation de ce type) - **point d'entree unique**,
     /// voir la section dediee plus haut sur ce type.
+    ///
+    /// Si la note est verrouillee (`isLocked`), vide les deux champs au lieu de les
+    /// recalculer : c'est l'invariant de securite documente plus haut, applique ici
+    /// inconditionnellement pour qu'aucun appelant (present ou futur, y compris un
+    /// appel maladroit depuis l'editeur sur une note verrouillee) ne puisse
+    /// repeupler ces champs en clair tant que la note reste verrouillee.
     public func refreshDerivedText() {
+        guard !isLocked else {
+            plainText = ""
+            snippetText = ""
+            return
+        }
+
         let orderedTexts = Self.collectText(from: blocks ?? [])
 
         plainText = orderedTexts.joined(separator: "\n")
@@ -167,5 +193,23 @@ public final class Note {
         } else {
             snippetText = plainText
         }
+    }
+
+    /// Verrouille cette note : `isLocked` passe a `true` et `plainText`/`snippetText`
+    /// sont immediatement vides (voir `refreshDerivedText()`) pour ne plus rien
+    /// exposer via l'extrait de la liste ou la recherche plein texte, y compris dans
+    /// le store synchronise vers CloudKit. Les blocs eux-memes ne sont pas modifies :
+    /// c'est le contenu **derive** qui est traite, pas un chiffrement du contenu
+    /// (voir `docs/12_verrouillage.md` et la recommandation associee).
+    public func lock() {
+        isLocked = true
+        refreshDerivedText()
+    }
+
+    /// Deverrouille cette note : `isLocked` passe a `false` puis `plainText`/
+    /// `snippetText` sont reconstruits a partir des blocs actuels.
+    public func unlock() {
+        isLocked = false
+        refreshDerivedText()
     }
 }

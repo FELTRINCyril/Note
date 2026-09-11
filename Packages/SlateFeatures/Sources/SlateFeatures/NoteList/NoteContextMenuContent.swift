@@ -13,13 +13,16 @@ import SlateModel
 /// grammaire visuelle que "Epingler" (bascule sur l'etat dominant de la selection,
 /// voir `isAllFavorite`).
 ///
-/// Deux entrees restent volontairement INERTES dans cette phase, chacune documentee a
-/// l'appel :
-/// - "Verrouiller" : la Phase 12 (verrouillage) n'est pas encore implementee. L'entree
-///   est presente (le raccourci ⌃⌘L existe deja dans la maquette) mais desactivee.
+/// Une entree reste volontairement INERTE dans cette phase, documentee a l'appel :
 /// - "Exporter..." : aucun mecanisme d'export n'existe dans le code a ce jour (aucune
 ///   phase dediee, aucun format defini). Ecart assume, a signaler explicitement plutot
 ///   que d'inventer un format d'export non specifie.
+///
+/// "Verrouiller la note" (Phase 12, `docs/12_verrouillage.md`) est actif depuis cette
+/// phase : desactive uniquement si la selection est vide ou contient deja au moins une
+/// note verrouillee (voir `isLockDisabled(for:)`) -- deverrouiller ne passe jamais par
+/// ce menu (regle de securite : deverrouiller exige une authentification, voir
+/// `LockedNoteView`/`NoteDetailColumnView`, jamais un simple clic de menu).
 struct NoteContextMenuContent: View {
     let selection: [Note]
     /// Dossiers candidats pour "Deplacer vers" (design : liste plate du workspace
@@ -29,6 +32,7 @@ struct NoteContextMenuContent: View {
 
     let onTogglePin: () -> Void
     let onToggleFavorite: () -> Void
+    let onLock: () -> Void
     let onDuplicate: () -> Void
     let onMove: (Folder) -> Void
     let onRequestNewFolder: () -> Void
@@ -65,12 +69,11 @@ struct NoteContextMenuContent: View {
             Label(favoriteLabel, systemImage: isAllFavorite ? "star.slash" : "star")
         }
 
-        Button {
-        } label: {
+        Button(action: onLock) {
             Label(String(localized: "noteList.contextMenu.lock", bundle: .module), systemImage: "lock")
         }
         .keyboardShortcut("l", modifiers: [.control, .command])
-        .disabled(true)
+        .disabled(Self.isLockDisabled(for: selection))
 
         Button(action: onDuplicate) {
             Label(NoteSelectionActionLabels.duplicate(count: count), systemImage: "doc.on.doc")
@@ -134,5 +137,13 @@ struct NoteContextMenuContent: View {
 
     private func isCurrentFolder(_ folder: Folder) -> Bool {
         count == 1 && selection.first?.folder?.id == folder.id
+    }
+
+    /// Vrai si "Verrouiller la note" doit etre desactive : selection vide, ou
+    /// contenant deja au moins une note verrouillee (deverrouiller ne passe jamais par
+    /// ce menu, voir la documentation de tete). Fonction PURE et `static`, testable
+    /// sans construire de vue (meme motif que `NoteListView.partitionByPinned`).
+    static func isLockDisabled(for selection: [Note]) -> Bool {
+        selection.isEmpty || selection.contains(where: \.isLocked)
     }
 }

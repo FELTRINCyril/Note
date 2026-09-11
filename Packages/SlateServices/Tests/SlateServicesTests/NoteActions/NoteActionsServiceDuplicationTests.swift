@@ -171,4 +171,30 @@ struct NoteActionsServiceDuplicationTests {
         #expect(copy.isTrashed == false)
         #expect(copy.trashedAt == nil)
     }
+
+    /// Regression Phase 12 (revue de securite) : dupliquer une note verrouillee ne
+    /// doit JAMAIS produire une copie deverrouillee. Sans quoi le menu contextuel -
+    /// qui n'exige aucune authentification pour "Dupliquer" - deviendrait un
+    /// contournement complet du verrou : la copie exposerait en clair (extrait,
+    /// recherche, ouverture) tout le contenu que l'original protegeait.
+    @Test
+    func duplicateOfLockedNotePreservesLockAndDerivedTextInvariant() throws {
+        let container = try SlateContainer.make(inMemory: true)
+        let context = ModelContext(container)
+        let note = NoteActionsFixtures.makeRichNote(in: context)
+        note.refreshDerivedText()
+        try context.save()
+        #expect(!note.plainText.isEmpty)
+
+        note.lock()
+        #expect(note.plainText.isEmpty)
+        #expect(note.snippetText.isEmpty)
+
+        let copy = service.duplicate(note, in: context, locale: NoteActionsFixtures.frenchLocale)
+        try context.save()
+
+        #expect(copy.isLocked == true)
+        #expect(copy.plainText.isEmpty)
+        #expect(copy.snippetText.isEmpty)
+    }
 }

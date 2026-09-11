@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import SwiftData
 import SlateModel
@@ -14,9 +15,18 @@ public struct MainWindowView: View {
     @Environment(\.appState) private var appState
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.lockService) private var lockService
 
     @State private var columnLayout = ColumnLayoutState.all
     @State private var bootstrapError: (any Error)?
+
+    /// Notification distribuee emise par macOS au verrouillage de l'ecran (aucune API
+    /// SwiftUI/`NSWorkspace` dediee pour cet evenement precis, contrairement au
+    /// sommeil de l'ecran -- c'est la notification que le systeme lui-meme utilise
+    /// pour tout ce qui doit reagir a un verrouillage). Voir
+    /// `AutoRelockCoordinator.relockAllUnlockedNotes` : "reverrouillage automatique...
+    /// au verrouillage de l'app" (`docs/12_verrouillage.md`).
+    private static let screenLockedNotification = Notification.Name("com.apple.screenIsLocked")
 
     public init() {}
 
@@ -36,6 +46,9 @@ public struct MainWindowView: View {
         .task {
             await bootstrapWorkspaceIfNeeded()
             purgeExpiredTrash()
+        }
+        .onReceive(DistributedNotificationCenter.default().publisher(for: Self.screenLockedNotification)) { _ in
+            AutoRelockCoordinator.relockAllUnlockedNotes(appState: appState, lockService: lockService)
         }
     }
 

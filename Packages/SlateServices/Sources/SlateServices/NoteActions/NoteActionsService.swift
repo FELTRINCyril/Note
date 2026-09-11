@@ -49,12 +49,25 @@ public struct NoteActionsService: Sendable {
     /// c'est le point d'entrée unique de ce recalcul), plutôt que recopiés depuis
     /// l'original : c'est la même donnée dérivée, la calculer à neuf est aussi sûr
     /// et évite de dépendre d'un état potentiellement obsolète de l'original.
+    ///
+    /// ## Sécurité (Phase 12) : `isLocked` est préservé, jamais forcé à `false`
+    ///
+    /// Les blocs eux-mêmes ne sont jamais vidés par le verrouillage (voir
+    /// `Note.lock()` : seuls `plainText`/`snippetText` le sont) - c'est un choix
+    /// assumé, pas un chiffrement. Si la copie d'une note verrouillée démarrait
+    /// déverrouillée, elle exposerait donc en clair (extrait, recherche, contenu
+    /// ouvert sans authentification) tout le contenu que l'original protégeait,
+    /// via un menu contextuel qui n'exige lui-même aucune authentification
+    /// (`NoteContextMenuContent` n'a jamais désactivé "Dupliquer" pour une note
+    /// verrouillée). Propager `isLocked` maintient la copie derrière le même mot de
+    /// passe d'app que l'original, et `refreshDerivedText()` ci-dessous fait alors
+    /// respecter l'invariant habituel (champs dérivés vides tant que verrouillée).
     @MainActor
     public func duplicate(_ note: Note, in context: ModelContext, locale: Locale = .current) -> Note {
         let copy = Note(
             title: Self.duplicatedTitle(from: note.title, locale: locale),
             isPinned: false,
-            isLocked: false,
+            isLocked: note.isLocked,
             isFavorite: false,
             isTrashed: false,
             trashedAt: nil,

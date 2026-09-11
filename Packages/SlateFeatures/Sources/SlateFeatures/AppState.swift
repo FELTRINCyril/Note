@@ -48,6 +48,30 @@ public final class AppState {
     /// detail (Phase 5).
     public var selectedNote: Note?
 
+    /// Notes verrouillees (`Note.isLocked`) deverrouillees PENDANT cette session
+    /// (Phase 12, `docs/12_verrouillage.md` : "reverrouillage automatique a la
+    /// fermeture de la note, apres inactivite, ou au verrouillage de l'app").
+    ///
+    /// Sert de registre : `Note.isLocked == false` ne suffit pas a savoir si une note
+    /// doit se reverrouiller automatiquement (une note qui n'a jamais ete protegee a
+    /// aussi `isLocked == false`, et ne doit evidemment jamais se faire verrouiller
+    /// "automatiquement" a sa place). Seule une note explicitement deverrouillee via
+    /// `LockService.unlock(_:password:)`/`unlock(_:usingBiometricsReason:)` entre ici
+    /// (voir `NoteDetailColumnView`) ; elle en ressort des que `AutoRelockCoordinator`
+    /// la reverrouille, ou immediatement si l'utilisateur la reverrouille lui-meme.
+    public var recentlyUnlockedNotes: [Note] = []
+
+    /// Enregistre `note` comme deverrouillee cette session (idempotent).
+    public func markNoteRecentlyUnlocked(_ note: Note) {
+        guard !recentlyUnlockedNotes.contains(where: { $0.id == note.id }) else { return }
+        recentlyUnlockedNotes.append(note)
+    }
+
+    /// Retire `note` du registre (apres reverrouillage, manuel ou automatique).
+    public func removeRecentlyUnlockedNote(_ note: Note) {
+        recentlyUnlockedNotes.removeAll { $0.id == note.id }
+    }
+
     public init(
         selectedWorkspace: Workspace? = nil,
         selectedFolder: Folder? = nil,

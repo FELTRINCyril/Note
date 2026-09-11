@@ -106,6 +106,32 @@ extension NoteListView {
         try? noteActions.setFavorite(shouldFavorite, for: selection)
     }
 
+    /// "Verrouiller la note" (Phase 12, `docs/12_verrouillage.md`). Si aucun mot de
+    /// passe d'app n'est encore defini, propose D'ABORD de le definir (feuille
+    /// `SetPasswordSheet`) et memorise la selection pour la verrouiller une fois la
+    /// definition validee (`lockPendingSelection`) -- jamais de verrouillage silencieux
+    /// sans mot de passe utilisable pour deverrouiller ensuite.
+    func lockSelection(clicking note: Note) {
+        let selection = selectionForContextMenu(clicking: note)
+        guard lockService.isPasswordSet else {
+            pendingLockSelection = selection
+            isSetPasswordSheetPresented = true
+            return
+        }
+        for target in selection {
+            lockService.lock(target)
+        }
+    }
+
+    /// Verrouille la selection memorisee par `lockSelection(clicking:)` une fois le mot
+    /// de passe d'app defini avec succes (voir le `.sheet` de `NoteListView`).
+    func lockPendingSelection() {
+        for target in pendingLockSelection {
+            lockService.lock(target)
+        }
+        pendingLockSelection = []
+    }
+
     func duplicateSelection(clicking note: Note) {
         let selection = selectionForContextMenu(clicking: note)
         _ = try? noteActions.duplicate(selection)
