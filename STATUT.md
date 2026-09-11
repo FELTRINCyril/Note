@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 9.
+**Dernière mise à jour :** fin de la phase 10.
 
 ---
 
 ## En un coup d'œil
 
-**9 / 21 phases terminées.**
+**10 / 21 phases terminées.**
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
-App v1         ██████░░░░  58 %   (7/12)  ⏳ en cours
+App v1         ███████░░░  67 %   (8/12)  ⏳ en cours
 Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 9 (médias & pièces jointes) validée. Import d'image (redimensionnement et recompression bornés à l'entrée), blocs image et fichier joint réellement rendus, légende, paliers de largeur, ouverture et révélation dans le Finder, refus motivés. Les binaires restent hors base via `externalStorage`. Un crash réel trouvé en revue (suppression d'un bloc pendant un import en vol) et corrigé.
-- **Prochaine étape :** **Phase 10 — Glisser-déposer & colonnes**. Elle reprend deux reports explicites de la phase 9, voir ci-dessous.
-- **Qualité au dernier point (phase 9) :** 536 tests verts (96 `SlateModel` · 285 `SlateEditor` · 61 `SlateUI` · 37 `SlateServices` · 57 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
+- **Où on en est :** phase 10 (glisser-déposer & colonnes) validée. Réordonnancement de blocs à la souris avec ligne d'insertion, déplacement multi-blocs, mise en colonnes par dépôt latéral avec dissolution propre, équivalent clavier ⌃⌘+flèches annoncé à VoiceOver. Les **deux reports de la phase 9 sont soldés** : dépôt de fichiers n'importe où dans l'éditeur, et paliers de largeur d'image hors colonne enfin proposés.
+- **Prochaine étape :** **Phase 11 — Organisation des notes** (dupliquer, déplacer, épingler, favori, corbeille). Design déjà livré (artboard P3 A-B).
+- **Qualité au dernier point (phase 10) :** 599 tests verts (96 `SlateModel` · 325 `SlateEditor` · 84 `SlateUI` · 37 `SlateServices` · 57 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -46,8 +46,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | 7 | Typographie & formatage | ✅ | 🎨 ✔️ | `3e62e82` |
 | 8 | Blocs spéciaux | ✅ | 🎨 ✔️ | `89c3d55` |
 | 9 | Médias & pièces jointes | ✅ | 🎨 ✔️ | `4c27bf6` |
-| 10 | Glisser-déposer & colonnes | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 11 | Organisation des notes | ⬜ | — | — |
+| 10 | Glisser-déposer & colonnes | ✅ | 🎨 ✔️ | `PHASE10` |
+| 11 | Organisation des notes | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 12 | Verrouillage de note | ⬜ | — | — |
 | 13 | Thèmes & apparence | ⬜ | 🎨 ✔️ | — |
 | 14 | Raccourcis clavier | ⬜ | — | — |
@@ -113,6 +113,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 9 — Alignement et palier de largeur sont un seul réglage :** le design n'expose qu'une barre unique mêlant les deux, d'où un unique `imageAlignment` (5 cas) plutôt que deux champs parallèles. ✅
 - **Phase 9 — Locale paramétrable plutôt que figée :** `formattedFileSize` et les libellés de type forçaient `fr_FR` pour rendre les tests déterministes. Un utilisateur anglais aurait lu "1,8 Mo" au lieu de "1.8 MB". La locale est devenue un paramètre (défaut `.current`) : le déterminisme d'un test vient de la locale qu'il injecte, jamais d'une locale figée en production. ✅
 
+- **Phase 10 — `DropDelegate` historique plutôt que `dropDestination` :** le `dropDestination(for:action:isTargeted:)` moderne ne donne la position du pointeur qu'au dépôt final (`isTargeted` n'est qu'un booléen), or la ligne d'insertion doit suivre le pointeur en continu. `DropDelegate.dropUpdated(info:)` est le seul point d'entrée SwiftUI qui fournit `info.location` à chaque déplacement. ✅
+- **Phase 10 — Sortie de colonne sans toucher au chemin par défaut :** `EditorContentColumn` enveloppe toute la liste de blocs d'un coup et est partagé par l'en-tête de note ; le modifier à la racine aurait risqué toute la mise en page de l'éditeur. Retenu : le conteneur publie sa largeur mesurée dans l'environnement (mesure passive en arrière-plan, jamais un `GeometryReader` en corps de vue qui forcerait une taille infinie), et le bloc qui déborde applique un `frame` sur son propre contenu. Le bord gauche ne bouge donc jamais, ce qui préserve l'alignement vertical des poignées de chrome et la marge commune exigée par la spec E4. ✅
+- **Phase 10 — Garde anti-cycle au dépôt :** déposer un bloc dans son propre sous-arbre est refusé. Ce n'est pas une précaution théorique : le glisser-déposer est le **premier chemin du projet capable de créer un cycle parent/enfant**, et `refreshDerivedText()` est récursif depuis la phase 8 sans protection - ce qui était acceptable tant qu'aucun chemin ne pouvait en produire un. ✅
+- **Phase 10 — Dissolution des colonnes :** une colonne vidée disparaît ; s'il ne reste qu'une colonne, le `columnList` disparaît aussi et son contenu remonte au niveau du document. Les blocs de structure retirés sont **réellement purgés du `ModelContext`** par `EditorController`, `ColumnStructure` se contentant de détacher - même partage de responsabilité qu'en phase 8, et même piège évité. ✅
+- **Phase 10 — Un bug de cache trouvé en chemin :** `BlockOrdering.detachPreservingChildren(_:)` n'invalide pas le cache par contrat ; enchaîner deux détachements sans lecture intermédiaire faisait réapparaître un bloc fantôme à la racine. Corrigé en réutilisant `BlockOrdering.insert(_:after:)`, qui invalide déjà, plutôt qu'en réécrivant une insertion maison. ✅
+- **Phase 10 — Gestes non concurrents :** redimensionnement d'image, de colonne de tableau, de colonnes, et sélection de plage passent tous par `DragGesture`, un mécanisme distinct de `.draggable`/`onDrop(delegate:)`. Le `DropDelegate` est attaché une seule fois, sur le conteneur qui porte déjà l'espace de coordonnées de la liste de blocs : aucune interception croisée possible par construction. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -142,21 +149,23 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Pas de protection anti-cycle dans `refreshDerivedText()`** : aucun chemin de code ne peut construire un cycle parent/enfant aujourd'hui, le risque est théorique.
 - **`---` vers séparateur** non implémenté : raccourci markdown réservé à la phase 15.
 - **Rendu visuel de la phase 8 non vérifié** (coloration syntaxique, débordement du bloc de code, glisser de redimensionnement de colonne, menu contextuel de cellule, apparition de la barre d'outils au survol) : aucune fenêtre disponible. Seule la logique pure est couverte par les tests.
-- **REPORT EXPLICITE EN PHASE 10 — dépôt de fichiers n'importe où dans l'éditeur** (artboard C de P2 : ligne d'insertion entre deux blocs, badge de comptage à partir de 2 fichiers, voile de dépôt sur la note entière, plusieurs fichiers déposés créant plusieurs blocs). Livré en phase 9 : le dépôt **sur la zone vide d'un bloc** média. Non livré : le dépôt libre dans l'éditeur, qui partage toute son infrastructure de détection de frontière avec le glisser-déposer de blocs, c'est-à-dire la phase 10. Les deux doivent être construits dans la même passe plutôt que deux fois.
-- **REPORT EXPLICITE EN PHASE 10 — paliers de largeur hors colonne** (débord 960 pt, pleine largeur). `EditorContentColumn` plafonne la largeur à 720 + 48 pt et enveloppe **toute la liste de blocs d'un coup**, pas chaque bloc : aucun bloc ne peut sortir de la colonne aujourd'hui. Les deux paliers ne sont donc volontairement **pas proposés** (`EditorController.availableImageAlignments`), plutôt qu'affichés sans effet - même règle d'honnêteté d'interface qu'en phase 6. Les largeurs restent calculées, prêtes à servir. La phase 10 doit de toute façon revoir ce conteneur pour la mise en colonnes.
+- ~~REPORT PHASE 9~~ **SOLDÉ en phase 10** - dépôt de fichiers n'importe où dans l'éditeur (artboard C de P2 : ligne d'insertion entre deux blocs, badge de comptage à partir de 2 fichiers, voile de dépôt sur la note entière, plusieurs fichiers déposés créant plusieurs blocs). Livré en phase 9 : le dépôt **sur la zone vide d'un bloc** média. Non livré : le dépôt libre dans l'éditeur, qui partage toute son infrastructure de détection de frontière avec le glisser-déposer de blocs, c'est-à-dire la phase 10. Les deux doivent être construits dans la même passe plutôt que deux fois.
+- ~~REPORT PHASE 9~~ **SOLDÉ en phase 10** - paliers de largeur hors colonne (débord 960 pt, pleine largeur). `EditorContentColumn` plafonne la largeur à 720 + 48 pt et enveloppe **toute la liste de blocs d'un coup**, pas chaque bloc : aucun bloc ne peut sortir de la colonne aujourd'hui. Les deux paliers ne sont donc volontairement **pas proposés** (`EditorController.availableImageAlignments`), plutôt qu'affichés sans effet - même règle d'honnêteté d'interface qu'en phase 6. Les largeurs restent calculées, prêtes à servir. La phase 10 doit de toute façon revoir ce conteneur pour la mise en colonnes.
 - **Barre de progression d'import sans pourcentage réel** : l'import est synchrone (décodage ImageIO), lancé en `Task.detached` pour ne pas geler l'interface, mais la barre ne progresse pas continûment.
 - **⌘V ne crée un bloc image que sur une image déjà sélectionnée**, pas pendant la frappe dans un bloc de texte. Intercepter le collage dans TextKit est un sous-système délicat, laissé de côté volontairement. Vérifié que le collage de texte ordinaire n'est pas cassé.
 - **"1 pages" au singulier** : le libellé de métadonnées PDF n'a pas de forme plurielle. Cosmétique, demanderait une pluralisation.
 - **`SlateServices` n'a aucun catalogue `.xcstrings`** : ses libellés de type de fichier et ses messages d'erreur passent par une table FR/EN interne, avec locale paramétrable. Cohérent et testable, mais ce n'est pas le mécanisme standard du projet. Chantier léger et distinct si tu veux l'aligner.
 - **Deux teintes dérivées faute de valeur au design** : la ligne de cause d'erreur en thème clair et la pastille de tableur en thème sombre n'ont pas de valeur dans les maquettes, elles ont été dérivées par cohérence. À valider à l'œil.
 - **Aucune vérification visuelle de la phase 9** : les 4 états du bloc image, le geste de redimensionnement, le popover de menu média et l'expérience VoiceOver ne sont couverts que par lecture de code et tests de logique. Aucune fenêtre n'était disponible, ni pour les agents livreurs, ni pour la revue.
+- **Aperçu de glisser non personnalisé** : `BlockDragGhostView` a été construit mais n'est pas injecté, l'API `.draggable` exposée par `BlockHandle` n'ayant pas de paramètre d'aperçu. macOS affiche son instantané par défaut. Le brancher demanderait de faire passer un constructeur d'aperçu à travers trois signatures et deux packages, pour un effet purement cosmétique invérifiable sans fenêtre : laissé tel quel, le composant reste disponible.
+- **Pas de voile distinct au dépôt sur la note entière** : un dépôt hors de tout bloc ajoute à la fin, ce qui est fonctionnellement correct, mais sans le voile `accent.subtle` dédié de l'artboard C.
+- **Glisser annulé hors fenêtre** (Échap, relâché ailleurs) : nettoyé au `dropExited`, faute de hook SwiftUI fiable côté source. Évite un état bloqué, mais le bloc source cesse d'être estompé un peu plus tôt que le design ne le décrit.
+- **Rendu du glisser-déposer jamais observé** : c'est précisément ce qui se vérifie le moins bien par des tests. Ligne d'insertion suivant le pointeur, empilement des colonnes sous 560 pt, redimensionnement du séparateur : uniquement couverts par la logique pure et la compilation.
+- **`swift test` en parallèle sur plusieurs packages produit des échecs fantômes** (`error: fatalError`, symboles introuvables) à cause du `.build` partagé. Rencontré deux fois, sans aucun rapport avec le code. Toujours relancer le package seul avant de conclure.
 
 ## Prochaine action concrète
-La **phase 10 — Glisser-déposer & colonnes**. Design déjà livré : artboards **I** (drag & drop de blocs) et **J** (mise en colonnes) de `design/_design_complet/Slate P1 - Formatage & blocs.dc.html`, plus le composant `ColumnsBlockView` de `design/_design_complet/SlateUI/BlockViews.swift` (fractions, pas des points ; empilement sous 560 pt ou dès `.accessibility1`).
+La **phase 11 — Organisation des notes** (dupliquer, déplacer, épingler, favori, supprimer avec corbeille). Design déjà livré : artboards **A** (menus contextuels de note, sélection multiple) et **B** (corbeille, alerte de suppression définitive) de `design/_design_complet/Slate P3 - Organisation & sécurité.dc.html`.
 
-Trois chantiers à mener dans la même passe, parce qu'ils partagent tous la même infrastructure de détection de frontière de dépôt :
-1. le glisser-déposer de blocs (réordonnancement, indicateur d'insertion, multi-blocs) ;
-2. la mise en colonnes (`columnList`/`column` existent déjà dans `BlockType` depuis la phase 2) ;
-3. **les deux reports de la phase 9** : le dépôt de fichiers n'importe où dans l'éditeur, et la sortie de colonne d'`EditorContentColumn` qui débloquera les paliers de largeur d'image.
+Le modèle est prêt depuis la phase 2 : `Note` porte déjà `isPinned`, `isFavorite`, `isTrashed` et `trashedAt`. Le travail est surtout côté `SlateFeatures` (liste, sidebar) et service d'actions.
 
-Le doc signale deux points de vigilance : la stabilité du focus pendant le drag, et l'intégrité `order`/`parent` avec le cas de dissolution d'une colonne vidée.
+Deux points de vigilance : la **duplication profonde** (tous les blocs et leurs pièces jointes, avec régénération des identifiants) et la **purge automatique après 30 jours**, à ne pas déclencher trop largement. Le design pose trois règles fermes : rien ne disparaît sans passer par la corbeille, rien n'en sort sans une confirmation qui **nomme** la note, et la suppression définitive est la seule action de l'app à porter un bouton destructif rouge plein (d'où le token `semanticErrorFill` déjà en place depuis la phase 7).

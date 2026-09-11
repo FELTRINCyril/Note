@@ -48,7 +48,6 @@ struct BlockRenderRoutingTests {
     @Test("Les blocs riches hors perimetre routent vers le rendu de repli, avec leur type d'origine")
     func outOfScopeTypesRouteToUnsupported() {
         let outOfScope: [BlockType] = [
-            .columnList, .column,
             .bookmark, .embed, .databaseView, .pageLink
         ]
         for type in outOfScope {
@@ -62,10 +61,16 @@ struct BlockRenderRoutingTests {
         #expect(BlockRenderRouting.kind(for: .file) == .file)
     }
 
-    @Test("tableRow/tableCell routent vers le rendu de repli : jamais rendus individuellement")
-    func tableStructuralTypesRouteToUnsupported() {
+    @Test("tableRow/tableCell/column routent vers le rendu de repli : jamais rendus individuellement")
+    func structuralChildTypesRouteToUnsupported() {
         #expect(BlockRenderRouting.kind(for: .tableRow) == .unsupported(.tableRow))
         #expect(BlockRenderRouting.kind(for: .tableCell) == .unsupported(.tableCell))
+        #expect(BlockRenderRouting.kind(for: .column) == .unsupported(.column))
+    }
+
+    @Test("Le columnList (Phase 10) route desormais vers un rendu reel")
+    func columnListRoutesToRealKind() {
+        #expect(BlockRenderRouting.kind(for: .columnList) == .columnList)
     }
 
     @Test("Le callout et le tableau (Phase 8) routent desormais vers un rendu reel")

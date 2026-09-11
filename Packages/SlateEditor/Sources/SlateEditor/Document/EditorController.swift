@@ -110,6 +110,24 @@ public final class EditorController {
     /// `EditorController+Attachments.swift`.
     public internal(set) var attachmentImportFailures: [UUID: String] = [:]
 
+    /// Bloc(s) actuellement SAISIS par la poignee pendant un glisser de
+    /// reordonnancement (Phase 10), vide si aucun glisser n'est en cours -- pilote
+    /// `View.slateDragSourceBlockAppearance()` sur le(s) bloc(s) d'origine. Voir
+    /// `EditorController+DragDrop.swift`.
+    public internal(set) var draggedBlockIDs: Set<UUID> = []
+
+    /// Cible de depot resolue en continu pendant le survol (Phase 10), `nil` si aucun
+    /// glisser n'est en cours ou si le pointeur ne survole aucun bloc mesure -- pilote
+    /// `BlockContainer.dropEdge`. Voir `EditorController+DragDrop.swift`/
+    /// `BlockDropResolution`.
+    public internal(set) var dragTarget: BlockDropTarget?
+
+    /// Nombre de fichiers glisses au-dessus de l'editeur (Phase 9/10), `nil` si le
+    /// glisser en cours ne transporte pas de fichiers -- pilote le badge de comptage de
+    /// `BlockDropIndicatorView` (`SlateUI`, "a partir de 2 fichiers"). Voir
+    /// `EditorController+DragDrop.swift`.
+    public internal(set) var dragFileCount: Int?
+
     /// Pas `private` (acces necessaire depuis `EditorController+Selection.swift`, seul
     /// autre fichier de ce type -- voir sa documentation de tete de fichier).
     let note: Note

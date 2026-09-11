@@ -84,6 +84,9 @@ enum EditorStrings {
         if let mediaLabel = mediaTypeLabel(type) {
             return mediaLabel
         }
+        if let structuralLabel = structuralBlockTypeLabel(type) {
+            return structuralLabel
+        }
         switch type {
         case .paragraph:
             return String(localized: "editor.blockType.paragraph", bundle: .module)
@@ -97,16 +100,29 @@ enum EditorStrings {
             return String(localized: "editor.blockType.quote", bundle: .module)
         case .code:
             return String(localized: "editor.blockType.code", bundle: .module)
-        case .divider:
-            return String(localized: "editor.blockType.divider", bundle: .module)
-        case .callout:
-            return String(localized: "editor.blockType.callout", bundle: .module)
-        case .table:
-            return String(localized: "editor.blockType.table", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .image, .file, .tableRow, .tableCell, .columnList, .column,
-             .bookmark, .embed, .databaseView, .pageLink:
+             .image, .file, .tableRow, .tableCell, .column,
+             .bookmark, .embed, .databaseView, .pageLink,
+             .callout, .table, .columnList, .divider:
             return type.rawValue
+        }
+    }
+
+    /// Libelle de `.callout`/`.table`/`.columnList`/`.divider`, extrait de
+    /// `blockTypeLabel(_:)` pour rester sous la limite de complexite cyclomatique de
+    /// SwiftLint -- meme motif que `mediaTypeLabel(_:)`/`headingTypeLabel(_:)`.
+    private static func structuralBlockTypeLabel(_ type: BlockType) -> String? {
+        switch type {
+        case .callout:
+            String(localized: "editor.blockType.callout", bundle: .module)
+        case .table:
+            String(localized: "editor.blockType.table", bundle: .module)
+        case .columnList:
+            String(localized: "editor.blockType.columnList", bundle: .module)
+        case .divider:
+            String(localized: "editor.blockType.divider", bundle: .module)
+        default:
+            nil
         }
     }
 
@@ -184,6 +200,9 @@ enum EditorStrings {
         if let mediaSubtitle = mediaSlashCommandSubtitle(type) {
             return mediaSubtitle
         }
+        if let structuralSubtitle = structuralSlashCommandSubtitle(type) {
+            return structuralSubtitle
+        }
         switch type {
         case .paragraph:
             return String(localized: "editor.slashCommand.subtitle.paragraph", bundle: .module)
@@ -197,16 +216,28 @@ enum EditorStrings {
             return String(localized: "editor.slashCommand.subtitle.quote", bundle: .module)
         case .code:
             return String(localized: "editor.slashCommand.subtitle.code", bundle: .module)
-        case .divider:
-            return String(localized: "editor.slashCommand.subtitle.divider", bundle: .module)
-        case .callout:
-            return String(localized: "editor.slashCommand.subtitle.callout", bundle: .module)
-        case .table:
-            return String(localized: "editor.slashCommand.subtitle.table", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
-             .image, .file, .tableRow, .tableCell, .columnList, .column,
-             .bookmark, .embed, .databaseView, .pageLink:
+             .image, .file, .tableRow, .tableCell, .column,
+             .bookmark, .embed, .databaseView, .pageLink,
+             .callout, .table, .columnList, .divider:
             return ""
+        }
+    }
+
+    /// Sous-titre de `.callout`/`.table`/`.columnList`/`.divider`, extrait de
+    /// `slashCommandSubtitle(_:)` -- meme motif que `structuralBlockTypeLabel(_:)`.
+    private static func structuralSlashCommandSubtitle(_ type: BlockType) -> String? {
+        switch type {
+        case .callout:
+            String(localized: "editor.slashCommand.subtitle.callout", bundle: .module)
+        case .table:
+            String(localized: "editor.slashCommand.subtitle.table", bundle: .module)
+        case .columnList:
+            String(localized: "editor.slashCommand.subtitle.columnList", bundle: .module)
+        case .divider:
+            String(localized: "editor.slashCommand.subtitle.divider", bundle: .module)
+        default:
+            nil
         }
     }
 

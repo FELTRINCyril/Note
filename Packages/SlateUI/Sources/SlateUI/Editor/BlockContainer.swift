@@ -14,7 +14,11 @@ public struct BlockContainer<Content: View>: View {
     private let isEmpty: Bool
     private let placeholder: String
     /// Bord sur lequel afficher la ligne d'insertion de drag & drop, ou `nil` si ce
-    /// bloc n'est pas la cible courante d'un glisser-depose.
+    /// bloc n'est pas la cible courante d'un glisser-depose. `.top`/`.bottom`
+    /// (comportement d'origine, Phase 5) inserent une ligne HORIZONTALE a la frontiere
+    /// avec le bloc voisin. `.leading`/`.trailing` (Phase 10, artboard I "Depot lateral
+    /// -> colonne") tracent une ligne VERTICALE PLEINE HAUTEUR : le depot sur le bord
+    /// lateral d'un bloc cree une colonne avec lui, au lieu d'inserer une ligne.
     private let dropEdge: Edge?
     /// Hauteur de la premiere ligne du CONTENU reel, pour centrer la poignee dessus.
     /// Dynamic Type (spec E4, "Accessibilite") : l'appelant DOIT passer la hauteur de
@@ -80,7 +84,7 @@ public struct BlockContainer<Content: View>: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.vertical, SlateGeometry.editorBlockSpacing / 2)
-        .overlay(alignment: dropEdge == .top ? .top : .bottom) { dropIndicator }
+        .overlay(alignment: dropOverlayAlignment) { dropIndicator }
         .contentShape(Rectangle())
         .onHover { hovering in
             let animation = SlateMotion.animation(duration: SlateMotion.durationFast, reduceMotion: reduceMotion)
@@ -138,14 +142,39 @@ public struct BlockContainer<Content: View>: View {
         }
     }
 
+    /// Comportement d'origine (Phase 5) preserve a l'identique pour `.top`/`.bottom`/
+    /// `nil` : seuls `.leading`/`.trailing` (Phase 10) sont un ajout.
+    private var dropOverlayAlignment: Alignment {
+        switch dropEdge {
+        case .top: .top
+        case .leading: .leading
+        case .trailing: .trailing
+        case .bottom, nil: .bottom
+        }
+    }
+
     // MARK: - Ligne d'insertion (`SlateColor.blockDropIndicator`)
     @ViewBuilder private var dropIndicator: some View {
-        if dropEdge != nil {
+        switch dropEdge {
+        case .top, .bottom:
             Capsule(style: .continuous)
                 .fill(SlateColor.blockDropIndicator)
                 .frame(height: SlateGeometry.editorDropIndicatorHeight)
                 .padding(.leading, SlateGeometry.editorGutter)
                 .transition(.opacity)
+        case .leading, .trailing:
+            // Depot lateral : ce bloc va devenir une COLONNE avec le bloc depose
+            // (artboard I, "Sombre - depot lateral -> colonne"). Ligne PLEINE HAUTEUR,
+            // contrairement a la ligne horizontale ci-dessus qui ne marque qu'une
+            // frontiere ENTRE deux blocs -- ici c'est le bloc survole lui-meme qui
+            // devient la frontiere.
+            Capsule(style: .continuous)
+                .fill(SlateColor.blockDropIndicator)
+                .frame(width: SlateGeometry.editorDropIndicatorHeight)
+                .frame(maxHeight: .infinity)
+                .transition(.opacity)
+        case nil:
+            EmptyView()
         }
     }
 }

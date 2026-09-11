@@ -34,6 +34,13 @@ struct BlockContentRouterView: View {
     /// code, icone de callout, structure de tableau -- voir
     /// `EditorController+SpecialBlocks.swift`/`+Table.swift`).
     let editorController: EditorController
+    /// Association `blockID -> SlateBlockRangePosition` de la plage de selection
+    /// COURANTE (Phase 10) -- transmise uniquement pour que `.columnList` puisse la
+    /// retransmettre a son tour aux `BlockTreeView` qu'il instancie POUR CHAQUE COLONNE
+    /// (voir `ColumnListBlockContentView`) : aucun autre cas de ce routeur n'en a
+    /// besoin, `BlockContainer` la recoit deja directement de `BlockTreeView` pour tous
+    /// les autres types.
+    let rangePositions: [UUID: SlateBlockRangePosition]
 
     var body: some View {
         switch BlockRenderRouting.kind(for: block.type) {
@@ -62,6 +69,10 @@ struct BlockContentRouterView: View {
             CalloutBlockContentView(block: block, editorController: editorController)
         case .table:
             TableBlockContentView(block: block, editorController: editorController)
+        case .columnList:
+            ColumnListBlockContentView(
+                block: block, strings: strings, editorController: editorController, rangePositions: rangePositions
+            )
         case .image:
             ImageBlockContentView(block: block, editorController: editorController)
         case .file:

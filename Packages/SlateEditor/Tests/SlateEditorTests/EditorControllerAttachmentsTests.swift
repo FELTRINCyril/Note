@@ -207,14 +207,15 @@ struct EditorControllerAttachmentsTests {
 
         #expect(fixture.controller.cycleImageAlignment(forward: true, in: block) == .center)
         #expect(fixture.controller.cycleImageAlignment(forward: true, in: block) == .right)
+        #expect(fixture.controller.cycleImageAlignment(forward: true, in: block) == .overflow)
 
-        // Borne haute : le cycle s'arrete au DERNIER palier propose, pas au dernier cas
-        // de l'enum. Les paliers hors colonne (.overflow, .fullWidth) ne sont pas
-        // proposes tant que `EditorContentColumn` ne sait pas laisser un bloc sortir de
-        // la colonne (phase 10) -- voir `EditorController.availableImageAlignments`.
-        let stayedAtRight = fixture.controller.cycleImageAlignment(forward: true, in: block)
-        #expect(stayedAtRight == .right)
-        #expect(block.attributes.imageAlignment == SlateImageAlignment.right.rawValue)
+        // Borne haute : le cycle s'arrete au DERNIER palier propose (les 5 paliers du
+        // design sont desormais tous offerts, Phase 10 -- voir
+        // `EditorController.availableImageAlignments`).
+        #expect(fixture.controller.cycleImageAlignment(forward: true, in: block) == .fullWidth)
+        let stayedAtFullWidth = fixture.controller.cycleImageAlignment(forward: true, in: block)
+        #expect(stayedAtFullWidth == .fullWidth)
+        #expect(block.attributes.imageAlignment == SlateImageAlignment.fullWidth.rawValue)
     }
 
     /// Le clavier et la barre d'alignement doivent proposer EXACTEMENT le meme jeu de
@@ -237,9 +238,8 @@ struct EditorControllerAttachmentsTests {
             let reached = try #require(fixture.controller.cycleImageAlignment(forward: false, in: block))
             #expect(offered.contains(reached))
         }
-        // Les paliers hors colonne restent volontairement inaccessibles pour l'instant.
-        #expect(!offered.contains(.overflow))
-        #expect(!offered.contains(.fullWidth))
+        // Les 5 paliers du design sont tous proposes depuis la Phase 10.
+        #expect(offered == Set(SlateImageAlignment.allCases))
     }
 
     @Test("cycleImageAlignment est sans effet sur un bloc qui n'est pas une image")

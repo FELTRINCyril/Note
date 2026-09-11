@@ -8,6 +8,12 @@ public enum SlateOpacity {
     public static let hoverOverlay: Double = 0.06
     /// Aperçu ("ghost") d'une ligne en cours de glissement.
     public static let dragGhost: Double = 0.6
+
+    /// Bloc d'origine pendant un glisser-depose (artboard I : "reste en place a 40 %
+    /// tant que le depot n'est pas valide"). Alias explicite de `disabled` : meme
+    /// valeur numerique par coincidence, pas une parente semantique (meme convention
+    /// que `listMarkerWidth`/`blockHandleSize` dans `BlockDecorationMetrics`).
+    public static let dragSourceBlock: Double = disabled
 }
 
 /// Palette d'icones de dossiers/notes (design/tokens.md §7/§8). Reprend les couleurs

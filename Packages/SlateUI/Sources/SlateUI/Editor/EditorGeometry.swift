@@ -127,7 +127,30 @@ public extension SlateGeometry {
     // MARK: - Depot de drag & drop
 
     /// Epaisseur de la ligne d'insertion affichee pendant un glisser-depose de bloc.
+    /// Reutilisee TELLE QUELLE pour la ligne verticale (artboard I, "depot lateral" --
+    /// une epaisseur de trait, qu'il soit trace horizontalement ou verticalement, reste
+    /// le meme token).
     static let editorDropIndicatorHeight: CGFloat = 2
+
+    // MARK: - Fantome de glisser-depose (artboard I, Phase 10)
+
+    /// Rotation du fantome de bloc en cours de glissement. Artboard I : "rotation -1 deg".
+    static let dragGhostRotationDegrees: Double = -1
+
+    /// Rayon de flou de l'ombre portee du fantome, `elevation.high` (design/tokens.md
+    /// §13 : "y:10 blur:30", usage "Modales, drag"). Meme convention que
+    /// `formatBarShadowRadius`/`formatBarShadowY` (elevation.medium) : pas de namespace
+    /// `SlateElevation` dedie tant qu'un seul autre consommateur (barre de formatage)
+    /// existe pour l'elevation moyenne -- ici le second cas d'usage (elevation haute)
+    /// justifie deja de poser les tokens a cote, sans pour autant generaliser.
+    static let dragGhostShadowRadius: CGFloat = 30
+
+    /// Decalage vertical de l'ombre portee du fantome, `elevation.high`.
+    static let dragGhostShadowY: CGFloat = 10
+
+    /// Diametre du badge de comptage affiche sur le fantome pour un glissement
+    /// multi-blocs. Artboard I : "badge 20x20 pt".
+    static let dragGhostBadgeSize: CGFloat = 20
 
     // MARK: - Listes
 

@@ -26,14 +26,14 @@ import UniformTypeIdentifiers
 /// `Task.detached`, pour ne jamais bloquer le fil principal sur une image volumineuse)
 /// mais ne progresse pas de facon continue -- ecart documente, pas un oubli.
 ///
-/// ## Paliers hors colonne reportes a la phase 10
-/// `EditorContentColumn` (`SlateUI`) plafonne la largeur a `editorMaxContentWidth +
-/// editorGutter` (720 + 48 pt) et enveloppe TOUTE la liste de blocs d'un coup, pas
-/// chaque bloc : un bloc ne peut donc pas sortir de la colonne aujourd'hui. Les paliers
-/// `.overflow` (960 pt) et `.fullWidth` ne sont pas PROPOSES tant que c'est le cas --
-/// voir `EditorController.availableImageAlignments` pour le raisonnement complet. Les
-/// largeurs correspondantes restent calculees ici, pretes a servir des que le conteneur
-/// saura les accorder.
+/// ## Paliers hors colonne (Phase 10)
+/// `.overflow` (960 pt) et `.fullWidth` (largeur du panneau) utilisent desormais
+/// `View.slateBreakOutOfEditorColumn(targetWidth:)` (`SlateUI`) sur le CONTENU du bloc
+/// (jamais sur `BlockContainer` lui-meme, voir sa documentation) plutot qu'un simple
+/// `.frame(width:)` -- ce dernier resterait plafonne par `EditorContentColumn`, qui
+/// enveloppe toute la liste de blocs d'un coup. Voir
+/// `EditorController.availableImageAlignments` pour la levee de la restriction
+/// correspondante.
 struct ImageBlockContentView: View {
     let block: Block
     let editorController: EditorController
@@ -125,6 +125,22 @@ struct ImageBlockContentView: View {
         // meme sans l'utiliser) -- erreur "generic parameter 'Content' could not be
         // inferred" constatee en local, contournee ici plutot qu'en degradant
         // `onResize` a un type non type-sur (`Any`).
+        Group {
+            if currentAlignment == .overflow || currentAlignment == .fullWidth {
+                // Debord hors colonne (Phase 10) : voir la documentation de tete de
+                // fichier. `displayWidth` porte deja exactement la cible attendue par
+                // `slateBreakOutOfEditorColumn(targetWidth:)` (960 pt, ou `nil` pour
+                // "pleine largeur du panneau") pour ces deux paliers.
+                framedImage.slateBreakOutOfEditorColumn(targetWidth: displayWidth)
+            } else {
+                framedImage.frame(width: displayWidth)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: outerAlignment)
+        .popover(isPresented: $isMenuPresented) { menuContent }
+    }
+
+    private var framedImage: some View {
         ImageFrameView<AnyView>(
             dimensionsText: dimensionsText,
             alignment: currentAlignment,
@@ -151,9 +167,6 @@ struct ImageBlockContentView: View {
             onResizeEnded: { _ in dragStartAlignment = nil },
             content: { imageContentView }
         )
-        .frame(width: displayWidth)
-        .frame(maxWidth: .infinity, alignment: outerAlignment)
-        .popover(isPresented: $isMenuPresented) { menuContent }
     }
 
     /// Type concret (`AnyView`, pas `some View`) : necessaire pour que `ImageFrameView<

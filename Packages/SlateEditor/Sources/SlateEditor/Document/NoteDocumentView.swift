@@ -151,6 +151,28 @@ public struct NoteDocumentView: View {
                                     selection: inlineSelection
                                 )
                             }
+
+                            // Ligne d'insertion d'un glisser de FICHIERS (Phase 10,
+                            // report Phase 9, artboard C de P2) : "meme ligne
+                            // d'insertion que le deplacement de blocs" -- remplace,
+                            // pendant ce type de glisser precis, la ligne generique de
+                            // `BlockContainer.dropEdge` (voir `BlockTreeView.
+                            // dropEdgeForContainer`) par `BlockDropIndicatorView`
+                            // (`SlateUI`), seule a porter le badge de comptage a partir
+                            // de 2 fichiers. Positionnee au bord du cadre DEJA mesure du
+                            // bloc cible (`EditorController.blockFrames`), aucune
+                            // nouvelle geometrie.
+                            if let fileCount = editorController.dragFileCount,
+                               let target = editorController.dragTarget,
+                               let frame = editorController.blockFrames[target.blockID] {
+                                BlockDropIndicatorView(fileCount: fileCount)
+                                    .frame(maxWidth: .infinity)
+                                    .position(
+                                        x: frame.midX,
+                                        y: target.edge == .bottom || target.edge == .trailing ? frame.maxY : frame.minY
+                                    )
+                                    .allowsHitTesting(false)
+                            }
                         }
                         // Coordonnees partagees pour la resolution "quel bloc est sous le
                         // pointeur" pendant un glisser de selection (sous-etape 5.6, voir
@@ -160,6 +182,14 @@ public struct NoteDocumentView: View {
                         .onPreferenceChange(BlockFramePreferenceKey.self) { frames in
                             editorController.updateBlockFrames(frames)
                         }
+                        // Point d'attache UNIQUE du glisser-depose de blocs ET de
+                        // fichiers (Phase 10) -- voir la documentation de tete de
+                        // `BlockAndFileDropDelegate` pour le choix du `DropDelegate`
+                        // legacy plutot que `dropDestination(for:action:)`.
+                        .onDrop(
+                            of: BlockAndFileDropDelegate.acceptedTypes,
+                            delegate: BlockAndFileDropDelegate(editorController: editorController)
+                        )
                     }
 
                     NoteDocumentBottomSpacerView(onTap: editorController.appendTrailingParagraph)

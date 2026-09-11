@@ -103,4 +103,13 @@ public extension SlateColor {
         light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.12),
         dark: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.40)
     )
+
+    /// Ombre portee `elevation.high` (design/tokens.md §13 : "y:10 blur:30",
+    /// "Modales, drag"), consommee par le fantome de bloc en cours de glissement
+    /// (`BlockDragGhostView`, Phase 10). Voir `SlateGeometry.dragGhostShadowRadius`/
+    /// `dragGhostShadowY` pour le rayon et le decalage associes.
+    static let elevationHighShadow = slateAdaptiveColor(
+        light: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.20),
+        dark: SlateRGB(red: 0, green: 0, blue: 0, alpha: 0.55)
+    )
 }

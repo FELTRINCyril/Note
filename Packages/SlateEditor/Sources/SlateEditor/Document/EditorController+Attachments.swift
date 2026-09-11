@@ -190,15 +190,14 @@ extension EditorController {
     /// Paliers de largeur REELLEMENT proposes a l'utilisateur, source de verite unique
     /// partagee par la barre d'alignement et par le cycle clavier Alt-fleches.
     ///
-    /// Le design en decrit cinq, mais les deux paliers hors colonne (`.overflow` 960 pt
-    /// et `.fullWidth`) exigent que `EditorContentColumn` sache laisser un bloc sortir de
-    /// la colonne de 720 pt, ce qu'il ne sait pas faire : il enveloppe toute la liste de
-    /// blocs d'un coup, pas chaque bloc. Ils sont donc retires de la liste au lieu d'etre
-    /// affiches sans effet -- meme regle d'honnetete d'interface qu'en phase 6, ou seuls
-    /// les types de bloc au rendu reel figurent au menu `/`. La sortie de colonne arrive
-    /// avec la mise en colonnes (phase 10), qui doit de toute facon revoir ce conteneur :
-    /// il suffira alors de rendre `SlateImageAlignment.allCases` ici.
-    static let availableImageAlignments: [SlateImageAlignment] = [.left, .center, .right]
+    /// Les 5 paliers du design sont desormais tous proposes : `View.
+    /// slateBreakOutOfEditorColumn(targetWidth:)` (Phase 10, `SlateUI`) permet
+    /// maintenant a un bloc de sortir individuellement de la colonne de texte de 720 pt,
+    /// ce qui debloque `.overflow` (960 pt) et `.fullWidth` (largeur du panneau) --
+    /// jusque-la retires de la liste par la meme regle d'honnetete d'interface qu'en
+    /// phase 6 (aucune entree qui semble actionnable sans effet reel), voir
+    /// `ImageBlockContentView` pour l'application du debord.
+    static let availableImageAlignments: [SlateImageAlignment] = SlateImageAlignment.allCases
 
     /// Largeur fixe (en points) d'un palier -- `nil` pour `.fullWidth`, qui suit la
     /// largeur disponible plutot qu'une valeur figee. Gauche/Centre/Droite partagent le

@@ -171,6 +171,24 @@
         }
       }
     },
+    "editor.blockMenu.moveUp.accessibilityAnnouncement": {
+      "comment": "VoiceOver, deplacement clavier Ctrl+Cmd+fleche haut/bas d'un bloc (Phase 10). %lld = position, %lld = total.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moved to position %lld of %lld"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déplacé en position %lld sur %lld"
+          }
+        }
+      }
+    },
     "editor.blockMenu.moveUp.title": {
       "extractionState": "manual",
       "localizations": {
@@ -252,6 +270,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Code"
+          }
+        }
+      }
+    },
+    "editor.blockType.columnList": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Columns"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colonnes"
           }
         }
       }
@@ -609,6 +644,42 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copié"
+          }
+        }
+      }
+    },
+    "editor.dropzone.fileCount": {
+      "comment": "Badge de comptage de fichiers deposes entre deux blocs (Phase 10, artboard C), a partir de 2 fichiers.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld files"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld fichiers"
+          }
+        }
+      }
+    },
+    "editor.dropzone.noteDestinationSummary": {
+      "comment": "Voile de depot sur la note entiere (Phase 10, artboard C) : le fichier est ajoute a la fin.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add to the end of the note"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajouter à la fin de la note"
           }
         }
       }
@@ -1476,6 +1547,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bloc de code à espacement fixe"
+          }
+        }
+      }
+    },
+    "editor.slashCommand.subtitle.columnList": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Side-by-side content"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contenu côte à côte"
           }
         }
       }

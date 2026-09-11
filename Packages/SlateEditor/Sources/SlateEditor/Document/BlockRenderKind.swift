@@ -32,12 +32,17 @@ public enum BlockRenderKind: Equatable, Sendable {
     /// Bloc fichier joint (Phase 9, artboard B) : une seule piece jointe par bloc, voir
     /// `FileBlockContentView`. Memes exclusions que `.image` ci-dessus.
     case file
+    /// Rangee de colonnes (Phase 10, artboard J) : voir `ColumnListBlockContentView`.
+    /// Un seul cas pour tout le `columnList`, meme principe que `.table` -- ses
+    /// `column` enfants ne routent JAMAIS ici individuellement (voir `.unsupported`
+    /// ci-dessous), ils sont rendus tous ensemble par cette vue.
+    case columnList
     /// Type de bloc dont le rendu riche n'est pas encore construit (hors perimetre de
-    /// la phase en cours, ou reserve a une phase ulterieure : `columnList`/`column`
-    /// (Phase 10), `bookmark`/`embed`/`databaseView`/`pageLink` (v2)), ou bloc de
-    /// structure interne jamais rendu directement (`tableRow`/`tableCell`, voir
-    /// `.table` ci-dessus). Porte le `BlockType` d'origine pour que le rendu de repli
-    /// reste identifiable plutot qu'invisible.
+    /// la phase en cours, ou reserve a une phase ulterieure : `bookmark`/`embed`/
+    /// `databaseView`/`pageLink` (v2)), ou bloc de structure interne jamais rendu
+    /// directement (`tableRow`/`tableCell`, voir `.table` ci-dessus ; `column`, voir
+    /// `.columnList` ci-dessus). Porte le `BlockType` d'origine pour que le rendu de
+    /// repli reste identifiable plutot qu'invisible.
     case unsupported(BlockType)
 }
 
@@ -50,41 +55,59 @@ public enum BlockRenderKind: Equatable, Sendable {
 /// INVISIBLE").
 public enum BlockRenderRouting {
     public static func kind(for type: BlockType) -> BlockRenderKind {
+        if let simple = simpleKind(for: type) {
+            return simple
+        }
         switch type {
-        case .paragraph:
-            return .paragraph
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6:
             return .heading(level: headingLevel(for: type))
-        case .bulletedList:
-            return .bulletedListItem
-        case .numberedList:
-            return .numberedListItem
-        case .todo:
-            return .todoItem
-        case .quote:
-            return .quote
-        case .code:
-            return .code
-        case .divider:
-            return .divider
-        case .callout:
-            return .callout
-        case .table:
-            return .table
         case .image, .file:
             return type == .image ? .image : .file
-        case .tableRow, .tableCell, .columnList, .column, .bookmark, .embed, .databaseView, .pageLink:
-            // Un seul cas fusionne (complexite cyclomatique, `CLAUDE.md` Sec.5) pour
-            // deux familles distinctes qui partagent la MEME reponse : structure
-            // interne d'un tableau jamais rendue individuellement
-            // (`tableRow`/`tableCell`, voir la documentation de `BlockRenderKind`) et
-            // types reserves a une phase ulterieure (colonnes -- Phase 10 -- et v2 --
-            // bookmark/embed/databaseView/pageLink). `tableRow`/`tableCell` ne sont en
-            // pratique jamais atteints par un appelant de ce module (`BlockTreeView` ne
-            // recurse pas dans les enfants d'un `table`), mais doivent rester couverts
-            // pour la compilation exhaustive de ce `switch`.
-            return .unsupported(type)
+        case .columnList:
+            return .columnList
+        // Les 9 premiers types de cette liste sont deja intercepts par `simpleKind(for:)`
+        // ci-dessus (jamais atteints ici en pratique) : ils DOIVENT neanmoins rester
+        // enumeres pour que ce `switch` reste EXHAUSTIF au sens du compilateur (voir la
+        // documentation de tete de fichier) -- meme motif que `EditorStrings.
+        // blockTypeLabel(_:)`, ou les types heading1-6/image/file, deja interceptes par
+        // un `if let` similaire, restent lister dans le groupe de repli.
+        case .paragraph, .bulletedList, .numberedList, .todo, .quote, .code, .divider, .callout, .table,
+             .tableRow, .tableCell, .column, .bookmark, .embed, .databaseView, .pageLink:
+            return structuralOrFutureKind(for: type)
         }
+    }
+
+    /// Les 9 types de bloc au rendu le plus simple (un seul `BlockRenderKind`, sans
+    /// parametre ni cas particulier), extraits de `kind(for:)` pour rester sous la
+    /// limite de complexite cyclomatique de SwiftLint -- meme motif que
+    /// `headingLevel(for:)`/`structuralOrFutureKind(for:)` ci-dessous. `nil` pour tout
+    /// autre type, laissant `kind(for:)` traiter les cas parametres (titres, image/
+    /// fichier) et de structure/reserves (`structuralOrFutureKind(for:)`).
+    private static func simpleKind(for type: BlockType) -> BlockRenderKind? {
+        switch type {
+        case .paragraph: .paragraph
+        case .bulletedList: .bulletedListItem
+        case .numberedList: .numberedListItem
+        case .todo: .todoItem
+        case .quote: .quote
+        case .code: .code
+        case .divider: .divider
+        case .callout: .callout
+        case .table: .table
+        default: nil
+        }
+    }
+
+    /// Structure interne jamais rendue individuellement (`tableRow`/`tableCell`, voir
+    /// `.table` ; `column`, voir `.columnList`) ou type reserve a une phase ulterieure
+    /// (v2 -- bookmark/embed/databaseView/pageLink). Extrait de `kind(for:)` pour
+    /// rester sous la limite de complexite cyclomatique de SwiftLint -- meme motif que
+    /// `headingLevel(for:)` ci-dessous. Ces types de structure interne ne sont en
+    /// pratique jamais atteints par un appelant de ce module (`BlockTreeView` ne
+    /// recurse pas dans les enfants d'un `table`/`columnList`), mais doivent rester
+    /// couverts pour la compilation exhaustive du `switch` appelant.
+    private static func structuralOrFutureKind(for type: BlockType) -> BlockRenderKind {
+        .unsupported(type)
     }
 
     /// Niveau (1 a 6) d'un `BlockType` de titre. Appelant garantit deja (via le

@@ -3,8 +3,9 @@ import SlateUI
 import SwiftUI
 
 /// Rendu de repli pour un `BlockType` dont l'apparence riche n'est pas encore
-/// construite (voir `BlockRenderKind.unsupported`) : callout/table (Phase 8),
-/// columnList/column (Phase 10), image/file/bookmark/embed/databaseView/pageLink.
+/// construite (voir `BlockRenderKind.unsupported`) : structure interne jamais rendue
+/// individuellement (tableRow/tableCell, column -- Phase 10), bookmark/embed/
+/// databaseView/pageLink (v2).
 ///
 /// Deliberement IDENTIFIABLE (glyphe + libelle + nom technique du type) plutot
 /// qu'invisible ou plante : la consigne de la 5.1 est qu'aucun type de bloc ne doit

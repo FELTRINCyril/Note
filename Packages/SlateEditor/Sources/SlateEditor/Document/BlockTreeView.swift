@@ -77,6 +77,7 @@ struct BlockTreeView: View {
                 rangePosition: rangePositions[block.id] ?? .single,
                 isEmpty: block.text?.isEmpty ?? true,
                 placeholder: EditorStrings.paragraphPlaceholder,
+                dropEdge: dropEdgeForContainer,
                 firstLineHeight: firstLineHeight,
                 blockID: block.id.uuidString,
                 onInsert: { editorController.insertBlockBelow(block) },
@@ -87,10 +88,16 @@ struct BlockTreeView: View {
                         numberedRank: numberedRank,
                         indentLevel: indentLevel,
                         strings: strings,
-                        editorController: editorController
+                        editorController: editorController,
+                        rangePositions: rangePositions
                     )
                 }
             )
+            // Bloc d'ORIGINE d'un glisser en cours (Phase 10, artboard I : "reste en
+            // place a 40% tant que le depot n'est pas valide") -- voir
+            // `EditorController.draggedBlockIDs`/`View.slateDragSourceBlockAppearance()`
+            // (`SlateUI`).
+            .opacity(isDragSource ? SlateOpacity.dragSourceBlock : 1)
             // Les 3 types d'item de liste (Phase 8) portent DEJA leur propre indentation
             // (`ListItemView`/`ChecklistItemView`, `SlateUI`, parametrees avec ce meme
             // `indentLevel` via `BlockContentRouterView`) : leur appliquer CETTE
@@ -168,6 +175,11 @@ struct BlockTreeView: View {
                 editorController.importImageData(data, filename: EditorStrings.imageUnnamedFilename, into: block)
                 return .handled
             }
+            // Ctrl+Cmd+fleche haut/bas (Phase 10, artboard I) : equivalent clavier
+            // OBLIGATOIRE du glisser de reordonnancement -- voir
+            // `handleMoveKeyPress(movingUp:)`/`EditorController+BlockMove.swift`.
+            .onKeyPress(.upArrow) { handleMoveKeyPress(movingUp: true) }
+            .onKeyPress(.downArrow) { handleMoveKeyPress(movingUp: false) }
             .onChange(of: editorController.selectedBlockID) { _, newValue in
                 isSelectionKeyCaptureFocused = newValue == block.id
             }
@@ -175,7 +187,9 @@ struct BlockTreeView: View {
             // actionnable (bloc selectionne seul) : repeter cette indication sur chaque
             // bloc lu en survol/navigation ordinaire alourdirait inutilement
             // l'experience VoiceOver.
-            .accessibilityHint(editorController.selectedBlockID == block.id ? EditorStrings.blockMenuAccessibilityHint : "")
+            .accessibilityHint(
+                editorController.selectedBlockID == block.id ? EditorStrings.blockMenuAccessibilityHint : ""
+            )
 
             // `LazyVStack` (voir `NoteDocumentView`, meme raison exacte : Perf, revue
             // finale de Phase 5) : une liste imbriquee (item de liste a puces/numerotee)
@@ -186,9 +200,15 @@ struct BlockTreeView: View {
             // (routee dans `BlockContentRouterView`) -- jamais par ce parcours recursif
             // generique, qui leur donnerait chacun leur propre `BlockContainer` (chrome
             // de selection, poignee de menu...) sans aucun sens pour une cellule de
-            // tableau. Tous les AUTRES types continuent de recurser normalement
-            // (imbrication d'un item de liste).
-            let childBlocks = block.type == .table ? [] : BlockOrdering.children(of: block)
+            // tableau. `columnList` (Phase 10) : meme raisonnement, ses `column`
+            // enfants sont rendus ENTIEREMENT par `ColumnListBlockContentView` (chacun
+            // avec sa PROPRE pile verticale de `BlockTreeView`, cote a cote plutot
+            // qu'empilee) -- jamais par ce parcours recursif generique, qui les
+            // empilerait verticalement avec leur propre chrome de bloc, ce qui n'a
+            // aucun sens pour une colonne. Tous les AUTRES types continuent de
+            // recurser normalement (imbrication d'un item de liste).
+            let childBlocks = (block.type == .table || block.type == .columnList)
+                ? [] : BlockOrdering.children(of: block)
             LazyVStack(alignment: .leading, spacing: 0) {
                 ForEach(childBlocks, id: \.id) { child in
                     BlockTreeView(
@@ -264,6 +284,31 @@ struct BlockTreeView: View {
         rangePositions.count > 1 && rangePositions[block.id] != nil
     }
 
+    /// Ctrl+Cmd+fleche haut/bas (Phase 10, artboard I) : equivalent clavier OBLIGATOIRE
+    /// du glisser de reordonnancement. Actionnable sur un bloc SELECTIONNE (seul, ou en
+    /// tete d'une plage multi-blocs -- deplace alors le groupe ENTIER), jamais en
+    /// edition -- meme portee que le reste du chrome de selection de ce fichier (menu de
+    /// bloc, Opt+fleches sur une image...). Poste l'annonce VoiceOver retournee par
+    /// `EditorController+BlockMove.swift` des qu'un deplacement a reellement eu lieu.
+    private func handleMoveKeyPress(movingUp: Bool) -> KeyPress.Result {
+        guard NSEvent.modifierFlags.contains([.control, .command]) else { return .ignored }
+        let announcement: String?
+        if isPartOfMultiBlockSelection {
+            announcement = movingUp
+                ? editorController.moveSelectionRangeUpWithAnnouncement()
+                : editorController.moveSelectionRangeDownWithAnnouncement()
+        } else if editorController.selectedBlockID == block.id {
+            announcement = movingUp
+                ? editorController.moveBlockUpWithAnnouncement(block)
+                : editorController.moveBlockDownWithAnnouncement(block)
+        } else {
+            announcement = nil
+        }
+        guard let announcement else { return .ignored }
+        AccessibilityNotification.Announcement(announcement).post()
+        return .handled
+    }
+
     @ViewBuilder
     private var blockMenu: some View {
         if isPartOfMultiBlockSelection {
@@ -304,6 +349,22 @@ struct BlockTreeView: View {
         if editorController.focusedBlockID == block.id { return .focused }
         if rangePositions[block.id] != nil { return .selected }
         return .normal
+    }
+
+    /// `true` si `block` fait partie des blocs actuellement SAISIS par un glisser de
+    /// reordonnancement (Phase 10) -- voir `EditorController.draggedBlockIDs`.
+    private var isDragSource: Bool {
+        editorController.draggedBlockIDs.contains(block.id)
+    }
+
+    /// Bord de `BlockContainer` ou dessiner la ligne d'insertion pour CE bloc, `nil`
+    /// sinon. Un glisser de FICHIERS (`dragFileCount != nil`) rend sa propre ligne via
+    /// `BlockDropIndicatorView` dans `NoteDocumentView` (badge de comptage) -- jamais
+    /// ici, pour ne pas superposer deux lignes.
+    private var dropEdgeForContainer: Edge? {
+        guard editorController.dragFileCount == nil else { return nil }
+        guard editorController.dragTarget?.blockID == block.id else { return nil }
+        return editorController.dragTarget?.edge
     }
 
     /// Voir le commentaire du `.padding(.leading, ...)` ci-dessus : ces 3 types portent

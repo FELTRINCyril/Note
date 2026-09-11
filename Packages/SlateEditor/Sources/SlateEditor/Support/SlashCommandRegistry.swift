@@ -15,20 +15,21 @@ import SlateModel
 ///   `callout` (Phase 8), `divider`. Tous rendus via un cas NON `.unsupported` de
 ///   `BlockRenderRouting`.
 /// - `advanced` : `code`, `table` (Phase 8, structure en sous-blocs -- voir
-///   `EditorController+SlashMenu.executeTableCommand(in:leftoverIsEmpty:)`), meme raison.
+///   `EditorController+SlashMenu.executeTableCommand(in:leftoverIsEmpty:)`), `columnList`
+///   (Phase 10, meme raison : structure en sous-blocs, voir
+///   `EditorController+Columns.executeColumnsCommand(in:)`).
 /// - `media` : `image`, `file` (Phase 9). Rendu REEL desormais (`ImageBlockContentView`/
 ///   `FileBlockContentView`, routes par `BlockRenderRouting`), meme insertion "toujours
 ///   un nouveau bloc en dessous + paragraphe vide focalise" que `table`
 ///   (`EditorController+SlashMenu.executeMediaCommand(targetType:in:)`) -- ni `image` ni
 ///   `file` ne portent de `RichText`, aucune conversion en place possible.
-/// - EXCLUS explicitement, meme motif : `columnList`/`column` (Phase 10),
-///   `bookmark`/`embed`/`databaseView`/`pageLink` (v2), et `tableRow`/`tableCell`
-///   (JAMAIS proposes, meme une fois `table` rendu : ce sont des blocs de structure
-///   INTERNE d'un tableau, jamais un point d'insertion valide pour l'utilisateur -- voir
-///   `BlockRenderKind.unsupported`, cas `.tableRow`/`.tableCell`). Chaque type qui
-///   gagnera un rendu reel dans une phase ulterieure devra rejoindre `allCommands` a ce
-///   moment-la -- jamais avant. Cette liste est donc EXTENSIBLE par construction, pas
-///   fermee.
+/// - EXCLUS explicitement, meme motif : `column` (JAMAIS propose, meme une fois
+///   `columnList` rendu : structure INTERNE d'une rangee de colonnes, jamais un point
+///   d'insertion valide pour l'utilisateur -- voir `BlockRenderKind.unsupported`, meme
+///   raisonnement que `tableRow`/`tableCell`), `bookmark`/`embed`/`databaseView`/
+///   `pageLink` (v2), et `tableRow`/`tableCell`. Chaque type qui gagnera un rendu reel
+///   dans une phase ulterieure devra rejoindre `allCommands` a ce moment-la -- jamais
+///   avant. Cette liste est donc EXTENSIBLE par construction, pas fermee.
 ///
 /// ## Convention des alias
 /// Chaque `aliases` couvre le FRANCAIS et l'ANGLAIS, en minuscules SANS accents (ex.
@@ -203,6 +204,15 @@ public enum SlashCommandRegistry {
                 systemImage: "tablecells",
                 category: .advanced,
                 targetType: .table
+            ),
+            SlashCommand(
+                id: "columnList",
+                title: EditorStrings.blockTypeLabel(.columnList),
+                subtitle: EditorStrings.slashCommandSubtitle(.columnList),
+                aliases: ["colonnes", "colonne", "columns", "column", "side by side", "cote a cote"],
+                systemImage: "rectangle.split.2x1",
+                category: .advanced,
+                targetType: .columnList
             )
         ]
     }
