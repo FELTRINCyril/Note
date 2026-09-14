@@ -37,17 +37,17 @@ public struct BlockHandle: View {
         HStack(spacing: Spacing.xs) {
             BlockChromeButton(
                 systemName: "plus",
-                helpText: "Inserer un bloc en dessous",
+                helpText: SlateUIStrings.blockHandleInsertHelp,
                 action: onInsert
             )
-            .accessibilityLabel("Inserer un bloc")
+            .accessibilityLabel(SlateUIStrings.blockHandleInsertLabel)
 
             BlockChromeButton(
                 systemName: "line.3.horizontal",
-                helpText: "Glisser pour deplacer, cliquer pour le menu",
+                helpText: SlateUIStrings.blockHandleMenuHelp,
                 action: onMenu
             )
-            .accessibilityLabel("Options du bloc")
+            .accessibilityLabel(SlateUIStrings.blockHandleMenuLabel)
             .draggable(dragPayload)
         }
         .frame(width: SlateGeometry.editorGutter, alignment: .trailing)

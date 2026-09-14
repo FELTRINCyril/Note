@@ -15,7 +15,6 @@ public struct MainWindowView: View {
     @Environment(\.appState) private var appState
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Environment(\.lockService) private var lockService
 
     @State private var columnLayout = ColumnLayoutState.all
     @State private var bootstrapError: (any Error)?
@@ -57,7 +56,7 @@ public struct MainWindowView: View {
             purgeExpiredTrash()
         }
         .onReceive(DistributedNotificationCenter.default().publisher(for: Self.screenLockedNotification)) { _ in
-            AutoRelockCoordinator.relockAllUnlockedNotes(appState: appState, lockService: lockService)
+            AutoRelockCoordinator.relockAllUnlockedNotes(appState: appState)
         }
     }
 

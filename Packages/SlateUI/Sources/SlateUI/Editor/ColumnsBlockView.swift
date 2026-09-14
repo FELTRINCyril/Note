@@ -137,7 +137,7 @@ private struct ColumnResizer: View {
                         dragStartFractions = nil
                     }
             )
-            .accessibilityLabel("Largeur des colonnes \(index + 1) et \(index + 2)")
+            .accessibilityLabel(SlateUIStrings.columnsResizerLabel(index + 1, index + 2))
             // Equivalent clavier obligatoire (artboard J) : la souris n'est pas le seul
             // moyen d'ajuster la largeur des colonnes. Pas d'annonce de valeur precise
             // (aucun contexte VoiceOver standard pour "fraction de colonne") : le

@@ -12,7 +12,7 @@ public struct DividerBlockView: View {
             .frame(height: SlateGeometry.strokeHairline)
             .frame(height: SlateGeometry.dividerHitHeight)
             .contentShape(Rectangle())
-            .accessibilityLabel("Separateur")
+            .accessibilityLabel(SlateUIStrings.dividerLabel)
     }
 }
 

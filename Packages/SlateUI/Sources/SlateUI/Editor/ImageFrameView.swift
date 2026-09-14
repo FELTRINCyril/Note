@@ -37,7 +37,9 @@ public struct ImageFrameView<Content: View>: View {
         isSelected: Bool,
         caption: Binding<String>,
         alignmentOptions: [SlateImageAlignment] = SlateImageAlignment.allCases,
-        captionPlaceholder: String = "Ajouter une legende",
+        // `nil` plutot qu'un litteral en defaut : meme motif que
+        // `BlockContainer.init(placeholder:)`, voir sa documentation.
+        captionPlaceholder: String? = nil,
         onSelectAlignment: @escaping (SlateImageAlignment) -> Void = { _ in },
         onMenu: @escaping () -> Void = {},
         onResize: @escaping (ResizeHandle, CGSize) -> Void = { _, _ in },
@@ -49,7 +51,7 @@ public struct ImageFrameView<Content: View>: View {
         self.isSelected = isSelected
         self._caption = caption
         self.alignmentOptions = alignmentOptions
-        self.captionPlaceholder = captionPlaceholder
+        self.captionPlaceholder = captionPlaceholder ?? SlateUIStrings.imageCaptionPlaceholder
         self.onSelectAlignment = onSelectAlignment
         self.onMenu = onMenu
         self.onResize = onResize
@@ -113,7 +115,7 @@ public struct ImageFrameView<Content: View>: View {
                     )
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Options de l'image")
+            .accessibilityLabel(SlateUIStrings.imageOptions)
             .padding(Spacing.xs)
         }
     }
@@ -160,7 +162,7 @@ public struct ImageFrameView<Content: View>: View {
                         .onChanged { onResize(position, $0.translation) }
                         .onEnded { _ in onResizeEnded(position) }
                 )
-                .accessibilityLabel("Redimensionner l'image")
+                .accessibilityLabel(SlateUIStrings.imageResize)
                 .accessibilityAddTraits(.isButton)
         }
     }

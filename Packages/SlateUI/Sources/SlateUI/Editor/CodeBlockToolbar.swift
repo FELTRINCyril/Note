@@ -25,7 +25,7 @@ public struct CodeBlockToolbar: View {
 
     public var body: some View {
         HStack(spacing: Spacing.xs) {
-            Picker("Langage", selection: $language) {
+            Picker(SlateUIStrings.codeBlockLanguage, selection: $language) {
                 ForEach(languages, id: \.self) { language in
                     Text(language.capitalized).tag(language)
                 }
@@ -34,7 +34,10 @@ public struct CodeBlockToolbar: View {
             .controlSize(.small)
 
             Button(action: onCopy) {
-                Label(didCopy ? "Copie" : "Copier", systemImage: didCopy ? "checkmark" : "doc.on.doc")
+                Label(
+                    didCopy ? SlateUIStrings.codeBlockCopied : SlateUIStrings.codeBlockCopy,
+                    systemImage: didCopy ? "checkmark" : "doc.on.doc"
+                )
                     .slateFont(SlateFont.label)
                     // Le succes n'est jamais porte par la seule couleur : la coche et le
                     // mot changent aussi (artboard E).

@@ -36,7 +36,9 @@ public struct DisclosureChevron: View {
             SlateMotion.animation(duration: SlateMotion.durationFast, reduceMotion: reduceMotion),
             value: isExpanded
         )
-        .accessibilityLabel(isExpanded ? "Replier" : "Deplier")
+        .accessibilityLabel(
+            isExpanded ? SlateUIStrings.disclosureChevronCollapse : SlateUIStrings.disclosureChevronExpand
+        )
     }
 }
 

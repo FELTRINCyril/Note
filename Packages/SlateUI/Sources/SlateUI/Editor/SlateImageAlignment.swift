@@ -20,13 +20,7 @@ public enum SlateImageAlignment: String, CaseIterable, Identifiable, Sendable {
 
     /// Libelle affiche dans `MediaAlignmentBar` (artboard A).
     public var label: String {
-        switch self {
-        case .left: "Gauche"
-        case .center: "Centre"
-        case .right: "Droite"
-        case .overflow: "Debord 960"
-        case .fullWidth: "Pleine largeur"
-        }
+        SlateUIStrings.imageAlignmentLabel(self)
     }
 
     /// Libelle annonce au clavier lors d'un changement de palier (artboard A : "Au
@@ -35,23 +29,13 @@ public enum SlateImageAlignment: String, CaseIterable, Identifiable, Sendable {
     /// `NSAccessibility`/`AccessibilityNotification` -- ce token ne fait que porter le
     /// texte attendu.
     public var accessibilityAnnouncement: String {
-        switch self {
-        case .left: "Aligne a gauche, largeur colonne, 720 points"
-        case .center: "Centre, largeur colonne, 720 points"
-        case .right: "Aligne a droite, largeur colonne, 720 points"
-        case .overflow: "Largeur debord, 960 points"
-        case .fullWidth: "Pleine largeur"
-        }
+        SlateUIStrings.imageAlignmentAnnouncement(self)
     }
 
     /// Badge de palier affiche sur le cadre d'image selectionnee (artboard A, sombre :
     /// "720 pt - colonne"). Gauche/Centre/Droite partagent le meme palier de largeur
     /// (720 pt) : seule la position dans la colonne change entre eux.
     public var widthBadgeText: String {
-        switch self {
-        case .left, .center, .right: "720 pt \u{b7} colonne"
-        case .overflow: "960 pt \u{b7} debord"
-        case .fullWidth: "Pleine largeur"
-        }
+        SlateUIStrings.imageAlignmentWidthBadge(self)
     }
 }

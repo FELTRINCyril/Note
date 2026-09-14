@@ -22,7 +22,7 @@ public struct QuoteBlockView<Content: View>: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding(.vertical, SlateGeometry.decoratedBlockSpacing)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Citation")
+        .accessibilityLabel(SlateUIStrings.quoteLabel)
     }
 }
 

@@ -55,8 +55,8 @@ public struct ChecklistItemView<Content: View>: View {
         }
         .buttonStyle(.plain)
         .focused($isFocused)
-        .accessibilityLabel("Tache")
-        .accessibilityValue(isDone ? "effectuee" : "a faire")
+        .accessibilityLabel(SlateUIStrings.checklistLabel)
+        .accessibilityValue(isDone ? SlateUIStrings.checklistDone : SlateUIStrings.checklistTodo)
     }
 
     /// Meme geometrie de contour que `BlockContainer.focusRing` (anneau, jamais un

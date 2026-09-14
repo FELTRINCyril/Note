@@ -52,14 +52,14 @@ public struct MediaDropzoneView: View {
                 .slateIconFont(20, weight: .regular)
                 .foregroundStyle(SlateColor.textSecondary)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Ajouter une image")
+                Text(SlateUIStrings.mediaDropzoneAddImage)
                     .slateFont(SlateFont.body)
                     .foregroundStyle(SlateColor.textPrimary)
                 HStack(spacing: Spacing.xs) {
-                    Text("Glissez un fichier, collez, ou")
+                    Text(SlateUIStrings.mediaDropzoneInstructions)
                         .slateFont(SlateFont.caption)
                         .foregroundStyle(SlateColor.textSecondary)
-                    Button("choisissez sur le Mac", action: onChooseFile)
+                    Button(SlateUIStrings.mediaDropzoneChooseOnMac, action: onChooseFile)
                         .buttonStyle(.plain)
                         .slateFont(SlateFont.caption)
                         .foregroundStyle(SlateColor.accentDefault)
@@ -86,9 +86,9 @@ public struct MediaDropzoneView: View {
 
     private var activeLabel: String {
         if let draggedFileName {
-            "Deposer \u{ab} \(draggedFileName) \u{bb}"
+            SlateUIStrings.mediaDropzoneDropNamed(draggedFileName)
         } else {
-            "Deposer le fichier ici"
+            SlateUIStrings.mediaDropzoneDropHere
         }
     }
 

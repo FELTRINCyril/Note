@@ -33,7 +33,8 @@ import SwiftData
 /// sur une relation `@Model`) : le recalcul est donc explicite plutot qu'automatique et
 /// silencieux.
 ///
-/// ## Verrouillage (Phase 12) : ces memes champs sont LE risque de fuite a traiter
+/// ## Verrouillage (Phase 12, revu en dette de securite fin de jalon v1) : ces memes
+/// champs sont LE risque de fuite a traiter
 ///
 /// `plainText`/`snippetText` sont stockes en clair dans le store SwiftData, donc
 /// synchronises tels quels vers CloudKit, et c'est precisement sur eux que
@@ -42,10 +43,25 @@ import SwiftData
 /// parfaitement lisible par ces deux chemins detournes - un verrou en trompe-l'oeil.
 /// `refreshDerivedText()` fait donc respecter un invariant fort, verifie a chaque
 /// recalcul quel qu'en soit l'appelant : **une note verrouillee n'a jamais de
-/// `plainText`/`snippetText` non vides.** `lock()`/`unlock()` sont le point d'entree
-/// attendu pour changer `isLocked` (voir plus bas) ; le titre n'est deliberement pas
-/// touche, il reste visible note verrouillee ou non (choix explicite du design,
-/// signale dans le dialogue de definition du mot de passe).
+/// `plainText`/`snippetText` non vides.**
+///
+/// **`isLocked` est desormais une propriete PERMANENTE, jamais remise a `false` par ce
+/// type.** Seul `lock()` existe comme point d'entree : il n'y a plus de `unlock()` au
+/// niveau du modele. Deverrouiller une note pour la consulter est un etat de SESSION,
+/// porte par `SlateFeatures.AppState.recentlyUnlockedNotes`, jamais par une ecriture
+/// dans ce store - c'est le correctif de la dette de securite signalee en fin de phase
+/// 12 (`STATUT.md`) : un arret brutal de l'app (plantage, `kill -9`, coupure de
+/// courant) ne peut plus laisser de note deverrouillee en base, puisqu'il n'existe
+/// simplement plus d'etat "deverrouille" a persister. Une consequence assumee et
+/// recherchee : `plainText`/`snippetText` restent vides en permanence pour une note
+/// verrouillee, meme pendant qu'elle est consultee en session - c'est strictement plus
+/// sur que l'ancien comportement, jamais moins. Le titre n'est deliberement pas touche,
+/// il reste visible note verrouillee ou non (choix explicite du design, signale dans le
+/// dialogue de definition du mot de passe).
+///
+/// Voir aussi `computedPlainText`, qui permet un affichage transitoire (nombre de mots
+/// dans l'en-tete de l'editeur) pour une note deverrouillee cette session, sans jamais
+/// toucher aux champs stockes ci-dessus.
 ///
 /// ## `refreshDerivedText()` : point d'entree UNIQUE de recalcul (decision Cyril, Phase 4)
 ///
@@ -175,7 +191,10 @@ public final class Note {
     /// recalculer : c'est l'invariant de securite documente plus haut, applique ici
     /// inconditionnellement pour qu'aucun appelant (present ou futur, y compris un
     /// appel maladroit depuis l'editeur sur une note verrouillee) ne puisse
-    /// repeupler ces champs en clair tant que la note reste verrouillee.
+    /// repeupler ces champs en clair tant que la note reste verrouillee - **y compris
+    /// pendant qu'elle est deverrouillee pour la session courante** : `isLocked` reste
+    /// vrai dans ce cas (voir la documentation de tete), donc ce garde-fou continue de
+    /// s'appliquer sans exception.
     public func refreshDerivedText() {
         guard !isLocked else {
             plainText = ""
@@ -183,9 +202,7 @@ public final class Note {
             return
         }
 
-        let orderedTexts = Self.collectText(from: blocks ?? [])
-
-        plainText = orderedTexts.joined(separator: "\n")
+        plainText = computedPlainText
 
         if plainText.count > Self.snippetMaxLength {
             let cutoff = plainText.index(plainText.startIndex, offsetBy: Self.snippetMaxLength)
@@ -195,21 +212,34 @@ public final class Note {
         }
     }
 
-    /// Verrouille cette note : `isLocked` passe a `true` et `plainText`/`snippetText`
-    /// sont immediatement vides (voir `refreshDerivedText()`) pour ne plus rien
-    /// exposer via l'extrait de la liste ou la recherche plein texte, y compris dans
-    /// le store synchronise vers CloudKit. Les blocs eux-memes ne sont pas modifies :
-    /// c'est le contenu **derive** qui est traite, pas un chiffrement du contenu
-    /// (voir `docs/12_verrouillage.md` et la recommandation associee).
-    public func lock() {
-        isLocked = true
-        refreshDerivedText()
+    /// Texte brut recalcule a la demande a partir des blocs actuels, **sans jamais**
+    /// lire ni ecrire `plainText`/`snippetText`. Ignore deliberement `isLocked`,
+    /// contrairement a `refreshDerivedText()` : ce calcul sert un besoin d'affichage
+    /// transitoire et strictement limite a la session (par ex. le nombre de mots dans
+    /// l'en-tete de l'editeur, `SlateFeatures.NoteDetailColumnView`) pour une note
+    /// deverrouillee cette session mais dont `isLocked` reste vrai en base. L'appelant
+    /// est deja responsable d'avoir verifie que le contenu doit etre visible avant
+    /// d'invoquer cette propriete - meme contrat que `SlateEditor.NoteDocumentView`, qui
+    /// lit directement `blocks` sans jamais passer par les champs stockes.
+    public var computedPlainText: String {
+        Self.collectText(from: blocks ?? []).joined(separator: "\n")
     }
 
-    /// Deverrouille cette note : `isLocked` passe a `false` puis `plainText`/
-    /// `snippetText` sont reconstruits a partir des blocs actuels.
-    public func unlock() {
-        isLocked = false
+    /// Verrouille cette note : `isLocked` passe a `true` (de facon permanente - voir la
+    /// documentation de tete) et `plainText`/`snippetText` sont immediatement vides
+    /// (voir `refreshDerivedText()`) pour ne plus rien exposer via l'extrait de la
+    /// liste ou la recherche plein texte, y compris dans le store synchronise vers
+    /// CloudKit. Les blocs eux-memes ne sont pas modifies : c'est le contenu **derive**
+    /// qui est traite, pas un chiffrement du contenu (voir `docs/12_verrouillage.md` et
+    /// la recommandation associee). Idempotent : appeler `lock()` sur une note deja
+    /// verrouillee n'a aucun effet observable supplementaire.
+    ///
+    /// Il n'existe volontairement **aucune** methode `unlock()` symetrique sur ce type :
+    /// deverrouiller une note pour la consulter est un etat de session, pas une
+    /// mutation du modele - voir `SlateFeatures.AppState.recentlyUnlockedNotes` et
+    /// `SlateServices.LockService`.
+    public func lock() {
+        isLocked = true
         refreshDerivedText()
     }
 }

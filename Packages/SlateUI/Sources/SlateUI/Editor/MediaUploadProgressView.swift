@@ -59,7 +59,7 @@ public struct MediaUploadProgressView: View {
                     .slateFont(SlateFont.caption)
                     .foregroundStyle(SlateColor.textSecondary)
 
-                Button("Annuler", action: onCancel)
+                Button(SlateUIStrings.mediaUploadCancel, action: onCancel)
                     .buttonStyle(.plain)
                     .slateFont(SlateFont.caption)
                     .foregroundStyle(SlateColor.accentDefault)

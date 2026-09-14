@@ -1,4205 +1,3967 @@
 {
-  "sourceLanguage": "fr",
-  "strings": {
-    "action.cancel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+  "sourceLanguage" : "fr",
+  "strings" : {
+    "action.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annuler"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
           }
         }
       }
     },
-    "action.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirm"
+    "action.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Valider"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valider"
           }
         }
       }
     },
-    "action.ok": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+    "action.ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }
     },
-    "lock.biometrics.reason": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authenticate to unlock this note."
+    "lock.biometrics.reason" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authenticate to unlock this note."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authentifiez-vous pour déverrouiller cette note."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authentifiez-vous pour déverrouiller cette note."
           }
         }
       }
     },
-    "lock.lockedNote.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The content, attachments, and the list preview stay hidden while the note is locked."
+    "lock.lockedNote.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The content, attachments, and the list preview stay hidden while the note is locked."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le contenu, les pièces jointes et l'extrait dans la liste restent masqués tant que la note est verrouillée."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le contenu, les pièces jointes et l'extrait dans la liste restent masqués tant que la note est verrouillée."
           }
         }
       }
     },
-    "lock.lockedNote.enterPassword": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter Password"
+    "lock.lockedNote.enterPassword" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saisir le mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saisir le mot de passe"
           }
         }
       }
     },
-    "lock.lockedNote.hint": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hint: %@"
+    "lock.lockedNote.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint: %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Indice : %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice : %@"
           }
         }
       }
     },
-    "lock.lockedNote.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This note is locked"
+    "lock.lockedNote.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This note is locked"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette note est verrouillée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette note est verrouillée"
           }
         }
       }
     },
-    "lock.lockedNote.unlockWithBiometrics": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock with Touch ID"
+    "lock.lockedNote.unlockWithBiometrics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock with Touch ID"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déverrouiller avec Touch ID"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouiller avec Touch ID"
           }
         }
       }
     },
-    "lock.lockedNote.usePassword": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Password"
+    "lock.lockedNote.usePassword" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Utiliser le mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser le mot de passe"
           }
         }
       }
     },
-    "lock.setPassword.allowBiometrics": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allow Touch ID"
+    "lock.setPassword.allowBiometrics" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow Touch ID"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Autoriser Touch ID"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser Touch ID"
           }
         }
       }
     },
-    "lock.setPassword.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set"
+    "lock.setPassword.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Définir"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir"
           }
         }
       }
     },
-    "lock.setPassword.confirmationField": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirm password"
+    "lock.setPassword.confirmationField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirm password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirmer le mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmer le mot de passe"
           }
         }
       }
     },
-    "lock.setPassword.confirmationLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirmation"
+    "lock.setPassword.confirmationLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmation"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirmation"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmation"
           }
         }
       }
     },
-    "lock.setPassword.explanation": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A single password protects all your locked notes. Slate cannot recover it: write it down somewhere safe."
+    "lock.setPassword.explanation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A single password protects all your locked notes. Slate cannot recover it: write it down somewhere safe."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un seul mot de passe protège toutes vos notes verrouillées. Slate ne peut pas le récupérer : notez-le ailleurs."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un seul mot de passe protège toutes vos notes verrouillées. Slate ne peut pas le récupérer : notez-le ailleurs."
           }
         }
       }
     },
-    "lock.setPassword.hintField": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visible before unlocking"
+    "lock.setPassword.hintField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visible before unlocking"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visible avant le déverrouillage"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visible avant le déverrouillage"
           }
         }
       }
     },
-    "lock.setPassword.hintLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hint (optional)"
+    "lock.setPassword.hintLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint (optional)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Indice (facultatif)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice (facultatif)"
           }
         }
       }
     },
-    "lock.setPassword.mismatch": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The two passwords do not match."
+    "lock.setPassword.mismatch" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The two passwords do not match."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les deux mots de passe ne correspondent pas."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les deux mots de passe ne correspondent pas."
           }
         }
       }
     },
-    "lock.setPassword.passwordField": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password"
+    "lock.setPassword.passwordField" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe"
           }
         }
       }
     },
-    "lock.setPassword.passwordLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password"
+    "lock.setPassword.passwordLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe"
           }
         }
       }
     },
-    "lock.setPassword.saveFailure.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unable to save the password"
+    "lock.setPassword.saveFailure.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to save the password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Impossible d'enregistrer le mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible d'enregistrer le mot de passe"
           }
         }
       }
     },
-    "lock.setPassword.strength.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password strength: %@"
+    "lock.setPassword.strength.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password strength: %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Robustesse du mot de passe : %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robustesse du mot de passe : %@"
           }
         }
       }
     },
-    "lock.setPassword.strength.medium": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medium"
+    "lock.setPassword.strength.medium" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Moyen"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moyen"
           }
         }
       }
     },
-    "lock.setPassword.strength.strong": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Strong"
+    "lock.setPassword.strength.strong" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strong"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Robuste"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Robuste"
           }
         }
       }
     },
-    "lock.setPassword.strength.weak": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weak"
+    "lock.setPassword.strength.weak" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weak"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Faible"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faible"
           }
         }
       }
     },
-    "lock.setPassword.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set a Password"
+    "lock.setPassword.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set a Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Définir un mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir un mot de passe"
           }
         }
       }
     },
-    "lock.settings.password.change": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Change…"
+    "lock.settings.password.change" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change…"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modifier…"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifier…"
           }
         }
       }
     },
-    "lock.settings.password.define": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set…"
+    "lock.settings.password.define" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set…"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Définir…"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Définir…"
           }
         }
       }
     },
-    "lock.settings.password.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password:"
+    "lock.settings.password.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe :"
           }
         }
       }
     },
-    "lock.settings.password.set": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password set"
+    "lock.settings.password.set" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password set"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe défini"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe défini"
           }
         }
       }
     },
-    "lock.settings.relock.fifteenMinutes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "After 15 minutes of inactivity"
+    "lock.settings.relock.fifteenMinutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After 15 minutes of inactivity"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Après 15 minutes d'inactivité"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Après 15 minutes d'inactivité"
           }
         }
       }
     },
-    "lock.settings.relock.fiveMinutes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "After 5 minutes of inactivity"
+    "lock.settings.relock.fiveMinutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After 5 minutes of inactivity"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Après 5 minutes d'inactivité"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Après 5 minutes d'inactivité"
           }
         }
       }
     },
-    "lock.settings.relock.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Re-lock:"
+    "lock.settings.relock.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Re-lock:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reverrouiller :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reverrouiller :"
           }
         }
       }
     },
-    "lock.settings.relock.oneMinute": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "After 1 minute of inactivity"
+    "lock.settings.relock.oneMinute" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After 1 minute of inactivity"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Après 1 minute d'inactivité"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Après 1 minute d'inactivité"
           }
         }
       }
     },
-    "lock.settings.unlock.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlocking:"
+    "lock.settings.unlock.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlocking:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déverrouillage :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouillage :"
           }
         }
       }
     },
-    "lock.settings.unlock.touchID": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Touch ID"
+    "lock.settings.unlock.touchID" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch ID"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Touch ID"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touch ID"
           }
         }
       }
     },
-    "lock.unlockPassword.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock"
+    "lock.unlockPassword.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déverrouiller"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouiller"
           }
         }
       }
     },
-    "lock.unlockPassword.field": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Password"
+    "lock.unlockPassword.field" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe"
           }
         }
       }
     },
-    "lock.unlockPassword.incorrect": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Incorrect password."
+    "lock.unlockPassword.incorrect" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Incorrect password."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mot de passe incorrect."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mot de passe incorrect."
           }
         }
       }
     },
-    "lock.unlockPassword.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Password"
+    "lock.unlockPassword.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Password"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Utiliser le mot de passe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utiliser le mot de passe"
           }
         }
       }
     },
-    "menu.format.bold": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bold"
+    "menu.format.bold" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bold"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gras"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gras"
           }
         }
       }
     },
-    "menu.format.convertHeading1": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heading 1"
+    "menu.format.convertHeading1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heading 1"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Titre 1"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre 1"
           }
         }
       }
     },
-    "menu.format.convertHeading2": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heading 2"
+    "menu.format.convertHeading2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heading 2"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Titre 2"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre 2"
           }
         }
       }
     },
-    "menu.format.convertHeading3": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heading 3"
+    "menu.format.convertHeading3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heading 3"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Titre 3"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre 3"
           }
         }
       }
     },
-    "menu.format.convertParagraph": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paragraph"
+    "menu.format.convertParagraph" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paragraph"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paragraphe"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paragraphe"
           }
         }
       }
     },
-    "menu.format.inlineCode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inline Code"
+    "menu.format.inlineCode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inline Code"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Code en ligne"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Code en ligne"
           }
         }
       }
     },
-    "menu.format.italic": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Italic"
+    "menu.format.italic" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italic"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Italique"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italique"
           }
         }
       }
     },
-    "menu.format.link": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Link..."
+    "menu.format.link" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link..."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lien..."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lien..."
           }
         }
       }
     },
-    "menu.format.strikethrough": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Strikethrough"
+    "menu.format.strikethrough" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strikethrough"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Barré"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barré"
           }
         }
       }
     },
-    "menu.format.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Format"
+    "menu.format.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Format"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Format"
           }
         }
       }
     },
-    "menu.format.underline": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Underline"
+    "menu.format.underline" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Underline"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Souligné"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Souligné"
           }
         }
       }
     },
-    "menu.view.focusEditor": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Editor"
+    "menu.view.focusEditor" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editor"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Éditeur"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditeur"
           }
         }
       }
     },
-    "menu.view.focusList": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Note List"
+    "menu.view.focusList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note List"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Liste des notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liste des notes"
           }
         }
       }
     },
-    "menu.view.focusSidebar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sidebar"
+    "menu.view.focusSidebar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sidebar"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Barre latérale"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Barre latérale"
           }
         }
       }
     },
-    "menu.view.toggleFocusMode": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Focus Mode"
+    "menu.view.toggleFocusMode" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus Mode"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mode focus"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode focus"
           }
         }
       }
     },
-    "noteDetail.addCover.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add a cover image to the note"
+    "noteDetail.addCover.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a cover image to the note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter une image de couverture a la note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une image de couverture a la note"
           }
         }
       }
     },
-    "noteDetail.addCover.comingSoon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adding a cover image is coming in a future phase."
+    "noteDetail.addCover.comingSoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adding a cover image is coming in a future phase."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "L'ajout d'une image de couverture arrive dans une prochaine phase."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'ajout d'une image de couverture arrive dans une prochaine phase."
           }
         }
       }
     },
-    "noteDetail.addCover.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add cover"
+    "noteDetail.addCover.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add cover"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter une couverture"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une couverture"
           }
         }
       }
     },
-    "noteDetail.addIcon.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add an icon to the note"
+    "noteDetail.addIcon.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add an icon to the note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter une icone a la note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une icone a la note"
           }
         }
       }
     },
-    "noteDetail.addIcon.comingSoon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choosing a note icon is coming in a future phase."
+    "noteDetail.addIcon.comingSoon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choosing a note icon is coming in a future phase."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le choix d'une icone de note arrive dans une prochaine phase."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le choix d'une icone de note arrive dans une prochaine phase."
           }
         }
       }
     },
-    "noteDetail.addIcon.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add icon"
+    "noteDetail.addIcon.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add icon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter une icone"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter une icone"
           }
         }
       }
     },
-    "noteDetail.comingSoon.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coming soon"
+    "noteDetail.comingSoon.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A venir"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A venir"
           }
         }
       }
     },
-    "noteDetail.cover.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cover image"
+    "noteDetail.cover.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cover image"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Image de couverture"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image de couverture"
           }
         }
       }
     },
-    "noteDetail.icon.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Note icon"
+    "noteDetail.icon.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note icon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Icone de la note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Icone de la note"
           }
         }
       }
     },
-    "noteDetail.placeholder.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The selected note's content will appear here."
+    "noteDetail.placeholder.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The selected note's content will appear here."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le contenu de la note sélectionnée apparaîtra ici."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le contenu de la note sélectionnée apparaîtra ici."
           }
         }
       }
     },
-    "noteDetail.placeholder.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a note"
+    "noteDetail.placeholder.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sélectionnez une note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez une note"
           }
         }
       }
     },
-    "noteDetail.title.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Untitled"
+    "noteDetail.title.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untitled"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sans titre"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans titre"
           }
         }
       }
     },
-    "noteDetail.unsupportedBlock.prefix": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Block type not supported yet:"
+    "noteDetail.unsupportedBlock.prefix" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Block type not supported yet:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Type de bloc pas encore pris en charge :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type de bloc pas encore pris en charge :"
           }
         }
       }
     },
-    "noteHeader.day.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "today"
+    "noteHeader.day.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "aujourd'hui"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aujourd'hui"
           }
         }
       }
     },
-    "noteHeader.day.yesterday": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "yesterday"
+    "noteHeader.day.yesterday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "yesterday"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "hier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "hier"
           }
         }
       }
     },
-    "noteHeader.metadataLine": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edited %@ at %@ - %@"
+    "noteHeader.metadataLine" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edited %@ at %@ - %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modifiee %@ a %@ - %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modifiee %@ a %@ - %@"
           }
         }
       }
     },
-    "noteHeader.wordCount.plural": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d words"
+    "noteHeader.wordCount.plural" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d words"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d mots"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d mots"
           }
         }
       }
     },
-    "noteHeader.wordCount.singular": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 word"
+    "noteHeader.wordCount.singular" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 word"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 mot"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 mot"
           }
         }
       }
     },
-    "noteList.cell.accessibility.favorite": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "favorite"
+    "noteList.cell.accessibility.favorite" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "favorite"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "favorite"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "favorite"
           }
         }
       }
     },
-    "noteList.cell.accessibility.locked": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "locked"
+    "noteList.cell.accessibility.locked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "locked"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "verrouillée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "verrouillée"
           }
         }
       }
     },
-    "noteList.cell.accessibility.pinned": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "pinned"
+    "noteList.cell.accessibility.pinned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pinned"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "épinglée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "épinglée"
           }
         }
       }
     },
-    "noteList.cell.date.yesterday": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yesterday %@"
+    "noteList.cell.date.yesterday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hier %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier %@"
           }
         }
       }
     },
-    "noteList.cell.snippet.empty": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Content"
+    "noteList.cell.snippet.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Content"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucun contenu"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun contenu"
           }
         }
       }
     },
-    "noteList.cell.snippet.locked": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Locked Note"
+    "noteList.cell.snippet.locked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked Note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Note verrouillée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note verrouillée"
           }
         }
       }
     },
-    "noteList.cell.title.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Note"
+    "noteList.cell.title.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note"
           }
         }
       }
     },
-    "noteList.contextMenu.copyLink": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copy Internal Link"
+    "noteList.contextMenu.copyLink" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Internal Link"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copier le lien interne"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copier le lien interne"
           }
         }
       }
     },
-    "noteList.contextMenu.duplicate.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Duplicate %d Notes"
+    "noteList.contextMenu.duplicate.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate %d Notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dupliquer %d notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dupliquer %d notes"
           }
         }
       }
     },
-    "noteList.contextMenu.duplicate.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Duplicate"
+    "noteList.contextMenu.duplicate.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duplicate"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dupliquer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dupliquer"
           }
         }
       }
     },
-    "noteList.contextMenu.export": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Export..."
+    "noteList.contextMenu.export" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export..."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exporter..."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter..."
           }
         }
       }
     },
-    "noteList.contextMenu.favorite.add.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add %d Notes to Favorites"
+    "noteList.contextMenu.favorite.add.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add %d Notes to Favorites"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter %d notes aux favoris"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter %d notes aux favoris"
           }
         }
       }
     },
-    "noteList.contextMenu.favorite.add.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add to Favorites"
+    "noteList.contextMenu.favorite.add.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add to Favorites"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajouter aux favoris"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajouter aux favoris"
           }
         }
       }
     },
-    "noteList.contextMenu.favorite.remove.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove %d Notes from Favorites"
+    "noteList.contextMenu.favorite.remove.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %d Notes from Favorites"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Retirer %d notes des favoris"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer %d notes des favoris"
           }
         }
       }
     },
-    "noteList.contextMenu.favorite.remove.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove from Favorites"
+    "noteList.contextMenu.favorite.remove.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove from Favorites"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Retirer des favoris"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retirer des favoris"
           }
         }
       }
     },
-    "noteList.contextMenu.lock": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lock Note"
+    "noteList.contextMenu.lock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock Note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verrouiller la note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouiller la note"
           }
         }
       }
     },
-    "noteList.contextMenu.moveTo": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Move to"
+    "noteList.contextMenu.moveTo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move to"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déplacer vers"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déplacer vers"
           }
         }
       }
     },
-    "noteList.contextMenu.moveToTrash.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Move %d Notes to Trash"
+    "noteList.contextMenu.moveToTrash.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move %d Notes to Trash"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mettre %d notes à la corbeille"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre %d notes à la corbeille"
           }
         }
       }
     },
-    "noteList.contextMenu.moveToTrash.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Move to Trash"
+    "noteList.contextMenu.moveToTrash.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Move to Trash"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mettre à la corbeille"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mettre à la corbeille"
           }
         }
       }
     },
-    "noteList.contextMenu.newFolder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Folder..."
+    "noteList.contextMenu.newFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Folder..."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau dossier..."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau dossier..."
           }
         }
       }
     },
-    "noteList.contextMenu.pin": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pin"
+    "noteList.contextMenu.pin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pin"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Épingler"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épingler"
           }
         }
       }
     },
-    "noteList.contextMenu.selectionHeader.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes selected"
+    "noteList.contextMenu.selectionHeader.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes selected"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes sélectionnées"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes sélectionnées"
           }
         }
       }
     },
-    "noteList.contextMenu.selectionHeader.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note selected"
+    "noteList.contextMenu.selectionHeader.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note selected"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note sélectionnée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note sélectionnée"
           }
         }
       }
     },
-    "noteList.contextMenu.unpin": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unpin"
+    "noteList.contextMenu.unpin" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unpin"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Désépingler"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désépingler"
           }
         }
       }
     },
-    "noteList.dateGroup.previous30Days": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Previous 30 Days"
+    "noteList.dateGroup.previous30Days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous 30 Days"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30 jours précédents"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 jours précédents"
           }
         }
       }
     },
-    "noteList.dateGroup.previous7Days": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Previous 7 Days"
+    "noteList.dateGroup.previous7Days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous 7 Days"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "7 jours précédents"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7 jours précédents"
           }
         }
       }
     },
-    "noteList.dateGroup.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+    "noteList.dateGroup.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aujourd'hui"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aujourd'hui"
           }
         }
       }
     },
-    "noteList.dateGroup.yesterday": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yesterday"
+    "noteList.dateGroup.yesterday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yesterday"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier"
           }
         }
       }
     },
-    "noteList.empty.noNotes.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "\"%@\" is empty. Create your first note to get started."
+    "noteList.empty.noNotes.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" is empty. Create your first note to get started."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "« %@ » est vide. Créez une première note pour commencer."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "« %@ » est vide. Créez une première note pour commencer."
           }
         }
       }
     },
-    "noteList.empty.noNotes.newNoteButton": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New Note"
+    "noteList.empty.noNotes.newNoteButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note"
           }
         }
       }
     },
-    "noteList.empty.noNotes.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Notes"
+    "noteList.empty.noNotes.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucune note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune note"
           }
         }
       }
     },
-    "noteList.empty.noResults.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No notes match \"%@\" in \"%@\"."
+    "noteList.empty.noResults.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No notes match \"%@\" in \"%@\"."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucune note ne correspond à « %@ » dans « %@ »."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune note ne correspond à « %@ » dans « %@ »."
           }
         }
       }
     },
-    "noteList.empty.noResults.searchEverywhereButton": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search Everywhere"
+    "noteList.empty.noResults.searchEverywhereButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search Everywhere"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rechercher partout"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher partout"
           }
         }
       }
     },
-    "noteList.empty.noResults.searchEverywhereHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not available yet: searching across every folder arrives in a later phase."
+    "noteList.empty.noResults.searchEverywhereHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not available yet: searching across every folder arrives in a later phase."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pas encore disponible : la recherche dans tous les dossiers arrivera dans une phase ultérieure."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas encore disponible : la recherche dans tous les dossiers arrivera dans une phase ultérieure."
           }
         }
       }
     },
-    "noteList.empty.noResults.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Results"
+    "noteList.empty.noResults.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Results"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucun résultat"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun résultat"
           }
         }
       }
     },
-    "noteList.noFolderSelected.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a folder in the sidebar."
+    "noteList.noFolderSelected.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a folder in the sidebar."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sélectionnez un dossier dans la barre latérale."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez un dossier dans la barre latérale."
           }
         }
       }
     },
-    "noteList.noFolderSelected.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes"
+    "noteList.noFolderSelected.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
           }
         }
       }
     },
-    "noteList.search.clearAccessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clear"
+    "noteList.search.clearAccessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Effacer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer"
           }
         }
       }
     },
-    "noteList.search.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search"
+    "noteList.search.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rechercher"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
           }
         }
       }
     },
-    "noteList.section.pinned": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pinned"
+    "noteList.section.pinned" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pinned"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Épinglées"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Épinglées"
           }
         }
       }
     },
-    "noteList.sort.ascendingToggle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ascending Order"
+    "noteList.sort.ascendingToggle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ascending Order"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ordre croissant"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordre croissant"
           }
         }
       }
     },
-    "noteList.sort.button.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sort notes: %@, %@"
+    "noteList.sort.button.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort notes: %@, %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trier les notes : %@, %@"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier les notes : %@, %@"
           }
         }
       }
     },
-    "noteList.sort.criterion.createdDate": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date Created"
+    "noteList.sort.criterion.createdDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date Created"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date de création"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de création"
           }
         }
       }
     },
-    "noteList.sort.criterion.modifiedDate": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date Modified"
+    "noteList.sort.criterion.modifiedDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date Modified"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date de modification"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date de modification"
           }
         }
       }
     },
-    "noteList.sort.criterion.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Title"
+    "noteList.sort.criterion.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Titre"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Titre"
           }
         }
       }
     },
-    "noteList.sort.criterionPickerLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sort by"
+    "noteList.sort.criterionPickerLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sort by"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trier par"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trier par"
           }
         }
       }
     },
-    "noteList.sort.direction.ascending": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ascending"
+    "noteList.sort.direction.ascending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ascending"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "croissant"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "croissant"
           }
         }
       }
     },
-    "noteList.sort.direction.descending": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "descending"
+    "noteList.sort.direction.descending" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "descending"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "décroissant"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "décroissant"
           }
         }
       }
     },
-    "settings.ai.processing.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Locked notes are never sent, regardless of this setting."
+    "settings.ai.processing.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked notes are never sent, regardless of this setting."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les notes verrouillées ne sont jamais envoyées, quel que soit ce réglage."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notes verrouillées ne sont jamais envoyées, quel que soit ce réglage."
           }
         }
       }
     },
-    "settings.ai.processing.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Processing:"
+    "settings.ai.processing.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processing:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Traitement :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traitement :"
           }
         }
       }
     },
-    "settings.ai.processing.onDevice": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "On this device only"
+    "settings.ai.processing.onDevice" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On this device only"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sur cet appareil uniquement"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur cet appareil uniquement"
           }
         }
       }
     },
-    "settings.ai.processing.remote": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Allow remote processing for long tasks"
+    "settings.ai.processing.remote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Allow remote processing for long tasks"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Autoriser le traitement distant pour les tâches longues"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoriser le traitement distant pour les tâches longues"
           }
         }
       }
     },
-    "settings.ai.searchIndex.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search index:"
+    "settings.ai.searchIndex.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search index:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Index de recherche :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Index de recherche :"
           }
         }
       }
     },
-    "settings.ai.searchIndex.rebuild": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rebuild"
+    "settings.ai.searchIndex.rebuild" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rebuild"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reconstruire"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reconstruire"
           }
         }
       }
     },
-    "settings.ai.searchIndex.unavailable": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not available yet: the AI assistant is planned for a later phase."
+    "settings.ai.searchIndex.unavailable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not available yet: the AI assistant is planned for a later phase."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pas encore disponible : l'assistant IA est prévu pour une phase ultérieure."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pas encore disponible : l'assistant IA est prévu pour une phase ultérieure."
           }
         }
       }
     },
-    "settings.appearance.accent.blue": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Blue"
+    "settings.appearance.accent.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Each color is named on hover and read by VoiceOver. The selection is marked with a checkmark in addition to the ring."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bleu"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chaque teinte est nommée au survol et lue par VoiceOver. La sélection est marquée par une coche en plus de l'anneau."
           }
         }
       }
     },
-    "settings.appearance.accent.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Each color is named on hover and read by VoiceOver. The selection is marked with a checkmark in addition to the ring."
+    "settings.appearance.accent.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accent color:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chaque teinte est nommée au survol et lue par VoiceOver. La sélection est marquée par une coche en plus de l'anneau."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couleur d'accent :"
           }
         }
       }
     },
-    "settings.appearance.accent.followSystem": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Follow system accent color"
+    "settings.appearance.accent.selectedFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, selected"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suivre l'accent du système"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, sélectionné"
           }
         }
       }
     },
-    "settings.appearance.accent.graphite": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Graphite"
+    "settings.appearance.font.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Body font:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Graphite"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Police du corps :"
           }
         }
       }
     },
-    "settings.appearance.accent.green": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Green"
+    "settings.appearance.options.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "These two options follow macOS accessibility settings by default; checking them here forces the behavior in Slate only."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vert"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ces deux options suivent par défaut les réglages d'accessibilité de macOS ; les cocher ici force le comportement dans Slate seulement."
           }
         }
       }
     },
-    "settings.appearance.accent.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Accent color:"
+    "settings.appearance.options.increaseSeparatorContrast" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase separator contrast"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Couleur d'accent :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Augmenter le contraste des séparateurs"
           }
         }
       }
     },
-    "settings.appearance.accent.orange": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Orange"
+    "settings.appearance.options.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Orange"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Options :"
           }
         }
       }
     },
-    "settings.appearance.accent.red": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Red"
+    "settings.appearance.options.reduceSidebarTransparency" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reduce sidebar transparency"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rouge"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réduire la transparence de la barre latérale"
           }
         }
       }
     },
-    "settings.appearance.accent.rose": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pink"
+    "settings.appearance.options.showCover" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show note covers"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rose"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher la couverture des notes"
           }
         }
       }
     },
-    "settings.appearance.accent.selectedFormat": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@, selected"
+    "settings.appearance.textSize.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Slate-only setting, combined with the system text size. Live preview in the editor."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@, sélectionné"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglage local à Slate, cumulé avec la taille système. Aperçu en direct dans l'éditeur."
           }
         }
       }
     },
-    "settings.appearance.accent.violet": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Purple"
+    "settings.appearance.textSize.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text size:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Violet"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Taille du texte :"
           }
         }
       }
     },
-    "settings.appearance.accent.yellow": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yellow"
+    "settings.appearance.theme.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“System” follows your Mac's settings, including the automatic switch at sunset."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jaune"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "« Système » suit les réglages du Mac, y compris la bascule automatique au coucher du soleil."
           }
         }
       }
     },
-    "settings.appearance.font.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Body font:"
+    "settings.appearance.theme.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theme:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Police du corps :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thème :"
           }
         }
       }
     },
-    "settings.appearance.font.sans": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SF Pro (system)"
+    "settings.general.cloudSync.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Controlled by the build configuration, not adjustable from here yet."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "SF Pro (système)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Contrôlé par la configuration de compilation, pas encore ajustable ici."
           }
         }
       }
     },
-    "settings.appearance.font.serif": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New York (serif)"
+    "settings.general.cloudSync.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync via iCloud"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New York (serif)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniser via iCloud"
           }
         }
       }
     },
-    "settings.appearance.options.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "These two options follow macOS accessibility settings by default; checking them here forces the behavior in Slate only."
+    "settings.general.newNote.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The only behavior implemented today: a new note is created in the selected folder."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ces deux options suivent par défaut les réglages d'accessibilité de macOS ; les cocher ici force le comportement dans Slate seulement."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le seul comportement implémenté aujourd'hui : une nouvelle note est créée dans le dossier sélectionné."
           }
         }
       }
     },
-    "settings.appearance.options.increaseSeparatorContrast": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Increase separator contrast"
+    "settings.general.newNote.currentFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In the current folder"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Augmenter le contraste des séparateurs"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dans le dossier courant"
           }
         }
       }
     },
-    "settings.appearance.options.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Options:"
+    "settings.general.newNote.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New note:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Options :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note :"
           }
         }
       }
     },
-    "settings.appearance.options.reduceSidebarTransparency": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reduce sidebar transparency"
+    "settings.general.startup.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "At startup:"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Réduire la transparence de la barre latérale"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au démarrage :"
           }
         }
       }
     },
-    "settings.appearance.options.showCover": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show note covers"
+    "settings.general.startup.reopenLastNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reopen last note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Afficher la couverture des notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rouvrir la dernière note"
           }
         }
       }
     },
-    "settings.appearance.textSize.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A Slate-only setting, combined with the system text size. Live preview in the editor."
+    "settings.tab.ai" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Réglage local à Slate, cumulé avec la taille système. Aperçu en direct dans l'éditeur."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IA"
           }
         }
       }
     },
-    "settings.appearance.textSize.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Text size:"
+    "settings.tab.appearance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Appearance"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Taille du texte :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apparence"
           }
         }
       }
     },
-    "settings.appearance.theme.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "“System” follows your Mac's settings, including the automatic switch at sunset."
+    "settings.tab.general" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "« Système » suit les réglages du Mac, y compris la bascule automatique au coucher du soleil."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
           }
         }
       }
     },
-    "settings.appearance.theme.dark": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dark"
+    "settings.tab.lock" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sombre"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouillage"
           }
         }
       }
     },
-    "settings.appearance.theme.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Theme:"
+    "sidebar.action.newSpace" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New space"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thème :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvel espace"
           }
         }
       }
     },
-    "settings.appearance.theme.light": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Light"
+    "sidebar.action.newSpace.comingSoon.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creating multiple spaces will arrive with multi-workspace support (phase 19)."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clair"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La création de plusieurs espaces arrivera avec le multi-espace de travail (phase 19)."
           }
         }
       }
     },
-    "settings.appearance.theme.system": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "System"
+    "sidebar.action.newSpace.comingSoon.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coming soon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Système"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bientôt disponible"
           }
         }
       }
     },
-    "settings.general.cloudSync.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Controlled by the build configuration, not adjustable from here yet."
+    "sidebar.favorites.accessibilityLabel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, favorite note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Contrôlé par la configuration de compilation, pas encore ajustable ici."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, note favorite"
           }
         }
       }
     },
-    "settings.general.cloudSync.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync via iCloud"
+    "sidebar.favorites.untitled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Untitled"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Synchroniser via iCloud"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans titre"
           }
         }
       }
     },
-    "settings.general.newNote.caption": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The only behavior implemented today: a new note is created in the selected folder."
+    "sidebar.folder.accessibility.collapseAction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapse"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le seul comportement implémenté aujourd'hui : une nouvelle note est créée dans le dossier sélectionné."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replier"
           }
         }
       }
     },
-    "settings.general.newNote.currentFolder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "In the current folder"
+    "sidebar.folder.accessibility.collapsed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder, collapsed"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dans le dossier courant"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dossier replié"
           }
         }
       }
     },
-    "settings.general.newNote.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New note:"
+    "sidebar.folder.accessibility.expandAction" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expand"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déplier"
           }
         }
       }
     },
-    "settings.general.startup.label": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "At startup:"
+    "sidebar.folder.accessibility.expanded" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder, expanded"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Au démarrage :"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "dossier déplié"
           }
         }
       }
     },
-    "settings.general.startup.reopenLastNote": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reopen last note"
+    "sidebar.folder.accessibility.notesCount.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rouvrir la dernière note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes"
           }
         }
       }
     },
-    "settings.tab.ai": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI"
+    "sidebar.folder.accessibility.notesCount.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "IA"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note"
           }
         }
       }
     },
-    "settings.tab.appearance": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Appearance"
+    "sidebar.folder.accessibility.notesCount.zero" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "no notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apparence"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "aucune note"
           }
         }
       }
     },
-    "settings.tab.general": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "General"
+    "sidebar.folder.delete.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Général"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
     },
-    "settings.tab.lock": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lock"
+    "sidebar.folder.delete.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The subfolders and notes it contains will be permanently deleted."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verrouillage"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les sous-dossiers et notes qu'il contient seront supprimés définitivement."
           }
         }
       }
     },
-    "sidebar.action.newSpace": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New space"
+    "sidebar.folder.delete.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete \"%@\"?"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvel espace"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer « %@ » ?"
           }
         }
       }
     },
-    "sidebar.action.newSpace.comingSoon.message": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Creating multiple spaces will arrive with multi-workspace support (phase 19)."
+    "sidebar.folder.iconPicker.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose an icon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "La création de plusieurs espaces arrivera avec le multi-espace de travail (phase 19)."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir une icône"
           }
         }
       }
     },
-    "sidebar.action.newSpace.comingSoon.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coming soon"
+    "sidebar.folder.menu.changeIcon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change icon"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bientôt disponible"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer d'icône"
           }
         }
       }
     },
-    "sidebar.favorites.accessibilityLabel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@, favorite note"
+    "sidebar.folder.menu.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@, note favorite"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
     },
-    "sidebar.favorites.untitled": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Untitled"
+    "sidebar.folder.menu.newSubfolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New subfolder"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sans titre"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau sous-dossier"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.collapseAction": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Collapse"
+    "sidebar.folder.menu.rename" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Replier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.collapsed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "folder, collapsed"
+    "sidebar.folder.moreActions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More actions"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "dossier replié"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus d'actions"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.expandAction": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expand"
+    "sidebar.folder.namePrompt.field" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder name"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déplier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nom du dossier"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.expanded": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "folder, expanded"
+    "sidebar.folder.namePrompt.newTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New folder"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "dossier déplié"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau dossier"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.notesCount.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes"
+    "sidebar.folder.namePrompt.renameTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rename folder"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Renommer le dossier"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.notesCount.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note"
+    "sidebar.footer.newFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New folder"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau dossier"
           }
         }
       }
     },
-    "sidebar.folder.accessibility.notesCount.zero": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "no notes"
+    "sidebar.footer.newFolder.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New folder (Cmd+Shift+N)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "aucune note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouveau dossier (Cmd+Maj+N)"
           }
         }
       }
     },
-    "sidebar.folder.delete.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "sidebar.footer.newNote" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note"
           }
         }
       }
     },
-    "sidebar.folder.delete.message": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The subfolders and notes it contains will be permanently deleted."
+    "sidebar.footer.newNote.disabledHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a folder to create a note."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les sous-dossiers et notes qu'il contient seront supprimés définitivement."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sélectionnez un dossier pour créer une note."
           }
         }
       }
     },
-    "sidebar.folder.delete.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete \"%@\"?"
+    "sidebar.footer.newNote.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New note in the selected folder (Cmd+N)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer « %@ » ?"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note dans le dossier sélectionné (Cmd+N)"
           }
         }
       }
     },
-    "sidebar.folder.iconPicker.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose an icon"
+    "sidebar.footer.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choisir une icône"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
           }
         }
       }
     },
-    "sidebar.folder.menu.changeIcon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Change icon"
+    "sidebar.footer.settings.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings (⌘,)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Changer d'icône"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages (⌘,)"
           }
         }
       }
     },
-    "sidebar.folder.menu.delete": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "sidebar.footer.trash" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corbeille"
           }
         }
       }
     },
-    "sidebar.folder.menu.newSubfolder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New subfolder"
+    "sidebar.footer.trash.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash: available in phase 11."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau sous-dossier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corbeille : disponible en phase 11."
           }
         }
       }
     },
-    "sidebar.folder.menu.rename": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rename"
+    "sidebar.newNote.defaultTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renommer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle note"
           }
         }
       }
     },
-    "sidebar.folder.moreActions": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "More actions"
+    "sidebar.section.favorites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favorites"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Plus d'actions"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favoris"
           }
         }
       }
     },
-    "sidebar.folder.namePrompt.field": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Folder name"
+    "sidebar.section.spaces" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaces"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nom du dossier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espaces"
           }
         }
       }
     },
-    "sidebar.folder.namePrompt.newTitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New folder"
+    "sidebar.workspace.placeholderName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Workspace"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau dossier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espace de travail"
           }
         }
       }
     },
-    "sidebar.folder.namePrompt.renameTitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rename folder"
+    "sidebar.workspace.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Workspace"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renommer le dossier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espace de travail"
           }
         }
       }
     },
-    "sidebar.footer.newFolder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New folder"
+    "sidebar.workspace.switcherHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Multi-workspace switching arrives in phase 19."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau dossier"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le sélecteur multi-espaces de travail arrive en phase 19."
           }
         }
       }
     },
-    "sidebar.footer.newFolder.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New folder (Cmd+Shift+N)"
+    "space.default.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau dossier (Cmd+Maj+N)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Général"
           }
         }
       }
     },
-    "sidebar.footer.newNote": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New note"
+    "toolbar.ai" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI assistant"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant IA"
           }
         }
       }
     },
-    "sidebar.footer.newNote.disabledHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select a folder to create a note."
+    "toolbar.ai.disabledHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI assistant: available in a later phase."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sélectionnez un dossier pour créer une note."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistant IA : disponible dans une phase ultérieure."
           }
         }
       }
     },
-    "sidebar.footer.newNote.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New note in the selected folder (Cmd+N)"
+    "toolbar.edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note dans le dossier sélectionné (Cmd+N)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Édition"
           }
         }
       }
     },
-    "sidebar.footer.settings": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "toolbar.edit.disabledHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Block editor: available in phase 5."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Réglages"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Éditeur de blocs : disponible en phase 5."
           }
         }
       }
     },
-    "sidebar.footer.settings.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings (⌘,)"
+    "toolbar.search" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Réglages (⌘,)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rechercher"
           }
         }
       }
     },
-    "sidebar.footer.trash": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trash"
+    "toolbar.search.disabledHelp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search: available in phase 15."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Corbeille"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recherche : disponible en phase 15."
           }
         }
       }
     },
-    "sidebar.footer.trash.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trash: available in phase 11."
+    "toolbar.sync.disabledDebug" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync disabled (development)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Corbeille : disponible en phase 11."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud désactivée (développement)"
           }
         }
       }
     },
-    "sidebar.newNote.defaultTitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New note"
+    "toolbar.sync.enabled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud sync enabled"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation iCloud activée"
           }
         }
       }
     },
-    "sidebar.section.favorites": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Favorites"
+    "toolbar.toggleList" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/hide list"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Favoris"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher/masquer la liste"
           }
         }
       }
     },
-    "sidebar.section.spaces": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spaces"
+    "toolbar.toggleList.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/hide note list (Cmd+2)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Espaces"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher/masquer la liste de notes (Cmd+2)"
           }
         }
       }
     },
-    "sidebar.workspace.placeholderName": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Workspace"
+    "toolbar.toggleSidebar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/hide sidebar"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Espace de travail"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher/masquer la barre latérale"
           }
         }
       }
     },
-    "sidebar.workspace.subtitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Workspace"
+    "toolbar.toggleSidebar.help" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/hide sidebar (Cmd+1)"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Espace de travail"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher/masquer la barre latérale (Cmd+1)"
           }
         }
       }
     },
-    "sidebar.workspace.switcherHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Multi-workspace switching arrives in phase 19."
+    "trash.banner.retention" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes are permanently deleted after %d days."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Le sélecteur multi-espaces de travail arrive en phase 19."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notes sont supprimées définitivement au bout de %d jours."
           }
         }
       }
     },
-    "space.default.name": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "General"
+    "trash.count.many" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Général"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d notes"
           }
         }
       }
     },
-    "toolbar.ai": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI assistant"
+    "trash.count.one" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Assistant IA"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 note"
           }
         }
       }
     },
-    "toolbar.ai.disabledHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI assistant: available in a later phase."
+    "trash.count.zero" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No notes"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Assistant IA : disponible dans une phase ultérieure."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune note"
           }
         }
       }
     },
-    "toolbar.edit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit"
+    "trash.deleteAlert.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Édition"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
     },
-    "toolbar.edit.disabledHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Block editor: available in phase 5."
+    "trash.deleteAlert.message.manyAttachments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This note and its %d attachments will be erased from all your devices. This action is irreversible."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Éditeur de blocs : disponible en phase 5."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette note et ses %d pièces jointes seront effacées de tous vos appareils. Cette action est irréversible."
           }
         }
       }
     },
-    "toolbar.search": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search"
+    "trash.deleteAlert.message.noAttachments" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This note will be erased from all your devices. This action is irreversible."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rechercher"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette note sera effacée de tous vos appareils. Cette action est irréversible."
           }
         }
       }
     },
-    "toolbar.search.disabledHelp": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search: available in phase 15."
+    "trash.deleteAlert.message.oneAttachment" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This note and its attachment will be erased from all your devices. This action is irreversible."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recherche : disponible en phase 15."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cette note et sa pièce jointe seront effacées de tous vos appareils. Cette action est irréversible."
           }
         }
       }
     },
-    "toolbar.sync.disabledDebug": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud sync disabled (development)"
+    "trash.deleteAlert.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanently delete \"%@\"?"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Synchronisation iCloud désactivée (développement)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer définitivement « %@ » ?"
           }
         }
       }
     },
-    "toolbar.sync.enabled": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud sync enabled"
+    "trash.elapsed.manyDays" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted %d days ago"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Synchronisation iCloud activée"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimée il y a %d jours"
           }
         }
       }
     },
-    "toolbar.toggleList": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show/hide list"
+    "trash.elapsed.oneDay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted 1 day ago"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Afficher/masquer la liste"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimée il y a 1 jour"
           }
         }
       }
     },
-    "toolbar.toggleList.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show/hide note list (Cmd+2)"
+    "trash.elapsed.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted today"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Afficher/masquer la liste de notes (Cmd+2)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimée aujourd'hui"
           }
         }
       }
     },
-    "toolbar.toggleSidebar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show/hide sidebar"
+    "trash.empty.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleted notes stay here for 30 days before being permanently erased."
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Afficher/masquer la barre latérale"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les notes supprimées restent ici 30 jours avant d'être effacées définitivement."
           }
         }
       }
     },
-    "toolbar.toggleSidebar.help": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show/hide sidebar (Cmd+1)"
+    "trash.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash Empty"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Afficher/masquer la barre latérale (Cmd+1)"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corbeille vide"
           }
         }
       }
     },
-    "trash.banner.retention": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes are permanently deleted after %d days."
+    "trash.emptyButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Trash"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les notes sont supprimées définitivement au bout de %d jours."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider la corbeille"
           }
         }
       }
     },
-    "trash.count.many": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes"
+    "trash.emptyConfirm.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d notes"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider"
           }
         }
       }
     },
-    "trash.count.one": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note"
+    "trash.emptyConfirm.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty Trash (%d notes)?"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vider la corbeille (%d notes) ?"
           }
         }
       }
     },
-    "trash.count.zero": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No notes"
+    "trash.expiration.days" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires in %d days"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucune note"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expire dans %d jours"
           }
         }
       }
     },
-    "trash.deleteAlert.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "trash.expiration.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires today"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expire aujourd'hui"
           }
         }
       }
     },
-    "trash.deleteAlert.message.manyAttachments": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This note and its %d attachments will be erased from all your devices. This action is irreversible."
+    "trash.expiration.tomorrow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expires tomorrow"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette note et ses %d pièces jointes seront effacées de tous vos appareils. Cette action est irréversible."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expire demain"
           }
         }
       }
     },
-    "trash.deleteAlert.message.noAttachments": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This note will be erased from all your devices. This action is irreversible."
+    "trash.row.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette note sera effacée de tous vos appareils. Cette action est irréversible."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprimer"
           }
         }
       }
     },
-    "trash.deleteAlert.message.oneAttachment": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This note and its attachment will be erased from all your devices. This action is irreversible."
+    "trash.row.locked" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cette note et sa pièce jointe seront effacées de tous vos appareils. Cette action est irréversible."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verrouillée"
           }
         }
       }
     },
-    "trash.deleteAlert.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Permanently delete \"%@\"?"
+    "trash.row.metadataSeparator" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " · "
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer définitivement « %@ » ?"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " · "
           }
         }
       }
     },
-    "trash.elapsed.manyDays": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleted %d days ago"
+    "trash.row.restore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimée il y a %d jours"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer"
           }
         }
       }
     },
-    "trash.elapsed.oneDay": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleted 1 day ago"
+    "trash.row.unlockToRestore" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock to Restore"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimée il y a 1 jour"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déverrouiller pour restaurer"
           }
         }
       }
     },
-    "trash.elapsed.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleted today"
+    "trash.row.wasInFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "was in %@"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimée aujourd'hui"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "était dans %@"
           }
         }
       }
     },
-    "trash.empty.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deleted notes stay here for 30 days before being permanently erased."
+    "trash.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trash"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les notes supprimées restent ici 30 jours avant d'être effacées définitivement."
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Corbeille"
           }
         }
       }
     },
-    "trash.empty.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trash Empty"
+    "workspace.default.name" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Workspace"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Corbeille vide"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Espace de travail"
           }
         }
       }
     },
-    "trash.emptyButton": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Empty Trash"
+    "workspaceBootstrap.error.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to prepare the workspace"
           }
         },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vider la corbeille"
-          }
-        }
-      }
-    },
-    "trash.emptyConfirm.confirm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Empty"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vider"
-          }
-        }
-      }
-    },
-    "trash.emptyConfirm.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Empty Trash (%d notes)?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vider la corbeille (%d notes) ?"
-          }
-        }
-      }
-    },
-    "trash.expiration.days": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expires in %d days"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expire dans %d jours"
-          }
-        }
-      }
-    },
-    "trash.expiration.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expires today"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expire aujourd'hui"
-          }
-        }
-      }
-    },
-    "trash.expiration.tomorrow": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expires tomorrow"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Expire demain"
-          }
-        }
-      }
-    },
-    "trash.row.delete": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer"
-          }
-        }
-      }
-    },
-    "trash.row.locked": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Locked"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verrouillée"
-          }
-        }
-      }
-    },
-    "trash.row.metadataSeparator": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " · "
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": " · "
-          }
-        }
-      }
-    },
-    "trash.row.restore": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restaurer"
-          }
-        }
-      }
-    },
-    "trash.row.unlockToRestore": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock to Restore"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Déverrouiller pour restaurer"
-          }
-        }
-      }
-    },
-    "trash.row.wasInFolder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "was in %@"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "était dans %@"
-          }
-        }
-      }
-    },
-    "trash.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trash"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Corbeille"
-          }
-        }
-      }
-    },
-    "workspace.default.name": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Workspace"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Espace de travail"
-          }
-        }
-      }
-    },
-    "workspaceBootstrap.error.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unable to prepare the workspace"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Impossible de préparer l'espace de travail"
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossible de préparer l'espace de travail"
           }
         }
       }
     }
   },
-  "version": "1.0"
+  "version" : "1.0"
 }

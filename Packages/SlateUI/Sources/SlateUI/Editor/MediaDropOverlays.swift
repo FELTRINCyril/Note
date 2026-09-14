@@ -14,9 +14,11 @@ public struct BlockDropIndicatorView: View {
     private let fileCount: Int
     private let itemLabel: String
 
-    public init(fileCount: Int, itemLabel: String = "fichiers") {
+    // `nil` plutot qu'un litteral en defaut : meme motif que
+    // `BlockContainer.init(placeholder:)`, voir sa documentation.
+    public init(fileCount: Int, itemLabel: String? = nil) {
         self.fileCount = fileCount
-        self.itemLabel = itemLabel
+        self.itemLabel = itemLabel ?? SlateUIStrings.mediaDropIndicatorItemLabelDefault
     }
 
     public var body: some View {
@@ -31,7 +33,7 @@ public struct BlockDropIndicatorView: View {
                 .frame(height: SlateGeometry.editorDropIndicatorHeight)
 
             if fileCount >= 2 {
-                Text("Inserer \(fileCount) \(itemLabel) ici")
+                Text(SlateUIStrings.mediaDropIndicatorInsertMultiple(count: fileCount, itemLabel: itemLabel))
                     .slateFont(SlateFont.caption)
                     .foregroundStyle(SlateColor.foregroundOnAccentFill)
                     .padding(.horizontal, Spacing.xs)
@@ -45,7 +47,9 @@ public struct BlockDropIndicatorView: View {
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
-            fileCount >= 2 ? "Inserer \(fileCount) \(itemLabel) ici" : "Inserer le fichier ici"
+            fileCount >= 2
+                ? SlateUIStrings.mediaDropIndicatorInsertMultiple(count: fileCount, itemLabel: itemLabel)
+                : SlateUIStrings.mediaDropIndicatorInsertSingle
         )
     }
 }
@@ -68,7 +72,7 @@ public struct NoteDropOverlayView: View {
             Image(systemName: "arrow.up.doc")
                 .slateIconFont(28, weight: .regular)
                 .foregroundStyle(SlateColor.mediaDropzoneActiveLabel)
-            Text("Deposer dans \u{ab} \(destinationTitle) \u{bb}")
+            Text(SlateUIStrings.mediaNoteDropTitle(destinationTitle: destinationTitle))
                 .slateFont(SlateFont.subtitle)
                 .foregroundStyle(SlateColor.mediaDropzoneActiveLabel)
             Text(summary)

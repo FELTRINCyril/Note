@@ -75,9 +75,9 @@ public enum SlateCalloutVariant: String, CaseIterable, Identifiable, Sendable {
     public var label: String? {
         switch self {
         case .neutral: nil
-        case .info: "Information"
-        case .warning: "Attention"
-        case .success: "Succes"
+        case .info: SlateUIStrings.calloutInfo
+        case .warning: SlateUIStrings.calloutWarning
+        case .success: SlateUIStrings.calloutSuccess
         }
     }
 

@@ -15,12 +15,11 @@ import SlateUI
 /// reellement. L'ancien `AppearanceSettingsStore`, qui les stockait sans consommateur,
 /// a ete supprime.
 ///
-/// `ThemeManager.Appearance`/`SlateAccentColor`/`ThemeManager.BodyFontChoice`
-/// exposent bien un `displayName`, mais en francais fige (`SlateUI` n'a pas de
-/// catalogue de localisation, voir `SlateAccentColor.displayName`) : cette vue
-/// recompose ses propres libelles localises FR/EN a partir des `rawValue`/cas plutot
-/// que de les reutiliser, pour respecter l'exigence de localisation de
-/// `SlateFeatures`.
+/// Les libelles de theme, d'accent et de police viennent directement des `displayName`
+/// de `ThemeManager.Appearance`/`SlateAccentColor`/`ThemeManager.BodyFontChoice`.
+/// Cette vue en recomposait autrefois des copies localisees, parce que ceux de
+/// `SlateUI` etaient figes en francais ; `SlateUI` a desormais son propre catalogue,
+/// donc la duplication a ete supprimee : une seule source par libelle.
 struct AppearanceSettingsTabView: View {
     @Environment(ThemeManager.self) private var themeManager
 
@@ -37,7 +36,7 @@ struct AppearanceSettingsTabView: View {
                     selection: $themeManager.appearance
                 ) {
                     ForEach(ThemeManager.Appearance.allCases) { choice in
-                        Text(themeLabel(choice)).tag(choice)
+                        Text(choice.displayName).tag(choice)
                     }
                 }
                 .labelsHidden()
@@ -54,7 +53,7 @@ struct AppearanceSettingsTabView: View {
                         ForEach(SlateAccentColor.allCases) { color in
                             AccentSwatchButton(
                                 color: color,
-                                name: accentName(color),
+                                name: color.displayName,
                                 isSelected: themeManager.accent == color
                             ) {
                                 themeManager.accent = color
@@ -69,10 +68,9 @@ struct AppearanceSettingsTabView: View {
                     String(localized: "settings.appearance.font.label", bundle: .module),
                     selection: $themeManager.bodyFont
                 ) {
-                    Text(String(localized: "settings.appearance.font.sans", bundle: .module))
-                        .tag(ThemeManager.BodyFontChoice.sans)
-                    Text(String(localized: "settings.appearance.font.serif", bundle: .module))
-                        .tag(ThemeManager.BodyFontChoice.serif)
+                    ForEach(ThemeManager.BodyFontChoice.allCases) { choice in
+                        Text(choice.displayName).tag(choice)
+                    }
                 }
                 .labelsHidden()
                 .pickerStyle(.segmented)
@@ -125,38 +123,4 @@ struct AppearanceSettingsTabView: View {
         }
         .padding(Spacing.lg)
     }
-
-    private func themeLabel(_ choice: ThemeManager.Appearance) -> String {
-        switch choice {
-        case .system: String(localized: "settings.appearance.theme.system", bundle: .module)
-        case .light: String(localized: "settings.appearance.theme.light", bundle: .module)
-        case .dark: String(localized: "settings.appearance.theme.dark", bundle: .module)
-        }
-    }
-
-    private func accentName(_ color: SlateAccentColor) -> String {
-        switch color {
-        case .blue: String(localized: "settings.appearance.accent.blue", bundle: .module)
-        case .purple: String(localized: "settings.appearance.accent.violet", bundle: .module)
-        case .pink: String(localized: "settings.appearance.accent.rose", bundle: .module)
-        case .red: String(localized: "settings.appearance.accent.red", bundle: .module)
-        case .orange: String(localized: "settings.appearance.accent.orange", bundle: .module)
-        case .yellow: String(localized: "settings.appearance.accent.yellow", bundle: .module)
-        case .green: String(localized: "settings.appearance.accent.green", bundle: .module)
-        case .graphite: String(localized: "settings.appearance.accent.graphite", bundle: .module)
-        }
-    }
-}
-
-#Preview("AppearanceSettingsTabView") {
-    AppearanceSettingsTabView()
-        .environment(ThemeManager.shared)
-        .frame(width: 620)
-}
-
-#Preview("AppearanceSettingsTabView - sombre") {
-    AppearanceSettingsTabView()
-        .environment(ThemeManager.shared)
-        .frame(width: 620)
-        .preferredColorScheme(.dark)
 }

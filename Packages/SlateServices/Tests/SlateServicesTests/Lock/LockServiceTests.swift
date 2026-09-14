@@ -181,7 +181,7 @@ struct LockServiceTests {
         #expect(await service.authenticateWithBiometrics(reason: "Test") == false)
     }
 
-    // MARK: - Cycle verrouiller / deverrouiller une note
+    // MARK: - Verrouillage d'une note
 
     @Test
     func lockingANoteDoesNotRequireAuthentication() throws {
@@ -196,8 +196,13 @@ struct LockServiceTests {
         #expect(note.plainText.isEmpty)
     }
 
+    /// Coeur du changement (dette de securite corrigee, voir STATUT.md phase 12) :
+    /// `LockService` n'expose plus de methode `unlock(_:...)` prenant une `Note`.
+    /// Verifier un mot de passe ne touche `note` d'aucune facon - `isLocked` reste
+    /// vrai, `plainText`/`snippetText` restent vides. C'est a l'appelant (voir
+    /// `SlateFeatures.AppState.recentlyUnlockedNotes`) de porter l'etat de session.
     @Test
-    func unlockingANoteWithTheCorrectPasswordRevealsItsContent() throws {
+    func verifyingTheCorrectPasswordNeverMutatesTheNote() throws {
         let service = makeService()
         try service.setPassword("CorrectHorse!42")
         let note = Note(title: "Confidentiel")
@@ -205,28 +210,27 @@ struct LockServiceTests {
         note.refreshDerivedText()
         service.lock(note)
 
-        let unlocked = service.unlock(note, password: "CorrectHorse!42")
+        #expect(service.verifyPassword("CorrectHorse!42"))
 
-        #expect(unlocked)
-        #expect(!note.isLocked)
-        #expect(note.plainText == "Secret.")
+        #expect(note.isLocked)
+        #expect(note.plainText.isEmpty)
+        #expect(note.snippetText.isEmpty)
     }
 
     @Test
-    func unlockingANoteWithTheWrongPasswordLeavesItLocked() throws {
+    func verifyingTheWrongPasswordLeavesItLocked() throws {
         let service = makeService()
         try service.setPassword("CorrectHorse!42")
         let note = Note(title: "Confidentiel", isLocked: true)
 
-        let unlocked = service.unlock(note, password: "WrongPassword")
+        #expect(!service.verifyPassword("WrongPassword"))
 
-        #expect(!unlocked)
         #expect(note.isLocked)
         #expect(note.plainText.isEmpty)
     }
 
     @Test
-    func unlockingANoteWithBiometricsRevealsItsContentOnSuccess() async throws {
+    func authenticatingWithBiometricsOnSuccessNeverMutatesTheNote() async throws {
         let biometrics = FakeBiometricAuthenticator()
         biometrics.available = true
         biometrics.succeeds = true
@@ -237,15 +241,14 @@ struct LockServiceTests {
         note.refreshDerivedText()
         service.lock(note)
 
-        let unlocked = await service.unlock(note, usingBiometricsReason: "Test")
+        #expect(await service.authenticateWithBiometrics(reason: "Test"))
 
-        #expect(unlocked)
-        #expect(!note.isLocked)
-        #expect(note.plainText == "Secret.")
+        #expect(note.isLocked)
+        #expect(note.plainText.isEmpty)
     }
 
     @Test
-    func unlockingANoteWithBiometricsLeavesItLockedOnFailure() async throws {
+    func authenticatingWithBiometricsOnFailureLeavesItLocked() async throws {
         let biometrics = FakeBiometricAuthenticator()
         biometrics.available = true
         biometrics.succeeds = false
@@ -253,14 +256,16 @@ struct LockServiceTests {
         try service.setPassword("CorrectHorse!42", allowBiometrics: true)
         let note = Note(title: "Confidentiel", isLocked: true)
 
-        let unlocked = await service.unlock(note, usingBiometricsReason: "Test")
+        #expect(await service.authenticateWithBiometrics(reason: "Test") == false)
 
-        #expect(!unlocked)
         #expect(note.isLocked)
     }
 
+    /// Cycle complet a travers le service : verrouiller, s'authentifier (session),
+    /// verrouiller de nouveau (fermeture) - `isLocked` ne quitte jamais `true` une fois
+    /// pose, et les champs derives restent invariablement vides.
     @Test
-    func lockUnlockRelockCycleThroughTheServiceIsConsistent() throws {
+    func lockAuthenticateRelockCycleThroughTheServiceLeavesTheNoteAlwaysLocked() throws {
         let service = makeService()
         try service.setPassword("CorrectHorse!42")
         let note = Note(title: "Confidentiel")
@@ -270,8 +275,9 @@ struct LockServiceTests {
         service.lock(note)
         #expect(note.plainText.isEmpty)
 
-        #expect(service.unlock(note, password: "CorrectHorse!42"))
-        #expect(note.plainText == "Secret.")
+        #expect(service.verifyPassword("CorrectHorse!42"))
+        #expect(note.isLocked)
+        #expect(note.plainText.isEmpty)
 
         service.lock(note)
         #expect(note.isLocked)

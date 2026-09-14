@@ -24,7 +24,11 @@ public enum LockServiceError: Error, Sendable, Equatable {
 /// - **Protege contre** : un tiers qui a acces a l'app pendant que la session macOS de
 ///   l'utilisateur est deverrouillee (ecran partage, collegue de passage, enfant qui
 ///   utilise le Mac) et parcourt les notes/la recherche/la liste - le contenu d'une
-///   note verrouillee n'apparait dans aucun de ces trois endroits.
+///   note verrouillee n'apparait dans aucun de ces trois endroits. Ceci reste vrai
+///   meme apres un arret brutal de l'app (plantage, `kill -9`, coupure de courant) :
+///   `Note.isLocked` ne redevient jamais `false` en base, le deverrouillage n'etant
+///   qu'un etat de session (`AppState.recentlyUnlockedNotes`) qui disparait avec le
+///   processus - voir la documentation de tete de `Note`.
 /// - **Ne protege PAS contre** : quelqu'un qui a acces au fichier du store SwiftData
 ///   lui-meme (disque demonte, sauvegarde Time Machine non chiffree, acces root sur la
 ///   machine) ou aux exports CloudKit cote serveur avec les identifiants iCloud de
@@ -164,7 +168,7 @@ public struct LockService: Sendable {
         }
     }
 
-    // MARK: - Verrouillage / deverrouillage d'une note
+    // MARK: - Verrouillage d'une note
 
     /// Verrouille `note` (voir `Note.lock()` : vide aussi `plainText`/`snippetText`).
     /// Ne demande aucune authentification - verrouiller n'a pas besoin d'etre
@@ -174,23 +178,12 @@ public struct LockService: Sendable {
         note.lock()
     }
 
-    /// Deverrouille `note` si `password` correspond au mot de passe de l'app.
-    /// Ne modifie `note` que si l'authentification reussit.
-    @MainActor
-    @discardableResult
-    public func unlock(_ note: Note, password: String) -> Bool {
-        guard verifyPassword(password) else { return false }
-        note.unlock()
-        return true
-    }
-
-    /// Deverrouille `note` par biometrie. Ne modifie `note` que si l'authentification
-    /// reussit.
-    @MainActor
-    @discardableResult
-    public func unlock(_ note: Note, usingBiometricsReason reason: String) async -> Bool {
-        guard await authenticateWithBiometrics(reason: reason) else { return false }
-        note.unlock()
-        return true
-    }
+    // Il n'existe volontairement AUCUNE methode `unlock(_:...)` prenant une `Note` sur
+    // ce type (dette de securite corrigee, voir STATUT.md phase 12) : deverrouiller ne
+    // mute plus jamais `Note.isLocked`, qui reste vrai en permanence une fois la note
+    // verrouillee. `verifyPassword(_:)` et `authenticateWithBiometrics(reason:)`
+    // ci-dessus restent les deux seuls points d'authentification ; c'est a l'appelant
+    // (`SlateFeatures.NoteDetailColumnView`) d'enregistrer le succes dans
+    // `AppState.recentlyUnlockedNotes`, un etat de SESSION qui n'est jamais persiste ni
+    // synchronise via CloudKit.
 }

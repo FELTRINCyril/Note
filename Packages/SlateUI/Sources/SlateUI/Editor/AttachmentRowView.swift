@@ -174,11 +174,11 @@ public struct AttachmentRowView<MenuItems: View>: View {
         case .normal:
             hoverActions
         case .failedImport:
-            Button("Reessayer", action: onRetry)
+            Button(SlateUIStrings.attachmentRetry, action: onRetry)
                 .buttonStyle(.bordered)
                 .controlSize(.small)
         case .missing:
-            Button("Localiser", action: onLocate)
+            Button(SlateUIStrings.attachmentLocate, action: onLocate)
                 .buttonStyle(.bordered)
                 .controlSize(.small)
         }
@@ -190,8 +190,10 @@ public struct AttachmentRowView<MenuItems: View>: View {
     /// metadonnees plutot que masquees (artboard D).
     private var hoverActions: some View {
         HStack(spacing: 2) {
-            actionButton(systemName: "magnifyingglass", label: "Apercu", action: onPreview)
-            actionButton(systemName: "arrow.down.circle", label: "Telecharger", action: onDownload)
+            actionButton(systemName: "magnifyingglass", label: SlateUIStrings.attachmentPreview, action: onPreview)
+            actionButton(
+                systemName: "arrow.down.circle", label: SlateUIStrings.attachmentDownload, action: onDownload
+            )
             Menu {
                 menuItems()
             } label: {
@@ -205,7 +207,7 @@ public struct AttachmentRowView<MenuItems: View>: View {
             }
             .menuStyle(.borderlessButton)
             .frame(width: SlateGeometry.attachmentActionButtonSize, height: SlateGeometry.attachmentActionButtonSize)
-            .accessibilityLabel("Options du fichier")
+            .accessibilityLabel(SlateUIStrings.attachmentOptions)
         }
         .opacity(isAccessibilityLayout || isHovering ? 1 : 0)
         .allowsHitTesting(isAccessibilityLayout || isHovering)

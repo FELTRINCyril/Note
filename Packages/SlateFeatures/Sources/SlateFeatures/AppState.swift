@@ -52,13 +52,18 @@ public final class AppState {
     /// (Phase 12, `docs/12_verrouillage.md` : "reverrouillage automatique a la
     /// fermeture de la note, apres inactivite, ou au verrouillage de l'app").
     ///
-    /// Sert de registre : `Note.isLocked == false` ne suffit pas a savoir si une note
-    /// doit se reverrouiller automatiquement (une note qui n'a jamais ete protegee a
-    /// aussi `isLocked == false`, et ne doit evidemment jamais se faire verrouiller
-    /// "automatiquement" a sa place). Seule une note explicitement deverrouillee via
-    /// `LockService.unlock(_:password:)`/`unlock(_:usingBiometricsReason:)` entre ici
-    /// (voir `NoteDetailColumnView`) ; elle en ressort des que `AutoRelockCoordinator`
-    /// la reverrouille, ou immediatement si l'utilisateur la reverrouille lui-meme.
+    /// **Seul lieu ou "deverrouille" existe** (dette de securite corrigee, voir
+    /// STATUT.md phase 12) : `Note.isLocked` ne redevient plus jamais `false` une fois
+    /// verrouillee, donc ce registre est desormais la SEULE source de verite pour
+    /// savoir si le contenu d'une note doit etre affiche cette session - une note qui
+    /// n'a jamais ete protegee n'y figure jamais non plus, et ne doit evidemment jamais
+    /// se faire "reverrouiller" a la place d'une note reellement deverrouillee. Une
+    /// note entre ici uniquement apres authentification reussie (`LockService.
+    /// verifyPassword(_:)`/`authenticateWithBiometrics(reason:)`, voir
+    /// `NoteDetailColumnView`) ; elle en ressort des que `AutoRelockCoordinator` la
+    /// reverrouille, ou immediatement si l'utilisateur la reverrouille lui-meme. Ce
+    /// registre ne survit jamais a la fin du processus : c'est precisement ce qui
+    /// garantit qu'un arret brutal de l'app ne peut plus laisser de note deverrouillee.
     public var recentlyUnlockedNotes: [Note] = []
 
     /// Enregistre `note` comme deverrouillee cette session (idempotent).
@@ -70,6 +75,15 @@ public final class AppState {
     /// Retire `note` du registre (apres reverrouillage, manuel ou automatique).
     public func removeRecentlyUnlockedNote(_ note: Note) {
         recentlyUnlockedNotes.removeAll { $0.id == note.id }
+    }
+
+    /// Vrai si `note` a ete deverrouillee cette session et n'a pas encore ete
+    /// reverrouillee. Puisque `note.isLocked` reste vrai en permanence (voir
+    /// `recentlyUnlockedNotes`), c'est l'unique moyen correct de savoir si le contenu
+    /// de `note` doit etre affiche : `NoteDetailColumnView` s'appuie dessus pour
+    /// choisir entre `LockedNoteView` et `NoteDocumentView`.
+    public func isUnlockedThisSession(_ note: Note) -> Bool {
+        recentlyUnlockedNotes.contains { $0.id == note.id }
     }
 
     public init(

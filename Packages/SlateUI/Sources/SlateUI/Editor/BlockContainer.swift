@@ -38,7 +38,11 @@ public struct BlockContainer<Content: View>: View {
         state: SlateBlockState = .normal,
         rangePosition: SlateBlockRangePosition = .single,
         isEmpty: Bool = false,
-        placeholder: String = "Tapez / pour les commandes",
+        // `nil` plutot qu'un litteral en defaut : `SlateUIStrings` (le catalogue de
+        // localisation de ce module) est INTERNE, une expression par defaut d'une API
+        // PUBLIQUE doit etre au moins aussi visible que l'API elle-meme -- resolu dans
+        // le corps de l'initialiseur plutot que de rendre tout le catalogue public.
+        placeholder: String? = nil,
         dropEdge: Edge? = nil,
         firstLineHeight: CGFloat = 15 * SlateGeometry.editorParagraphLineHeight,
         blockID: String = "",
@@ -49,7 +53,7 @@ public struct BlockContainer<Content: View>: View {
         self.state = state
         self.rangePosition = rangePosition
         self.isEmpty = isEmpty
-        self.placeholder = placeholder
+        self.placeholder = placeholder ?? SlateUIStrings.blockParagraphPlaceholder
         self.dropEdge = dropEdge
         self.firstLineHeight = firstLineHeight
         self.blockID = blockID

@@ -48,23 +48,11 @@ public enum SlateAccentColor: String, CaseIterable, Sendable, Equatable, Identif
     }
 
     /// Nom affiche au survol / lu par VoiceOver ("Bleu, selectionne" -- artboard B du
-    /// design P4).
-    ///
-    /// Chaine FR en dur plutot que `String(localized:)` : `SlateUI` ne declare aucune
-    /// ressource de localisation (pas de catalogue `.xcstrings`), donc `Bundle.module`
-    /// n'existe pas pour ce cible -- l'ajouter est hors du perimetre "vitesse" de cette
-    /// phase (voir le rapport de livraison pour ce signalement).
+    /// design P4). Localise (FR + EN) via `Bundle.module` depuis la dette technique de
+    /// fin de jalon v1 -- `SlateUI` declare desormais son propre catalogue, voir
+    /// `Package.swift` et `SlateUIStrings`.
     public var displayName: String {
-        switch self {
-        case .blue: "Bleu"
-        case .purple: "Violet"
-        case .pink: "Rose"
-        case .red: "Rouge"
-        case .orange: "Orange"
-        case .yellow: "Jaune"
-        case .green: "Vert"
-        case .graphite: "Graphite"
-        }
+        SlateUIStrings.accentDisplayName(self)
     }
 
     // MARK: - `text.onAccent` (design/tokens.md §7, correction Phase 13)

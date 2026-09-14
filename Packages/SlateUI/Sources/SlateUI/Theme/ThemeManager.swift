@@ -45,13 +45,9 @@ public final class ThemeManager {
 
         public var id: String { rawValue }
 
-        /// Nom affiche (design P4).
+        /// Nom affiche (design P4). Localise via `Bundle.module`, voir `SlateUIStrings`.
         public var displayName: String {
-            switch self {
-            case .system: "Systeme"
-            case .light: "Clair"
-            case .dark: "Sombre"
-            }
+            SlateUIStrings.themeAppearanceDisplayName(self)
         }
     }
 
@@ -62,12 +58,9 @@ public final class ThemeManager {
 
         public var id: String { rawValue }
 
-        /// Nom affiche (design P4).
+        /// Nom affiche (design P4). Localise via `Bundle.module`, voir `SlateUIStrings`.
         public var displayName: String {
-            switch self {
-            case .sans: "SF Pro (systeme)"
-            case .serif: "New York (serif)"
-            }
+            SlateUIStrings.themeFontDisplayName(self)
         }
 
         /// `Font.Design` correspondant, pour `SlateFont`.
@@ -216,9 +209,15 @@ private extension Comparable {
 /// appele depuis un thread qui n'execute pas reellement le MainActor -- confirme par la
 /// trace de crash (`slateCurrentAccent()` -> `SlateAccent.defaultDarkRGB` ->
 /// `EditorAccessibilityTests.opaqueReinforcementMeetsNonTextMinimumInDark()`, thread 5,
-/// SIGTRAP). `slateCurrentlyIncreasesContrast()` porte la MEME fragilite latente ; elle ne
-/// s'est simplement pas encore manifestee dans la suite actuelle. Signale dans le rapport
-/// de livraison plutot que corrige ici : hors perimetre des deux corrections demandees.
+/// SIGTRAP). `slateCurrentlyIncreasesContrast()` portait exactement la MEME mine : elle a
+/// ete desamorcee dans la foulee (elle passe desormais par le miroir `increasesContrast`
+/// ci-dessous, alimente par `SlateAccessibility`). Le seul `assumeIsolated` restant dans
+/// `SlateUI` est celui de l'observateur `NotificationCenter` de `SlateAccessibility`, ou
+/// il est SUR : cet observateur est enregistre avec `queue: .main`, donc son bloc
+/// s'execute reellement sur le thread principal.
+///
+/// REGLE POUR LA SUITE : tout nouvel etat global lu pendant le calcul d'un token de
+/// couleur ou de police doit passer par ce miroir, jamais par `assumeIsolated`.
 ///
 /// Un verrou simple (`NSLock`) sur des types valeur `Sendable` est suffisant et sans
 /// risque de cette classe de plantage, quel que soit le thread appelant.

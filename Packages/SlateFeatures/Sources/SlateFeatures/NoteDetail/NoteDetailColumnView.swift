@@ -14,10 +14,15 @@ import SlateServices
 /// ne sait ni localiser une chaine (voir `NoteEditorStrings`) ni formater une date
 /// (sens des dependances, `docs/00_architecture.md`).
 ///
-/// **Regle de securite de cette phase (Phase 12, `docs/12_verrouillage.md`)** : quand
-/// `note.isLocked`, `SlateEditor.NoteDocumentView` (qui lit `note.blocks` -- voir
-/// `BlockOrdering.topLevelBlocks(of:)`) n'est PAS meme construite. C'est ce branchement
-/// qui garantit qu'aucun chemin de code ne lit le contenu d'une note verrouillee, pas
+/// **Regle de securite de cette phase (Phase 12, `docs/12_verrouillage.md`, revue en
+/// dette de securite fin de jalon v1)** : `note.isLocked` reste vrai en permanence une
+/// fois une note verrouillee (voir la documentation de tete de `Note`), donc ce n'est
+/// PLUS ce booleen seul qui decide de l'affichage - `SlateEditor.NoteDocumentView` (qui
+/// lit `note.blocks` -- voir `BlockOrdering.topLevelBlocks(of:)`) n'est construite que
+/// si `note` est a la fois verrouillee ET deverrouillee cette session
+/// (`AppState.isUnlockedThisSession(_:)`), c'est-a-dire authentifiee avec succes sans
+/// avoir ete refermee/reverrouillee depuis. C'est ce branchement qui garantit qu'aucun
+/// chemin de code ne lit le contenu d'une note verrouillee et non authentifiee, pas
 /// une precaution a l'interieur de `LockedNoteView` elle-meme.
 struct NoteDetailColumnView: View {
     @Environment(\.appState) private var appState
@@ -39,7 +44,7 @@ struct NoteDetailColumnView: View {
     var body: some View {
         Group {
             if let note = appState.selectedNote {
-                if note.isLocked {
+                if note.isLocked && !appState.isUnlockedThisSession(note) {
                     LockedNoteView(
                         noteTitle: displayedTitle(for: note),
                         passwordHint: lockService.passwordHint,
@@ -82,7 +87,7 @@ struct NoteDetailColumnView: View {
         // declenche des que la note affichee change (y compris vers "aucune note"),
         // AVANT que la nouvelle note ne soit rendue.
         .onChange(of: appState.selectedNote) { oldValue, _ in
-            AutoRelockCoordinator.noteDidLoseFocus(oldValue, appState: appState, lockService: lockService)
+            AutoRelockCoordinator.noteDidLoseFocus(oldValue, appState: appState)
         }
         // Reverrouillage automatique par inactivite : voir `SystemIdleTime`/
         // `AutoRelockCoordinator.relockIfInactive`. No-op tant qu'aucune note n'est
@@ -91,27 +96,30 @@ struct NoteDetailColumnView: View {
             AutoRelockCoordinator.relockIfInactive(
                 autoRelock: InactivityAutoRelock(threshold: autoRelockThresholdSeconds),
                 idleSeconds: SystemIdleTime.seconds(),
-                appState: appState,
-                lockService: lockService
+                appState: appState
             )
         }
     }
 
-    // MARK: - Deverrouillage
+    // MARK: - Deverrouillage (etat de session uniquement, voir `AppState.recentlyUnlockedNotes`)
 
+    /// `LockService` n'expose plus de methode `unlock(_:...)` prenant une `Note`
+    /// (dette de securite corrigee, voir STATUT.md phase 12) : l'authentification et
+    /// l'enregistrement de l'etat de session sont desormais deux etapes explicites
+    /// ici, et seule cette derniere touche `note` (jamais `note.isLocked`).
     private func unlockWithBiometrics(_ note: Note) {
         Task { @MainActor in
             let reason = String(localized: "lock.biometrics.reason", bundle: .module)
-            guard await lockService.unlock(note, usingBiometricsReason: reason) else { return }
+            guard await lockService.authenticateWithBiometrics(reason: reason) else { return }
             appState.markNoteRecentlyUnlocked(note)
         }
     }
 
     /// Retourne le succes a `UnlockPasswordSheet` (mot de passe incorrect = echec
-    /// NORMAL de ce flux, pas une anomalie -- voir `LockService.unlock(_:password:)`).
+    /// NORMAL de ce flux, pas une anomalie -- voir `LockService.verifyPassword(_:)`).
     private func unlockWithPassword(_ note: Note?, password: String) -> Bool {
         guard let note else { return false }
-        guard lockService.unlock(note, password: password) else { return false }
+        guard lockService.verifyPassword(password) else { return false }
         appState.markNoteRecentlyUnlocked(note)
         isUnlockPasswordSheetPresented = false
         return true
@@ -123,8 +131,14 @@ struct NoteDetailColumnView: View {
             : note.title
     }
 
+    /// Utilise `note.computedPlainText`, PAS `note.plainText` : ce champ stocke reste
+    /// vide en permanence pour une note verrouillee (voir la documentation de tete de
+    /// `Note`), y compris pendant qu'elle est deverrouillee cette session - sans quoi
+    /// le nombre de mots afficherait toujours 0 pour toute note ayant deja ete
+    /// verrouillee, meme affichee en clair. Cette methode n'est appelee que dans la
+    /// branche ou le contenu est deja legitimement visible (voir le corps de la vue).
     private func metadataLine(for note: Note) -> String {
-        let wordCount = WordCounter.wordCount(in: note.plainText)
+        let wordCount = WordCounter.wordCount(in: note.computedPlainText)
         return NoteHeaderMetadataFormatter.string(modifiedAt: note.modifiedAt, wordCount: wordCount)
     }
 
