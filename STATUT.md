@@ -55,7 +55,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 ### Jalon v2 — Puissance Notion
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
-| 15 | Markdown natif à la frappe | ✅ | — | `PH15` |
+| 15 | Markdown natif à la frappe | ✅ | — | `872b114` |
 | 16 | Liens internes & sous-pages | ⏳ **prochaine** | — | — |
 | 17 | Bases de données | ⬜ | 🎨 ✔️ | — |
 | 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
