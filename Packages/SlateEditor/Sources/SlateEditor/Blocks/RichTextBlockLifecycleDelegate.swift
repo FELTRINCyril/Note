@@ -1,4 +1,5 @@
 import CoreGraphics
+import Foundation
 import SlateModel
 
 /// Delegue informe des franchissements de bloc au clavier (Entree, Retour arriere en
@@ -56,6 +57,33 @@ protocol RichTextBlockLifecycleDelegate: AnyObject {
     func richTextViewShouldHandleSlashMenuReturn() -> Bool
     /// Echap menu ouvert : ferme le menu SEUL, sans selectionner le bloc entier.
     func richTextViewShouldHandleSlashMenuEscape() -> Bool
+
+    // MARK: - Markdown natif (Phase 15, docs/15_markdown_natif.md)
+
+    /// Entree pressee : motifs de bloc SANS espace (`` ``` ``, `---`, voir
+    /// `MarkdownShortcutEngine.blockReturnTrigger(text:)`). Interrogee EN TETE de
+    /// `insertNewline(_:)`, avant meme `richTextViewShouldHandleReturn(caretOffset:)` --
+    /// une conversion markdown prend TOUJOURS la main sur le split de bloc normal.
+    /// Retourne `false` de son propre chef si aucun motif ne correspond (bloc pas un
+    /// paragraphe, contenu different de `` ``` ``/`---`...). `undoManager` : celui de
+    /// CE `NSTextView` (pour que la conversion et la frappe qui la declenche se defont
+    /// ensemble -- voir `EditorController+MarkdownShortcuts.swift`) ; seule donnee
+    /// AppKit transmise ici, au meme titre que `visualColumnX`/`caretOffset` ailleurs
+    /// dans ce protocole -- ne fait pas exception a la regle "generique" de ce type.
+    func richTextViewShouldHandleMarkdownReturnTrigger(undoManager: UndoManager?) -> Bool
+
+    /// Cmd+V (`paste(_:)`) : collage de `text` (le contenu texte brut du pasteboard
+    /// general, deja lu par l'appelant -- lire un pasteboard est une operation AppKit,
+    /// mais transmettre la CHAINE resultante reste une donnee ordinaire, meme regle que
+    /// `undoManager` ci-dessus) a la place de `replacingRange` (la selection courante,
+    /// vide pour un simple caret). Retourne `false` de son propre chef des qu'une
+    /// condition manque (reglage desactive, bloc de code, aucun motif markdown detecte)
+    /// -- l'appelant DOIT alors laisser `super.paste(_:)` s'executer normalement, sans
+    /// aucune exception (garde-fou de la tache : "aucune regression du collage
+    /// ordinaire, ni du Cmd+V d'image de la Phase 9").
+    func richTextViewShouldHandleMarkdownPaste(
+        text: String, replacingRange: RichTextRange, undoManager: UndoManager?
+    ) -> Bool
 
     // MARK: - Raccourcis de formatage (Phase 7, docs/07_typographie_formatage.md)
     //

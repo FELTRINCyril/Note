@@ -89,7 +89,9 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
         let block: Block
         let editorController: EditorController
         var modelContext: ModelContext
-        private let debouncer = BlockSaveDebouncer()
+        // Pas `private` (meme raison que `block`/`editorController` ci-dessus) :
+        // `tryApplyMarkdownAutoformat` (`+Rendering.swift`, Phase 15) y planifie aussi.
+        let debouncer = BlockSaveDebouncer()
 
         /// Dernier contenu connu comme etant IDENTIQUE entre le modele et la vue.
         /// Sert a distinguer "le modele a change depuis l'exterieur" (il faut repousser
@@ -223,6 +225,12 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
             }
 
             let richText = RichText(attributedString: bridged)
+
+            // Markdown natif (Phase 15) : voir `tryApplyMarkdownAutoformat` (`+Rendering.swift`).
+            if tryApplyMarkdownAutoformat(richText: richText, textView: textView) {
+                return
+            }
+
             // Synchrone, a chaque frappe (voir la documentation de tete de fichier) :
             // seul un encodage JSON local, jamais l'ecriture disque ni le recalcul des
             // champs derives de la note.
@@ -361,6 +369,15 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
         func richTextViewShouldHandleSlashMenuEscape() -> Bool {
             editorController.handleSlashMenuEscape(in: block)
         }
+
+        // MARK: - Markdown natif (Phase 15, docs/15_markdown_natif.md)
+
+        func richTextViewShouldHandleMarkdownReturnTrigger(undoManager: UndoManager?) -> Bool {
+            editorController.handleMarkdownReturnTrigger(in: block, undoManager: undoManager)
+        }
+
+        // `richTextViewShouldHandleMarkdownPaste` : voir `+Rendering.swift` (limite de
+        // longueur de fichier, meme motif que `apply(_:to:)`/`persist()`).
 
         // MARK: - Indentation d'un item de liste (Phase 8, docs/08_blocs_speciaux.md)
 

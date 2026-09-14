@@ -102,6 +102,48 @@ extension RichTextEditingRepresentable.Coordinator {
         textView.setSelectedRange(NSRange(location: clampedLocation, length: clampedLength))
     }
 
+    /// Markdown natif (Phase 15, docs/15_markdown_natif.md) : tente une conversion de
+    /// bloc/formatage inline sur `richText` (le contenu QUI VIENT D'ETRE bridge depuis
+    /// `textView`), AVANT que `textDidChange(_:)` n'ecrive normalement dans
+    /// `block.text`. `false` sans aucun effet si aucun motif ne s'est declenche --
+    /// l'appelant doit alors ecrire `richText` normalement, comme avant cette phase.
+    ///
+    /// `true` : `EditorController.handleMarkdownAutoformat` a deja entierement mute
+    /// `block.text`/`block.type` (et persiste synchroniquement, comme toute operation
+    /// structurelle) -- `lastSyncedText` de ce `Coordinator` est volontairement LAISSE a
+    /// sa valeur PRECEDENTE (le contenu d'avant cette frappe) : `syncModelIfNeeded`
+    /// (prochain `updateNSView`) detecte alors que `block.text` a change "depuis
+    /// l'exterieur" et repousse le nouveau contenu (marqueurs retires) dans ce meme
+    /// `NSTextView`, pendant que la requete de caret deja programmee
+    /// (`EditorController.applyFocus`) repositionne le caret -- exactement le chemin
+    /// normal modele -> vue, jamais un second chemin d'ecriture ad hoc.
+    func tryApplyMarkdownAutoformat(richText: RichText, textView: NSTextView) -> Bool {
+        let caretOffset = RichTextOffset(utf16Offset: textView.selectedRange().location, in: textView.string)
+        guard editorController.handleMarkdownAutoformat(
+            in: block, typedText: richText, caretOffset: caretOffset, undoManager: textView.undoManager
+        ) else {
+            return false
+        }
+        debouncer.schedule { [weak self] in
+            self?.persist()
+        }
+        return true
+    }
+
+    /// Cmd+V (Phase 15, docs/15_markdown_natif.md) : adapte l'appel du delegue de cycle
+    /// de vie (`RichTextBlockLifecycleDelegate.richTextViewShouldHandleMarkdownPaste`)
+    /// vers `EditorController.handleMarkdownPaste`, en lui fournissant `block`. Extrait
+    /// de `RichTextEditingRepresentable.swift` pour rester sous la limite de longueur de
+    /// fichier de `CLAUDE.md` §5 -- meme motif exact que `tryApplyMarkdownAutoformat`
+    /// ci-dessus.
+    func richTextViewShouldHandleMarkdownPaste(
+        text: String, replacingRange: RichTextRange, undoManager: UndoManager?
+    ) -> Bool {
+        editorController.handleMarkdownPaste(
+            pasteboardText: text, in: block, replacingRange: replacingRange, undoManager: undoManager
+        )
+    }
+
     /// Le point de sauvegarde UNIQUE (voir `BlockTextCommit`) : recalcule les champs
     /// derives de la note, horodate la modification, puis ecrit reellement sur disque.
     /// Invoque uniquement au flush du debounce -- jamais a chaque frappe.

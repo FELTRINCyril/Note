@@ -138,6 +138,13 @@ final class RichTextEditingTextView: NSTextView {
         if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuReturn() == true {
             return
         }
+        // Markdown natif (Phase 15, docs/15_markdown_natif.md) : motifs sans espace
+        // (`` ``` ``, `---`) qui ne se declenchent qu'a l'Entree -- AVANT le split de
+        // bloc normal, jamais apres (une conversion prend la main sur cette pression
+        // d'Entree, elle ne doit pas EN PLUS scinder le bloc).
+        if blockLifecycleDelegate?.richTextViewShouldHandleMarkdownReturnTrigger(undoManager: undoManager) == true {
+            return
+        }
         // Frontiere AppKit -> logique pure (voir la documentation de `RichTextOffset`) :
         // `selectedRange().location` est TOUJOURS en unites UTF-16, jamais transmis
         // sans conversion au-dela de ce point -- defaut le plus grave de la revue
@@ -245,6 +252,24 @@ final class RichTextEditingTextView: NSTextView {
     override func insertBacktab(_ sender: Any?) {
         if blockLifecycleDelegate?.richTextViewShouldHandleOutdent() == true { return }
         super.insertBacktab(sender)
+    }
+
+    /// Cmd+V (Phase 15, docs/15_markdown_natif.md, "Coller du markdown -> conversion
+    /// optionnelle en blocs"). Ne lit que `.string` du pasteboard general : un collage
+    /// d'image (`.png`/`.tiff`, Phase 9) ou de RTF ne passe JAMAIS par cette branche,
+    /// `super.paste(sender)` s'en charge exactement comme avant cette phase -- aucune
+    /// regression possible sur ces deux chemins, ni sur un collage de texte SANS syntaxe
+    /// markdown (le delegue retourne alors `false` de son propre chef).
+    override func paste(_ sender: Any?) {
+        if let pasteboardText = NSPasteboard.general.string(forType: .string) {
+            let range = RichTextRange(utf16Range: selectedRange(), in: string)
+            if blockLifecycleDelegate?.richTextViewShouldHandleMarkdownPaste(
+                text: pasteboardText, replacingRange: range, undoManager: undoManager
+            ) == true {
+                return
+            }
+        }
+        super.paste(sender)
     }
 
     // MARK: - Raccourcis de formatage (docs/07_typographie_formatage.md)

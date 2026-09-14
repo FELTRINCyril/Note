@@ -88,6 +88,21 @@ Certaines phases sont marquées 🎨 **DESIGN REQUIS** dans `PLAN.md`. Pour cell
 - **Commits** : un commit par étape logique, message clair (`feat:`, `fix:`, `refactor:`…).
 - **Tests** : Swift Testing (`import Testing`) pour la logique ; previews pour l'UI.
 
+### ⚠️ Piège récurrent : détacher un bloc ne le supprime PAS du store
+
+Trouvé et corrigé **trois fois** (phases 8, 10 et 15). `BlockOrdering.remove(_:)` et
+`BlockOperations` ne font que **détacher** un bloc du graphe en mémoire (`note = nil`,
+`parent = nil`) : ils n'appellent jamais `ModelContext.delete(_:)`. Un bloc retiré sans
+purge explicite reste donc persisté indéfiniment, invisible dans l'interface mais bien
+réel - et synchronisé vers CloudKit.
+
+**Règle** : tout chemin qui retire définitivement un bloc (suppression, dissolution de
+structure, annulation d'une insertion) doit faire un `modelContext?.delete(...)` explicite.
+
+**Et surtout** : un test qui vérifie seulement `note.blocks` **ne voit rien** de ce bug.
+Il faut un vrai `ModelContainer` en mémoire et un `context.fetch(FetchDescriptor<Block>())`
+après `save()`. Motif de référence : `EditorControllerDeletionPurgeTests`.
+
 ---
 
 ## 6. Ce que tu ne fais PAS

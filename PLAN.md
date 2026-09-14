@@ -43,7 +43,7 @@
 ## SECONDAIRE
 
 ### Jalon v2 — Puissance Notion
-- [ ] **Phase 15 — Markdown natif à la frappe** (`#`, `**`, `-`, `[]`…) → `docs/15_markdown_natif.md`
+- [x] **Phase 15 — Markdown natif à la frappe** (`#`, `**`, `-`, `[]`…) → `docs/15_markdown_natif.md`
 - [ ] **Phase 16 — Liens internes & sous-pages** (mentions `@`, création à la volée) → `docs/16_liens_internes.md`
 - [ ] 🎨 **Phase 17 — Bases de données** (grille, kanban, calendrier, galerie, liste ; champs ; filtres/tris/groupes ; calculs ; templates) → `docs/17_base_de_donnees.md`
 - [ ] 🎨 **Phase 18 — Fonctionnalités IA** (génération, RAG Q&A, transcription, résumés, bibliothèque de prompts) → `docs/18_ia.md`

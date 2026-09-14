@@ -2432,6 +2432,40 @@
         }
       }
     },
+    "settings.general.markdownPaste.caption" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When enabled, pasted markdown text (headings, lists, quotes...) is converted into the matching blocks instead of being inserted as plain text."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si activé, le texte markdown collé (titres, listes, citations...) est converti dans les blocs correspondants au lieu d'être inséré comme texte brut."
+          }
+        }
+      }
+    },
+    "settings.general.markdownPaste.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convert pasted markdown into blocks"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Convertir le markdown collé en blocs"
+          }
+        }
+      }
+    },
     "settings.general.newNote.caption" : {
       "extractionState" : "manual",
       "localizations" : {

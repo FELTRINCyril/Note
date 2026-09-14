@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 14 - **jalon v1 terminé**.
+**Dernière mise à jour :** fin de la phase 15.
 
 ---
 
 ## En un coup d'œil
 
-**14 / 21 phases terminées. Jalon v1 complet.**
+**15 / 21 phases terminées.** Jalon v1 complet, jalon v2 entamé.
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
 App v1         ██████████ 100 %   (12/12) ✅ terminé
-Notion v2      ░░░░░░░░░░    0 %   (0/5)   ⬜ à venir
+Notion v2      ██░░░░░░░░   20 %   (1/5)  ⏳ en cours
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** **jalon v1 terminé.** Les 12 phases de l'app utilisable sont livrées, de la coquille à trois colonnes jusqu'aux raccourcis clavier. Slate prend, édite, organise, verrouille et met en forme des notes avec un éditeur de blocs complet.
-- **Prochaine étape :** **Phase 15 — Markdown natif à la frappe**, premier pas du jalon v2 (puissance Notion).
-- **Qualité après solde des dettes de fin de jalon :** 730 tests verts (103 `SlateModel` · 329 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 102 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict` sur 344 fichiers.
+- **Où on en est :** phase 15 (markdown à la frappe) validée, première du jalon v2. Les 13 motifs de bloc et les 5 marques inline se convertissent à la frappe, la syntaxe est consommée, l'annulation défait texte et type en une seule étape, et coller du markdown crée les blocs correspondants (gouverné par un réglage qui est le **premier contrôle réellement actif** de l'onglet Général).
+- **Prochaine étape :** **Phase 16 — Liens internes & sous-pages** (mentions `@`, création à la volée).
+- **Qualité au dernier point (phase 15) :** 799 tests verts (103 `SlateModel` · 398 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 102 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict` sur 353 fichiers.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -55,8 +55,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 ### Jalon v2 — Puissance Notion
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
-| 15 | Markdown natif à la frappe | ⏳ **prochaine** | — | — |
-| 16 | Liens internes & sous-pages | ⬜ | — | — |
+| 15 | Markdown natif à la frappe | ✅ | — | `PH15` |
+| 16 | Liens internes & sous-pages | ⏳ **prochaine** | — | — |
 | 17 | Bases de données | ⬜ | 🎨 ✔️ | — |
 | 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
 | 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
@@ -145,6 +145,12 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 14 — Le focus AppKit interne de l'éditeur n'a PAS été touché.** Le saut vers l'éditeur réutilise `EditorController.selectBlock(_:)`, déjà le point d'entrée du clic sur un bloc, plutôt que de manipuler le premier répondant. La restauration de focus du `LazyVStack` (phase 5) est délicate et fonctionne : la casser aurait coûté bien plus que ce raccourci ne rapporte. ✅
 - **Phase 14 — Le registre rend les conflits détectables par test**, et pas seulement par relecture : deux raccourcis actifs de même portée ne peuvent pas partager une combinaison. Aucun conflit réel n'existait dans l'acquis des phases 5 à 13 ; c'est une garde préventive. Les touches nues (flèches, Tab, Espace, Entrée) en sont volontairement exclues : elles sont contextuelles par widget et produiraient de faux conflits. ✅
 
+- **Phase 15 — Annulation : un seul ⌘Z pour le texte ET le type.** Une conversion markdown mute le texte (undo natif du `NSTextView`) et le type de bloc (SwiftData, aucun undo natif) : deux systèmes d'annulation différents, donc un risque d'état incohérent. Retenu : `UndoManager.registerUndo` appelé **synchroniquement** dans le même événement que la frappe, ce que `groupsByEvent` (comportement Foundation par défaut) regroupe alors en une seule étape. Chaque enregistrement réenregistre son inverse, donc le rétablissement est symétrique. ✅
+- **Phase 15 — Déclencheurs restreints aux paragraphes, et jamais dans un bloc de code.** Un `# ` tapé dans une citation ou un titre existant ne reconvertit pas silencieusement, et on peut taper du markdown littéral dans un bloc de code sans qu'il se transforme. ✅
+- **Phase 15 — `---` exige un bloc entièrement vide et la touche Entrée**, sinon trois tirets tapés dans du texte ordinaire deviendraient un séparateur. Le gras est essayé avant l'italique, `**` et `*` se chevauchant. ✅
+- **Phase 15 — Le collage markdown est gouverné par un réglage réellement branché.** Désactivé, le collage est strictement identique à avant, y compris le ⌘V d'image de la phase 9 (la détection ne lit que le texte du presse-papiers). C'est le premier contrôle actif de l'onglet Général, dont tous les autres restent désactivés faute de mécanisme. ✅
+- **Phase 15 — TROISIÈME occurrence du piège "détacher n'est pas supprimer".** Annuler un collage markdown retirait les blocs du document mais les laissait persistés en base. Même classe de bug qu'en phases 8 et 10. La règle et son motif de test sont désormais **inscrits dans `CLAUDE.md` §5** pour que les phases suivantes ne la redécouvrent pas : un test qui ne regarde que `note.blocks` ne voit rien, il faut un vrai `fetch` après `save()`. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -207,10 +213,13 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Recherche globale (⌘⇧F) sans mécanisme** : seul un filtre local au dossier affiché existe. La recherche plein texte relève d'une phase ultérieure, l'entrée reste désactivée.
 - **Menu Format désactivé** (voir Décisions) : les raccourcis eux-mêmes fonctionnent, seules les entrées de menu sont inertes.
 - **Raccourcis clavier jamais exercés dans une vraie fenêtre** : c'est la limite la plus gênante de cette phase, puisqu'un raccourci ne se vérifie vraiment qu'à l'usage. Le câblage `@FocusedValue`/`.focusedSceneValue`, le grisage effectif des entrées de menu et le déplacement réel de l'anneau de focus restent à confirmer à la main dans Xcode.
+- **Le regroupement réel de l'annulation n'a jamais été observé** : `groupsByEvent` est documenté par Foundation et le raisonnement tient, mais personne n'a constaté dans une vraie fenêtre qu'une frappe d'espace suivie d'une conversion se défait bien en un seul ⌘Z. C'est le point de la phase 15 à vérifier en priorité dès qu'une fenêtre sera disponible.
 
 ## Prochaine action concrète
-**Le jalon v1 est clos.** Avant d'attaquer le jalon v2, une chose domine tout le reste : **rien de ce qui a été construit des phases 7 à 14 n'a jamais été vu à l'écran.** Aucune fenêtre n'était disponible, ni pour les agents livreurs, ni pour les revues. Tout est couvert par 726 tests de logique, un build complet et des contrastes calculés, mais la conformité visuelle au design déposé reste entièrement à vérifier.
+**La vérification visuelle reste le point qui domine tout.** Rien des phases 7 à 15 n'a été vu à l'écran : aucune fenêtre n'était disponible, et la capture d'écran est bloquée tant que le terminal n'est pas autorisé dans *Réglages Système -> Confidentialité et sécurité -> Enregistrement de l'écran*. Les 799 tests couvrent la logique, les contrastes sont calculés, le build passe - mais la conformité visuelle au design déposé est entièrement à contrôler. La liste de ce qui n'a pas été observé est dans "Points ouverts", phase par phase.
 
-La capture d'écran a été retentée et reste **bloquée** (`could not create image from display`) : il faut autoriser le terminal dans *Réglages Système -> Confidentialité et sécurité -> Enregistrement de l'écran*. La première action utile est donc une **passe de vérification visuelle dans Xcode**, en clair et en sombre, avec la liste des points déjà identifiés comme non observés (elle est dans la section "Points ouverts" ci-dessus, phase par phase). Les plus à risque, par ordre : le glisser-déposer de blocs et la mise en colonnes (phase 10), les 4 états du bloc image et le geste de redimensionnement (phase 9), la barre de formatage flottante et son ancrage (phase 7), la fenêtre de réglages et la bascule de thème (phase 13), et les raccourcis de la barre de menu (phase 14).
+Ensuite, la **phase 16 — Liens internes & sous-pages** (mentions `@`, création à la volée). Deux éléments l'attendent déjà, posés volontairement au fil des phases précédentes :
+- le **popover de lien de la phase 7** a son champ de recherche de notes en place mais désactivé, précisément en attendant cette phase ;
+- le **lien interne `slate://note/<uuid>`** de la phase 11 est copié dans le presse-papiers mais aucun résolveur de ce schéma n'existe.
 
-Ensuite seulement, la **phase 15 — Markdown natif à la frappe** (`#`, `**`, `-`, `[]`...), premier pas du jalon v2. Elle s'appuiera directement sur l'acquis des phases 7 et 8 : les marques inline et les types de bloc existent tous, il s'agit de les déclencher à la frappe.
+Le modèle est prêt : `BlockAttributes.linkedNoteID` et `BlockType.pageLink` existent depuis la phase 2.
