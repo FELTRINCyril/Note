@@ -56,7 +56,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
 | 15 | Markdown natif à la frappe | ✅ | — | `872b114` |
-| 16 | Liens internes & sous-pages | ✅ | — | `PH16` |
+| 16 | Liens internes & sous-pages | ✅ | — | `48f48ef` |
 | 17 | Bases de données | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
 | 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
