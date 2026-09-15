@@ -1,66 +1,114 @@
-# REPRISE — continuer Slate sur un autre Mac
+# REPRISE — continuer Slate sur un autre ordinateur
 
-> Ce fichier voyage avec le dépôt GitHub. Sur le nouveau Mac, il te donne l'ordre exact des messages à coller.
-> État au moment de la pause : **phases 0 → 4 terminées**, prochaine = **phase 5 (éditeur de blocs)**, marquée 🎨.
-
----
-
-## 0. Préparer le nouveau Mac (une fois)
-- Installer **Xcode** (avec macOS 15 SDK) et se connecter à un **compte iCloud** (pour CloudKit).
-- Cloner le dépôt : `git clone https://github.com/FELTRINCyril/Note.git`
-- Ouvrir le dossier dans **Claude Code**.
-- (Pour les captures d'écran de vérification) autoriser **Switchboard** dans *Réglages Système → Confidentialité et sécurité → Enregistrement de l'écran*, puis le quitter/relancer.
+> Ce fichier voyage avec le dépôt GitHub. Il te donne l'ordre exact des messages à coller
+> dans une nouvelle session Claude Code.
+>
+> **État au 15/09/2026 : phases 0 → 16 terminées.** Jalon v1 complet, jalon v2 entamé.
+> **Prochaine phase : 17 — Bases de données.**
+> Source de vérité des cases cochées : `PLAN.md`. Contexte détaillé : `STATUT.md`.
 
 ---
 
-## 1. Prompt de REPRISE (premier message à Claude Code)
+## 0. Préparer le nouvel ordinateur (une seule fois)
 
-> Je reprends le projet Slate sur un nouveau Mac. Le code vient d'être cloné depuis https://github.com/FELTRINCyril/Note dans ce dossier.
+### Installer
+
+- **Xcode** (SDK macOS 15 minimum) et se connecter à un compte iCloud (nécessaire seulement
+  pour tester la synchronisation CloudKit, pas pour développer en Debug).
+- **Homebrew**, puis :
+  ```bash
+  brew install xcodegen swiftlint
+  ```
+  `xcodegen` est **indispensable** : `Slate.xcodeproj` n'est pas versionné, il se régénère
+  depuis `project.yml`. Sans lui, pas de projet Xcode. `swiftlint` est requis par la
+  configuration de build et par la règle « 0 violation » du projet.
+
+### Cloner et générer
+
+```bash
+git clone https://github.com/FELTRINCyril/Note.git
+cd Note
+xcodegen generate
+```
+
+### Piège d'environnement à connaître tout de suite
+
+`xcode-select -p` pointe peut-être sur les Command Line Tools, qui ne fournissent ni les
+macros SwiftData ni le module `Testing`. Dans ce cas **toute** commande de build ou de test
+doit être préfixée :
+
+```bash
+export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+```
+
+Le détail complet est dans `docs/DEV_ENV.md`, à lire avant de s'étonner d'une erreur de build.
+
+### Pour la vérification visuelle
+
+Autoriser le terminal (et/ou Switchboard) dans *Réglages Système → Confidentialité et
+sécurité → Enregistrement de l'écran*, puis le quitter et le relancer. **Sans cette
+autorisation, aucune capture d'écran n'est possible** et la conformité visuelle au design ne
+peut pas être contrôlée — c'est aujourd'hui la principale limite du projet.
+
+---
+
+## 1. Premier message à Claude Code
+
+> Je reprends le projet Slate sur un nouvel ordinateur. Le dépôt vient d'être cloné.
 > Avant de coder quoi que ce soit :
 > 1. Lis `CLAUDE.md`, `PLAN.md` et `STATUT.md`, puis résume-moi en 3 lignes où on en est et quelle est la prochaine phase.
-> 2. Vérifie que les sous-agents sont actifs : si `.claude/agents/` est absent ou vide, copie-y `sous-agents/*.md` (sauf le README).
-> 3. Vérifie que l'environnement du nouveau Mac est bon : que le projet compile et que la suite de tests passe (build + tests SPM / scheme Xcode). Signale-moi tout ce qui manque (version Xcode, SDK macOS 15, réglage iCloud/CloudKit, autorisation Switchboard).
+> 2. Vérifie que les sous-agents sont actifs : `.claude/agents/` doit contenir les 5 définitions. S'il est absent ou vide, copie-y `sous-agents/*.md` (sauf le README).
+> 3. Vérifie que l'environnement est bon : `xcodegen generate` a bien produit `Slate.xcodeproj`, le projet compile, et la suite de tests passe sur les 5 packages. Signale-moi tout ce qui manque (Xcode, SDK macOS 15, xcodegen, swiftlint, `DEVELOPER_DIR`).
 > Ne lance aucune phase tant que je n'ai pas dit `go`.
 
 ---
 
-## 2. Prompt à donner à CLAUDE DESIGN (écran de la phase 5)
-*(joindre `design/01-brief-design.md` et `design/tokens.md`)*
+## 2. Lancer la phase suivante
 
-> Tu conçois Slate, une app macOS native (SwiftUI, macOS 15) : un hybride entre l'app Notes d'Apple et Notion. Les deux fichiers joints sont ta référence : 01-brief-design.md et tokens.md (respecte-les strictement, appelle les tokens par leur nom). Reste cohérent avec les écrans déjà conçus E1/E2 (coquille + sidebar) et E3 (liste) : ici c'est la 3e colonne, l'éditeur, colonne de texte centrée à 720 pt max.
->
-> Livre-moi l'écran E4 — Éditeur de note, en thème clair ET sombre, avec tous les états. De préférence en code SwiftUI utilisant les tokens (pas de couleurs en dur) ; sinon des maquettes annotées + specs.
->
-> E4 — Éditeur de note :
-> - En-tête : zone icône/emoji optionnel + image de couverture optionnelle, titre (title.note), sous-titre.
-> - Corps : pile verticale de blocs, colonne centrée (editor.maxContentWidth 720), espacement inter-blocs (editor.blockSpacing).
-> - Poignée de bloc ⋮⋮ + bouton + à gauche, révélés au survol.
-> - États d'un bloc : normal, survol, focus (caret actif), sélectionné (block.selected.bg), placeholder « Tapez / pour les commandes ».
-> - Comportement visuel du caret entre blocs et de la sélection multi-blocs.
-> - Rendu de quelques types de base pour caler la hiérarchie et l'espacement : paragraphe, H1–H3, liste à puces, case à cocher (cochée/décochée), citation. (Le détail des blocs spéciaux et de la barre de formatage viendra dans des écrans ultérieurs.)
->
-> Donne-moi aussi les composants : BlockHandle (poignée ⋮⋮ + bouton +) et le gabarit d'une rangée de bloc éditable. Deux thèmes, accessibilité (contraste AA — vérifie sur l'accent, Dynamic Type, focus clavier distinct de la sélection).
+Le design de **toutes** les phases restantes est déjà livré dans `design/_design_complet/` :
+plus aucun aller-retour avec Claude Design n'est nécessaire. `design/_design_complet/MAPPING.md`
+donne la correspondance page → phase.
 
-Déposer le résultat dans `design/05_editeur/`.
-
----
-
-## 3. Le VRAI prompt de travail (à Claude Code, après avoir déposé le design)
-
-> Le design de la phase 5 est dans `design/05_editeur/`. D'abord je valide les trois points en suspens de la phase 4 :
-> 1. **Aplat de sélection** à 2 valeurs par thème (via la règle générale) : OK, on garde — la règle protège le contraste quand l'accent deviendra personnalisable en phase 13.
-> 2. **Increase Contrast** plus sombre : OK, c'est le but du mode.
-> 3. **Date à J-7** (« 27 juil. » vs « Lundi ») : aligne le format sur le groupe — toutes les entrées de « 7 jours précédents » en nom de jour.
->
-> Ensuite, lance la **phase 5 (éditeur de blocs)** :
-> - **Architecture d'édition** : pars sur l'option recommandée du doc (un `RichTextBlockView` par bloc via `NSViewRepresentable` / TextKit 2), sauf vrai bloquant — dans ce cas, arrête-toi et explique-moi avant de coder.
-> - Respecte le **découpage en sous-étapes 5.1 → 5.6** du doc ; petit point à la fin de chaque sous-étape.
-> - **Périmètre** : le menu `/` (phase 6), le formatage inline (phase 7) et les blocs spéciaux (phase 8) restent hors périmètre — prévois seulement les points d'accroche.
-> - Implémente le design via `design-integrator`, termine par `swift-reviewer` (tests de l'`EditorController` : insertion / fusion / split / conversion, focus, perf sur note longue).
-> - Coche la phase 5 dans `PLAN.md` et **mets à jour `STATUT.md`** en fin de phase (garde-le, c'est mon récap maintenu hors workflow, ne le supprime pas).
+> Lance la **phase 17 (bases de données)**. Ouvre `docs/17_base_de_donnees.md`, prends la
+> maquette correspondante dans `design/_design_complet/` via `MAPPING.md` (c'est
+> « P5 - Bases de données »), et découpe la phase en sous-étapes : c'est la plus grosse du
+> projet, son doc prévoit explicitement ce découpage. Point d'étape à la fin de chaque
+> sous-étape. Termine par une revue, coche la phase dans `PLAN.md`, mets `STATUT.md` à jour,
+> commit et push.
 > Puis `go`.
 
+Même schéma ensuite pour les phases 18 (IA, maquette P6), 19 (workspaces, P7) et 20 (iOS, P9).
+
 ---
 
-## Rappel du cycle
-Design → dépôt dans `design/05_editeur/` → prompt §3 → Claude Code code par sous-étapes → vérif → coche → il s'arrête. Rien n'avance sans ton `go`.
+## 3. Ce qu'une nouvelle session doit absolument savoir
+
+Ces points ont coûté cher à découvrir. Ils sont documentés en détail dans `CLAUDE.md` §5 et
+`docs/DEV_ENV.md`, mais les voici en résumé :
+
+- **Détacher un bloc ne le supprime PAS du store.** `BlockOrdering`/`BlockOperations` ne font
+  que détacher : il faut un `modelContext?.delete(...)` explicite, sinon les blocs restent
+  persistés et partent vers CloudKit. Trouvé trois fois (phases 8, 10, 15).
+- **Un champ ajouté à `BlockAttributes` doit être OPTIONNEL.** SwiftData aplatit cette struct
+  `Codable` en colonnes Core Data ; un champ non optionnel casse l'ouverture de tout store
+  existant. L'app a cessé de démarrer à cause de ça (phase 8, découvert en phase 16).
+- **Un test en mémoire ne voit ni l'un ni l'autre.** Il faut un vrai `ModelContainer` sur
+  disque et un `fetch` après `save()`. Motifs de référence : `EditorControllerDeletionPurgeTests`
+  et `BlockAttributesHeaderRowMigrationTests`.
+- **Pas de `MainActor.assumeIsolated` dans le calcul d'un token de couleur** : Swift Testing
+  exécute les tests non isolés hors du thread principal, et ça provoque un SIGTRAP. Passer par
+  le miroir verrouillé de `SlateThemeState`.
+- **`swift test` en ligne de commande ne compile pas les `.xcstrings`** : `String(localized:)`
+  y renvoie la clé brute. Ne jamais comparer un test à du texte traduit figé.
+- **Ne pas lancer `swift test` en parallèle sur plusieurs packages** : le `.build` partagé
+  produit des échecs fantômes. En cas de symbole « introuvable » qui existe pourtant :
+  `rm -rf .build` dans le package concerné.
+
+---
+
+## 4. Le cycle de chaque phase
+
+Annonce de la phase → `go` → implémentation (via sous-agents) → vérification → coche dans
+`PLAN.md` → mise à jour de `STATUT.md` → commit et push → arrêt.
+
+Rien n'avance sans un `go` explicite (`CLAUDE.md` §2).

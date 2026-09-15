@@ -1,5 +1,20 @@
 # Comment démarrer — mode d'emploi
 
+> ⚠️ **Ce document décrit le démarrage INITIAL du projet (phase 0) et n'est plus d'actualité.**
+>
+> **Au 15/09/2026, les phases 0 à 16 sont terminées.** Pour reprendre le travail, notamment
+> sur un autre ordinateur, lis **`REPRISE.md`** : il donne l'état réel, les prérequis machine
+> et les messages exacts à coller.
+>
+> Deux choses ont changé depuis la rédaction de ce fichier :
+> - **Le design est intégralement livré** dans `design/_design_complet/` (voir son `MAPPING.md`).
+>   Plus aucune phase ne nécessite d'aller-retour avec Claude Design : toute la section
+>   « Étape Design » ci-dessous est caduque.
+> - Les sous-agents sont déjà en place dans `.claude/agents/`, il n'y a plus à les copier.
+>
+> Le reste du document garde son intérêt : il explique le **cycle d'une phase**, qui n'a pas changé.
+
+
 Ce projet est piloté par deux outils en parallèle : **Claude Code** (qui écrit le code) et **Claude Design** (qui produit les maquettes). Voici le flux complet.
 
 ---
