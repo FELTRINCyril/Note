@@ -103,6 +103,18 @@ structure, annulation d'une insertion) doit faire un `modelContext?.delete(...)`
 Il faut un vrai `ModelContainer` en mémoire et un `context.fetch(FetchDescriptor<Block>())`
 après `save()`. Motif de référence : `EditorControllerDeletionPurgeTests`.
 
+### ⚠️ Piège récurrent : ajouter un champ `Bool` non-optionnel à une struct `Codable`
+stockée comme propriété `@Model` casse tout store existant
+
+Trouvé sur le store réel de Cyril (`isHeaderRow` ajouté à `BlockAttributes`, Phase 8) :
+SwiftData aplatit une struct `Codable` stockée directement comme propriété `@Model` en
+autant d'attributs Core Data distincts que de champs. Ajouter un champ non-optionnel à
+une telle struct casse l'ouverture de tout store déjà en circulation (`NSCocoaErrorDomain`
+134110), et **aucun test en mémoire ne le voit** (toujours un store neuf, jamais une
+migration réelle). Voir `docs/DEV_ENV.md`, piège n°2 bis, pour le détail complet et le
+piège additionnel du correctif naïf (stockage privé renommé = perte de données
+silencieuse).
+
 ---
 
 ## 6. Ce que tu ne fais PAS

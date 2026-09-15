@@ -55,19 +55,20 @@ struct TableBlockContentView: View {
 
     private func rowView(_ row: Block) -> some View {
         let cells = row.tableCells
+        let isHeaderRow = row.attributes.isHeaderRow ?? false
         return HStack(spacing: 0) {
             ForEach(Array(cells.enumerated()), id: \.element.id) { index, cell in
-                cellView(cell, row: row, isHeader: row.attributes.isHeaderRow, isLastColumn: index == cells.count - 1)
+                cellView(cell, row: row, isHeader: isHeaderRow, isLastColumn: index == cells.count - 1)
             }
         }
-        .background(row.attributes.isHeaderRow ? Color.clear : rowStripeBackground(row))
+        .background(isHeaderRow ? Color.clear : rowStripeBackground(row))
     }
 
     /// Lignes alternees (docs/08, artboard H : "lignes alternees") sur les lignes de
     /// CORPS uniquement -- la ligne d'en-tete garde `table.header.bg`
     /// (`TableHeaderCell`), jamais l'alternance.
     private func rowStripeBackground(_ row: Block) -> Color {
-        let bodyRows = rows.filter { !$0.attributes.isHeaderRow }
+        let bodyRows = rows.filter { !($0.attributes.isHeaderRow ?? false) }
         guard let index = bodyRows.firstIndex(where: { $0.id == row.id }) else { return .clear }
         return index.isMultiple(of: 2) ? .clear : SlateColor.tableRowStripe
     }

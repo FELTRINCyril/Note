@@ -14,7 +14,12 @@ import Foundation
 ///   `isChecked` qui utilise une valeur par defaut non-optionnelle (`false`) plutot
 ///   qu'un `Bool?` : `discouraged_optional_boolean` est une regle SwiftLint active sur
 ///   ce projet, et un booleen absent d'anciennes donnees a de toute facon un sens par
-///   defaut clair ("pas coche").
+///   defaut clair ("pas coche"). **`isChecked` s'en tire uniquement parce qu'il existe
+///   depuis la toute premiere version de cette struct** : aucun store n'a jamais existe
+///   sans lui, donc aucune migration ne l'a jamais mis en defaut. Ce n'est PAS un
+///   modele a reproduire pour un champ ajoute plus tard - voir `isHeaderRow`
+///   ci-dessous, qui documente l'incident reel provoque par cette meme forme
+///   appliquee a un champ ajoute apres coup.
 /// - Le decodage est ecrit a la main (`init(from:)`) avec `decodeIfPresent` pour
 ///   **chaque** champ : une valeur JSON/plist qui ne contient pas encore un champ
 ///   ajoute ulterieurement se decode sans erreur, avec la valeur par defaut. C'est
@@ -100,8 +105,55 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
     // MARK: Tableau (`BlockType.table` / `tableRow` / `tableCell`)
 
     /// Marque une `tableRow` comme ligne d'en-tete (fond distinct, texte en gras dans le
-    /// rendu). Non-optionnel par choix, meme raison que `isChecked` ci-dessus.
-    public var isHeaderRow: Bool = false
+    /// rendu). `nil` = pas d'en-tete (valeur par defaut a interpreter cote appelant, via
+    /// `?? false` - voir `Block+Table.swift`/`TableBlockContentView`) ; ne jamais
+    /// confondre `nil` avec `false` au niveau du stockage, meme si les deux ont le meme
+    /// sens pour l'affichage (voir plus bas pourquoi la distinction compte quand meme).
+    ///
+    /// ## Pourquoi ce champ est reellement optionnel, contrairement a `isChecked`
+    ///
+    /// Ce champ a ete ajoute *apres* la mise en circulation de stores existants (ceux
+    /// crees avant la Phase 8, tableaux). Or `BlockAttributes` est stockee
+    /// **directement** comme propriete `@Model` de `Block` (voir la documentation de
+    /// tete de `Block.swift`) : SwiftData l'aplatit en autant de colonnes Core Data
+    /// distinctes que de champs de cette struct ("composite coder"). Un champ `Bool`
+    /// non-optionnel ajoute dans ces conditions devient un attribut obligatoire sans
+    /// valeur pour toutes les lignes deja presentes, et fait echouer l'ouverture de
+    /// tout store existant a la migration legere (`NSCocoaErrorDomain` 134110,
+    /// "missing attribute values on mandatory destination attribute" - c'est
+    /// exactement l'incident reel documente dans `docs/DEV_ENV.md`, piege n°2 bis, et
+    /// reproduit par `BlockAttributesHeaderRowMigrationTests`).
+    ///
+    /// `discouraged_optional_boolean` (regle SwiftLint active sur ce projet) est
+    /// desactive ligne par ligne ici en connaissance de cause : c'est precisement
+    /// l'optionnalite Swift de ce champ qui evite l'echec de migration decrit
+    /// ci-dessus. La regle reste active partout ailleurs.
+    ///
+    /// **Ce champ ne peut pas etre "cache" derriere un stockage prive optionnel plus un
+    /// accesseur public non-optionnel** (le motif utilise par `Folder.colorIndex` /
+    /// `colorToken`, mais pour exposer un *type* different, pas pour masquer
+    /// l'optionnalite d'un meme type) : verifie empiriquement pendant cette meme tache
+    /// - renommer le stockage brut (ex. `isHeaderRowRaw`, prive) casse silencieusement
+    /// la persistance elle-meme, pas seulement la migration. Le "composite coder" de
+    /// SwiftData exige que le nom Swift du champ
+    /// stocke corresponde exactement au nom utilise par `CodingKeys`/`init(from:)`/
+    /// `encode(to:)` : un ecart entre les deux fait que la valeur ecrite via
+    /// `encode(to:)` (sous la cle `isHeaderRow`) n'est jamais relue par `init(from:)`
+    /// apres un vrai passage par le disque (la mutation "survit" en memoire dans le
+    /// meme process, ce qui masque le probleme si on ne teste qu'avec des instances
+    /// deja chargees, mais se perd silencieusement des qu'un `ModelContext` frais
+    /// relit la ligne). D'ou la contrainte : **le nom de la propriete Swift, le nom du
+    /// cas `CodingKeys`, et les cles utilisees dans `init(from:)`/`encode(to:)` doivent
+    /// rester rigoureusement identiques ('isHeaderRow' partout)** pour tout champ
+    /// stocke directement dans une struct `Codable` aplatie par SwiftData - cette
+    /// contrainte est plus stricte que ce que `Codable` exige d'ordinaire (ou seul le
+    /// `CodingKeys.rawValue` compte, le nom de propriete etant libre).
+    ///
+    /// Consequence assumee : l'API publique de ce champ precis change (`Bool?` au lieu
+    /// du `Bool` non-optionnel initialement prevu) - tous les lecteurs
+    /// (`TableBlockContentView`, tests) appliquent `?? false` explicitement plutot que
+    /// de compter sur un defaut cache dans le type.
+    public var isHeaderRow: Bool? // swiftlint:disable:this discouraged_optional_boolean
 
     /// Largeur d'affichage d'une colonne, en points (ex. "184 pt" dans l'indicateur de
     /// redimensionnement de l'artboard H). Portee par chaque `tableCell` de la colonne
@@ -133,7 +185,8 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         imageAlignment: String? = nil,
         columnWidthRatio: Double? = nil,
         columnCount: Int? = nil,
-        isHeaderRow: Bool = false,
+        // swiftlint:disable:next discouraged_optional_boolean
+        isHeaderRow: Bool? = nil,
         columnWidth: Double? = nil,
         linkedNoteID: UUID? = nil,
         sourceURLString: String? = nil
@@ -189,7 +242,7 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         imageAlignment = try container.decodeIfPresent(String.self, forKey: .imageAlignment)
         columnWidthRatio = try container.decodeIfPresent(Double.self, forKey: .columnWidthRatio)
         columnCount = try container.decodeIfPresent(Int.self, forKey: .columnCount)
-        isHeaderRow = try container.decodeIfPresent(Bool.self, forKey: .isHeaderRow) ?? false
+        isHeaderRow = try container.decodeIfPresent(Bool.self, forKey: .isHeaderRow)
         columnWidth = try container.decodeIfPresent(Double.self, forKey: .columnWidth)
         linkedNoteID = try container.decodeIfPresent(UUID.self, forKey: .linkedNoteID)
         sourceURLString = try container.decodeIfPresent(String.self, forKey: .sourceURLString)
@@ -209,7 +262,7 @@ public struct BlockAttributes: Codable, Hashable, Sendable {
         try container.encodeIfPresent(imageAlignment, forKey: .imageAlignment)
         try container.encodeIfPresent(columnWidthRatio, forKey: .columnWidthRatio)
         try container.encodeIfPresent(columnCount, forKey: .columnCount)
-        try container.encode(isHeaderRow, forKey: .isHeaderRow)
+        try container.encodeIfPresent(isHeaderRow, forKey: .isHeaderRow)
         try container.encodeIfPresent(columnWidth, forKey: .columnWidth)
         try container.encodeIfPresent(linkedNoteID, forKey: .linkedNoteID)
         try container.encodeIfPresent(sourceURLString, forKey: .sourceURLString)

@@ -138,6 +138,74 @@ propriété `@Model` normale.
 
 ---
 
+## Piège n°2 bis : ajouter un champ `Bool` non-optionnel à une struct `Codable` déjà en
+circulation casse l'ouverture de tout store existant (et aucun test en mémoire ne le voit)
+
+Constaté en pratique sur le store réel de Cyril, après l'ajout de `isHeaderRow` à
+`BlockAttributes` (Phase 8, tableaux). L'app affichait "Impossible de démarrer Slate -
+SwiftDataError erreur 1" au lancement. L'erreur réelle, masquée par ce message
+générique, était :
+
+```
+NSCocoaErrorDomain 134110
+Cannot migrate store in-place: Validation error missing attribute values on mandatory
+destination attribute
+entity=Block, attribute=isHeaderRow
+```
+
+**Cause** : `BlockAttributes` (voir piège n°2 ci-dessus, un `Codable` "plat", donc
+stockée directement comme propriété `@Model` de `Block`) est **aplatie par SwiftData en
+autant de colonnes Core Data distinctes que de champs de la struct** ("composite
+coder") - `ZHEADINGLEVEL`, `ZISCHECKED`, `ZCOLUMNCOUNT`, etc. dans la table `ZBLOCK`, une
+colonne par propriété, pas une seule colonne encodée. Un champ `Bool` non-optionnel
+ajouté à une telle struct *après* la mise en circulation d'un store existant devient un
+attribut Core Data obligatoire sans valeur pour toutes les lignes déjà présentes, et
+fait échouer la migration légère : le `= false` de l'initialiseur Swift est une valeur
+par défaut de **construction d'instance**, elle ne joue aucun rôle de valeur par défaut
+d'attribut Core Data au moment de la migration.
+
+**Piège dans le correctif lui-même** : la réponse instinctive ("stockage privé
+optionnel + accesseur public non-optionnel", le motif déjà utilisé par
+`Folder.colorIndex`/`colorToken` mais pour exposer un *type différent*, pas pour
+masquer l'optionnalité d'un même type) **casse silencieusement la persistance**, pas
+seulement la migration : le "composite coder" exige que le nom Swift du champ stocké
+corresponde **exactement** au nom de cas utilisé dans `CodingKeys`/`init(from:)`/
+`encode(to:)`. Renommer le stockage brut (ex. `isHeaderRowRaw`, privé) tout en gardant
+la clé `CodingKeys` d'origine (`isHeaderRow`) fait qu'une valeur écrite via
+`encode(to:)` n'est jamais relue par `init(from:)` après un vrai passage par le disque -
+la mutation "survit" en mémoire dans le même process (ce qui masque totalement le
+problème si on ne teste qu'avec des instances déjà chargées), mais se perd
+silencieusement dès qu'un `ModelContext` frais relit la ligne. Aucune erreur, aucun
+avertissement : juste une valeur qui redevient `false` au prochain lancement.
+
+**Règle** : pour tout champ ajouté à une struct `Codable` stockée directement comme
+propriété `@Model` (motif `BlockAttributes`) :
+- s'il doit tolérer un store déjà en circulation, il **doit** être un type authentiquement
+  optionnel (`String?`, `Int?`, `Double?`, `UUID?`... ou, si c'est un booléen,
+  `Bool?` avec `discouraged_optional_boolean` désactivé ligne par ligne en
+  connaissance de cause - un booléen non-optionnel avec valeur par défaut n'est
+  sûr QUE pour un champ présent depuis la toute première version de la struct,
+  jamais pour un champ ajouté après coup, voir `isChecked` vs `isHeaderRow` dans
+  `BlockAttributes.swift`) ;
+- **le nom de la propriété Swift, le nom du cas `CodingKeys`, et les clés utilisées
+  dans `init(from:)`/`encode(to:)` doivent rester rigoureusement identiques** - ne
+  jamais introduire d'indirection de type "stockage privé renommé + accesseur public".
+  C'est plus strict que ce que `Codable` exige d'ordinaire (où seul le
+  `CodingKeys.rawValue` compte, le nom de propriété étant libre) : ce cas précis viole
+  cette liberté habituelle.
+
+**Aucun test en mémoire (`SlateContainer.make(inMemory: true)`) ne peut jamais
+attraper ce genre de régression** : un container en mémoire est toujours un store
+neuf, jamais une migration. Voir `FolderExpandedStateMigrationTests`,
+`FolderColorIndexMigrationTests` et `BlockAttributesHeaderRowMigrationTests`
+(`Tests/SlateModelTests`) pour le motif de test qui ouvre un store réel sur disque,
+construit avec l'ancienne forme du schéma, via `SlateContainer.make(storeURL:)`. Ce
+motif de test doit être reproduit à chaque évolution de champ qui touche une struct
+`Codable` stockée directement comme propriété `@Model`, pas seulement pour les
+entités `@Model` elles-mêmes.
+
+---
+
 ## Contrainte CloudKit à ne jamais oublier (vaut pour la phase 2)
 
 Tout modèle SwiftData synchronisé via CloudKit doit avoir **toutes ses propriétés avec une

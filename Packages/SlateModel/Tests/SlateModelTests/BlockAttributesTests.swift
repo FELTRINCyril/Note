@@ -52,7 +52,10 @@ struct BlockAttributesTests {
         #expect(decoded.imageCaption == nil)
         #expect(decoded.imageAlignment == nil)
         #expect(decoded.linkedNoteID == nil)
-        #expect(decoded.isHeaderRow == false)
+        // Reellement `nil` (et non `false`) : voir la documentation de
+        // `BlockAttributes.isHeaderRow`, c'est le seul champ Bool qui reste
+        // authentiquement optionnel au niveau du stockage.
+        #expect(decoded.isHeaderRow == nil)
         #expect(decoded.columnWidth == nil)
         #expect(decoded.calloutVariant == nil)
     }
