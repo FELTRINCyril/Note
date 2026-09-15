@@ -62,7 +62,10 @@ struct NoteDetailColumnView: View {
                         },
                         onAddCover: {
                             presentComingSoon(String(localized: "noteDetail.addCover.comingSoon", bundle: .module))
-                        }
+                        },
+                        // Navigation vers une autre note (Phase 16, docs/16_liens_internes.md) :
+                        // clic sur un lien de page, un lien inline interne, ou un backlink.
+                        onNavigateToNote: { targetNote in appState.selectedNote = targetNote }
                     )
                 }
             } else {

@@ -37,12 +37,17 @@ public enum BlockRenderKind: Equatable, Sendable {
     /// `column` enfants ne routent JAMAIS ici individuellement (voir `.unsupported`
     /// ci-dessous), ils sont rendus tous ensemble par cette vue.
     case columnList
-    /// Type de bloc dont le rendu riche n'est pas encore construit (hors perimetre de
-    /// la phase en cours, ou reserve a une phase ulterieure : `bookmark`/`embed`/
-    /// `databaseView`/`pageLink` (v2)), ou bloc de structure interne jamais rendu
-    /// directement (`tableRow`/`tableCell`, voir `.table` ci-dessus ; `column`, voir
-    /// `.columnList` ci-dessus). Porte le `BlockType` d'origine pour que le rendu de
-    /// repli reste identifiable plutot qu'invisible.
+    /// Lien vers une autre note (Phase 16, docs/16_liens_internes.md) : titre resolu
+    /// dynamiquement depuis `BlockAttributes.linkedNoteID`, cliquable, etat "page
+    /// supprimee" si la cible n'existe plus -- voir `PageLinkBlockContentView`. Ne
+    /// porte aucun `RichText` -- ni convertible (`BlockConversion.convertibleTypes`),
+    /// ni destinataire du caret, meme motif que `.divider`/`.table` ci-dessus.
+    case pageLink
+    /// Type de bloc dont le rendu riche n'est pas encore construit (reserve a une
+    /// phase ulterieure : `bookmark`/`embed`/`databaseView` (v2)), ou bloc de structure
+    /// interne jamais rendu directement (`tableRow`/`tableCell`, voir `.table`
+    /// ci-dessus ; `column`, voir `.columnList` ci-dessus). Porte le `BlockType`
+    /// d'origine pour que le rendu de repli reste identifiable plutot qu'invisible.
     case unsupported(BlockType)
 }
 
@@ -65,6 +70,8 @@ public enum BlockRenderRouting {
             return type == .image ? .image : .file
         case .columnList:
             return .columnList
+        case .pageLink:
+            return .pageLink
         // Les 9 premiers types de cette liste sont deja intercepts par `simpleKind(for:)`
         // ci-dessus (jamais atteints ici en pratique) : ils DOIVENT neanmoins rester
         // enumeres pour que ce `switch` reste EXHAUSTIF au sens du compilateur (voir la
@@ -72,7 +79,7 @@ public enum BlockRenderRouting {
         // blockTypeLabel(_:)`, ou les types heading1-6/image/file, deja interceptes par
         // un `if let` similaire, restent lister dans le groupe de repli.
         case .paragraph, .bulletedList, .numberedList, .todo, .quote, .code, .divider, .callout, .table,
-             .tableRow, .tableCell, .column, .bookmark, .embed, .databaseView, .pageLink:
+             .tableRow, .tableCell, .column, .bookmark, .embed, .databaseView:
             return structuralOrFutureKind(for: type)
         }
     }
@@ -100,7 +107,8 @@ public enum BlockRenderRouting {
 
     /// Structure interne jamais rendue individuellement (`tableRow`/`tableCell`, voir
     /// `.table` ; `column`, voir `.columnList`) ou type reserve a une phase ulterieure
-    /// (v2 -- bookmark/embed/databaseView/pageLink). Extrait de `kind(for:)` pour
+    /// (v2 -- bookmark/embed/databaseView ; `pageLink` a quitte ce groupe en Phase 16,
+    /// voir `.pageLink` ci-dessus). Extrait de `kind(for:)` pour
     /// rester sous la limite de complexite cyclomatique de SwiftLint -- meme motif que
     /// `headingLevel(for:)` ci-dessous. Ces types de structure interne ne sont en
     /// pratique jamais atteints par un appelant de ce module (`BlockTreeView` ne

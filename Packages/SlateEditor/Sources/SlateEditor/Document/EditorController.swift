@@ -86,6 +86,22 @@ public final class EditorController {
     /// longueur de `CLAUDE.md` §5, meme motif exact que `EditorController+Selection.swift`.
     public internal(set) var slashMenuState: SlashMenuState?
 
+    /// Etat du selecteur de page "@"/"[[" (docs/16_liens_internes.md), `nil` si aucun
+    /// selecteur n'est ouvert. Toute la logique vit dans
+    /// `EditorController+PageMention.swift` (voir sa documentation de tete) -- meme
+    /// motif de separation que `slashMenuState`/`SlashMenuState` ci-dessus.
+    public internal(set) var pageMentionState: PageMentionState?
+
+    /// Navigation vers une autre note (clic sur un bloc `pageLink` deja resolu, ou lien
+    /// inline `slate://note/<uuid>` -- docs/16_liens_internes.md). `SlateEditor` ne
+    /// porte aucune notion de selection d'app (`AppState` vit dans `SlateFeatures`, sens
+    /// des dependances -- voir `docs/00_architecture.md`) : ce point d'injection est
+    /// donc la seule facon pour `PageLinkBlockContentView`/le clic sur un lien inline de
+    /// faire remonter une intention de navigation jusqu'a l'appelant. Fourni par
+    /// `NoteDocumentView` (voir sa documentation), branche par `SlateFeatures` sur
+    /// `AppState.selectedNote`.
+    public var onNavigateToNote: ((Note) -> Void)?
+
     /// Selection de texte INLINE courante (Phase 7, docs/07_typographie_formatage.md) :
     /// bloc + plage de caracteres selectionnee dans son `NSTextView`, et le rectangle de
     /// cette selection dans la `coordinateSpace` partagee (pour ancrer la barre de
@@ -173,6 +189,10 @@ public final class EditorController {
         if let slashMenuState, slashMenuState.blockID != blockID {
             self.slashMenuState = nil
         }
+        // Selecteur de page (Phase 16), meme regle de fermeture defensive.
+        if let pageMentionState, pageMentionState.blockID != blockID {
+            self.pageMentionState = nil
+        }
     }
 
     public func noteBlockDidEndEditing(_ blockID: UUID) {
@@ -182,6 +202,10 @@ public final class EditorController {
         // la documentation de `noteBlockDidBeginEditing(_:)` ci-dessus.
         if slashMenuState?.blockID == blockID {
             slashMenuState = nil
+        }
+        // Selecteur de page (Phase 16), meme regle.
+        if pageMentionState?.blockID == blockID {
+            pageMentionState = nil
         }
         // Barre de formatage (Phase 7, artboard P1 A : "se ferme... a la perte de
         // selection") : la perte de focus du bloc EST une perte de selection.

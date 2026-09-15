@@ -1,6 +1,7 @@
 import AppKit
 import SlateModel
 import SlateUI
+import SwiftData
 import SwiftUI
 
 /// Popover d'edition de lien (docs/07_typographie_formatage.md, artboard P1 C) :
@@ -9,13 +10,16 @@ import SwiftUI
 /// Modifier/Copier/Retirer). Presente en `.popover` par `FormatBarView`, meme precedent
 /// que `FormatColorPopoverView` (voir sa documentation de tete).
 ///
-/// ## Perimetre volontairement REDUIT : recherche de notes
-/// L'artboard montre aussi une recherche de notes ("chercher une note...", "Creer une
-/// note...") -- c'est la Phase 16 (liens internes & sous-pages, voir PLAN.md), PAS cette
-/// phase. Le champ ci-dessous est present et STRUCTURELLEMENT pret a l'accueillir
-/// (meme emplacement, meme style), mais desactive et sans aucune recherche reelle
-/// branchee derriere : la Phase 16 le remplacera par un vrai champ de recherche, sans
-/// avoir a redessiner ce popover.
+/// ## Recherche de notes (Phase 16, docs/16_liens_internes.md)
+/// La recherche de notes est desormais REELLE (voir `noteSearchResults`) : selectionner
+/// un resultat pose un lien `slate://note/<uuid>` (`SlateNoteURLResolver`) sur le texte
+/// selectionne, resolu au clic par `RichTextEditingRepresentable+PageMention.swift`.
+/// Reutilise `PageMentionFilter`/`NoteMentionCandidate` (memes types que le selecteur
+/// "@"/"[[") : meme filtrage flou, pas de duplication de logique de recherche. Ce
+/// popover reste volontairement plus simple que le selecteur "@" : pas d'entree
+/// "Creer une page" ici (le texte deja selectionne n'est pas un TITRE de note, y greffer
+/// une creation a la volee melangerait deux intentions differentes) -- une note
+/// inexistante se cree via "@"/"[[" dans le corps du texte, pas depuis ce popover.
 struct LinkEditorPopoverView: View {
     let block: Block
     let editorController: EditorController
@@ -27,9 +31,25 @@ struct LinkEditorPopoverView: View {
     /// declenche par l'action "Modifier le lien" (voir `editingContent(existingLink:)`).
     @State private var isEditingURL = false
     @State private var urlText = ""
+    @State private var noteSearchQuery = ""
     @FocusState private var isURLFieldFocused: Bool
 
+    @Environment(\.modelContext) private var modelContext
+
     private var existingLink: URL? { editorController.currentLink(in: block, range: range) }
+
+    /// Resultats de recherche pour `noteSearchQuery`, note en cours d'edition exclue
+    /// (se lier a soi-meme n'a pas de sens) -- meme regle que le selecteur "@"/"[[".
+    private var noteSearchResults: [NoteMentionMatch] {
+        guard !noteSearchQuery.isEmpty else { return [] }
+        let predicate = #Predicate<Note> { !$0.isTrashed }
+        guard let notes = try? modelContext.fetch(FetchDescriptor<Note>(predicate: predicate)) else { return [] }
+        let currentNoteID = block.note?.id
+        let candidates = notes
+            .filter { $0.id != currentNoteID }
+            .map { NoteMentionCandidate(id: $0.id, title: $0.title) }
+        return PageMentionFilter.match(query: noteSearchQuery, in: candidates)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
@@ -62,12 +82,25 @@ struct LinkEditorPopoverView: View {
                 .focused($isURLFieldFocused)
                 .onSubmit(applyURL)
 
-            // Recherche de notes : structure prete pour la Phase 16, voir la
-            // documentation de tete de fichier. Desactivee, aucune recherche reelle.
-            TextField(EditorStrings.linkPopoverNoteSearchPlaceholder, text: .constant(""))
+            // Recherche de notes (Phase 16) : voir la documentation de tete de fichier.
+            TextField(EditorStrings.linkPopoverNoteSearchPlaceholder, text: $noteSearchQuery)
                 .textFieldStyle(.roundedBorder)
-                .disabled(true)
-                .opacity(SlateOpacity.disabled)
+
+            if !noteSearchResults.isEmpty {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(noteSearchResults.prefix(5)) { match in
+                        Button { applyNoteLink(match.candidate) } label: {
+                            Text(displayedTitle(match.candidate.title))
+                                .slateFont(SlateFont.body)
+                                .foregroundStyle(SlateColor.textPrimary)
+                                .lineLimit(1)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.vertical, Spacing.xs)
+                    }
+                }
+            }
 
             HStack {
                 Spacer()
@@ -148,5 +181,19 @@ struct LinkEditorPopoverView: View {
         editorController.setLink(url, in: block, range: range)
         isEditingURL = false
         onDismiss()
+    }
+
+    /// Pose un lien interne `slate://note/<uuid>` (Phase 16) vers `candidate` sur le
+    /// texte selectionne -- meme action de fond que `applyURL()`, URL construite par
+    /// `SlateNoteURLResolver.url(forNoteID:)` plutot que tapee.
+    private func applyNoteLink(_ candidate: NoteMentionCandidate) {
+        editorController.setLink(SlateNoteURLResolver.url(forNoteID: candidate.id), in: block, range: range)
+        isEditingURL = false
+        onDismiss()
+    }
+
+    private func displayedTitle(_ title: String) -> String {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? EditorStrings.pageLinkUntitled : trimmed
     }
 }

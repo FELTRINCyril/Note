@@ -48,11 +48,16 @@ struct BlockRenderRoutingTests {
     @Test("Les blocs riches hors perimetre routent vers le rendu de repli, avec leur type d'origine")
     func outOfScopeTypesRouteToUnsupported() {
         let outOfScope: [BlockType] = [
-            .bookmark, .embed, .databaseView, .pageLink
+            .bookmark, .embed, .databaseView
         ]
         for type in outOfScope {
             #expect(BlockRenderRouting.kind(for: type) == .unsupported(type))
         }
+    }
+
+    @Test("Le lien de page (Phase 16) route desormais vers un rendu reel")
+    func pageLinkRoutesToRealKind() {
+        #expect(BlockRenderRouting.kind(for: .pageLink) == .pageLink)
     }
 
     @Test("L'image et le fichier joint (Phase 9) routent desormais vers un rendu reel")

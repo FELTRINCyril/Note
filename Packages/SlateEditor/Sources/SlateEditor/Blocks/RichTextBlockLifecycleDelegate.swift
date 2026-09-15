@@ -58,6 +58,18 @@ protocol RichTextBlockLifecycleDelegate: AnyObject {
     /// Echap menu ouvert : ferme le menu SEUL, sans selectionner le bloc entier.
     func richTextViewShouldHandleSlashMenuEscape() -> Bool
 
+    // MARK: - Selecteur de page "@"/"[[" (Phase 16, docs/16_liens_internes.md) : meme
+    // priorite absolue que le menu "/" ci-dessus, interrogees juste apres lui en tete de
+    // `insertNewline`/`moveUp`/`moveDown`/`cancelOperation`. `false` de son propre chef si
+    // aucun selecteur n'est ouvert pour ce bloc.
+
+    /// Fleche haut/bas selecteur ouvert : deplace la selection DANS la liste.
+    func richTextViewShouldHandlePageMentionMoveSelection(_ direction: BlockSelectionDirection) -> Bool
+    /// Entree selecteur ouvert : valide l'entree mise en avant plutot que de scinder le bloc.
+    func richTextViewShouldHandlePageMentionReturn() -> Bool
+    /// Echap selecteur ouvert : ferme le selecteur SEUL, sans selectionner le bloc entier.
+    func richTextViewShouldHandlePageMentionEscape() -> Bool
+
     // MARK: - Markdown natif (Phase 15, docs/15_markdown_natif.md)
 
     /// Entree pressee : motifs de bloc SANS espace (`` ``` ``, `---`, voir

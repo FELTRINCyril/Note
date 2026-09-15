@@ -39,6 +39,21 @@ struct SlateApp: App {
                         .environment(\.appState, appState)
                         .environment(ThemeManager.shared)
                         .modelContainer(container)
+                        // Phase 16 : ouverture d'un lien slate://note/<uuid> venant de
+                        // l'EXTERIEUR de l'app (Finder, Mail, presse-papiers colle
+                        // ailleurs), tel que celui produit par "Copier le lien interne"
+                        // (phase 11). La resolution d'un lien clique DANS l'editeur est
+                        // geree separement, cote SlateEditor. Le schema est declare dans
+                        // `CFBundleURLTypes` (project.yml).
+                        .onOpenURL { url in
+                            guard let noteID = SlateNoteURLResolver.noteID(in: url) else { return }
+                            let context = ModelContext(container)
+                            let descriptor = FetchDescriptor<Note>(
+                                predicate: #Predicate { $0.id == noteID }
+                            )
+                            guard let note = try? context.fetch(descriptor).first else { return }
+                            appState.selectedNote = note
+                        }
                 case .failure(let error):
                     ContainerErrorView(error: error)
                 }

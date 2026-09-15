@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 15.
+**Dernière mise à jour :** fin de la phase 16.
 
 ---
 
 ## En un coup d'œil
 
-**15 / 21 phases terminées.** Jalon v1 complet, jalon v2 entamé.
+**16 / 21 phases terminées.** Jalon v1 complet, jalon v2 entamé.
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
 App v1         ██████████ 100 %   (12/12) ✅ terminé
-Notion v2      ██░░░░░░░░   20 %   (1/5)  ⏳ en cours
+Notion v2      ████░░░░░░   40 %   (2/5)  ⏳ en cours
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 15 (markdown à la frappe) validée, première du jalon v2. Les 13 motifs de bloc et les 5 marques inline se convertissent à la frappe, la syntaxe est consommée, l'annulation défait texte et type en une seule étape, et coller du markdown crée les blocs correspondants (gouverné par un réglage qui est le **premier contrôle réellement actif** de l'onglet Général).
-- **Prochaine étape :** **Phase 16 — Liens internes & sous-pages** (mentions `@`, création à la volée).
-- **Qualité au dernier point (phase 15) :** 799 tests verts (103 `SlateModel` · 398 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 102 `SlateFeatures`) · build complet de l'app sans avertissement · 0 violation SwiftLint en mode `--strict` sur 353 fichiers.
+- **Où on en est :** phase 16 (liens internes) validée. Le déclencheur `@` (et `[[`) ouvre un sélecteur de pages, insère un lien dont le titre suit les renommages, propose de créer la page à la volée, gère les cibles supprimées, et affiche les backlinks. Deux éléments laissés en attente depuis les phases 7 et 11 sont soldés : le champ de recherche du popover de lien est activé, et `slate://note/<uuid>` est résolu, y compris depuis l'extérieur de l'app.
+- **Prochaine étape :** **Phase 17 — Bases de données**, la plus grosse du projet, à découper en sous-étapes.
+- **Qualité au dernier point (phase 16) :** 827 tests verts (111 `SlateModel` · 418 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 102 `SlateFeatures`) · build complet de l'app OK · 0 violation SwiftLint en `--strict`.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -56,8 +56,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 | # | Phase | Statut | Design | Commit |
 |---|---|---|---|---|
 | 15 | Markdown natif à la frappe | ✅ | — | `872b114` |
-| 16 | Liens internes & sous-pages | ⏳ **prochaine** | — | — |
-| 17 | Bases de données | ⬜ | 🎨 ✔️ | — |
+| 16 | Liens internes & sous-pages | ✅ | — | `PH16` |
+| 17 | Bases de données | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
 | 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
 
@@ -151,6 +151,11 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 15 — Le collage markdown est gouverné par un réglage réellement branché.** Désactivé, le collage est strictement identique à avant, y compris le ⌘V d'image de la phase 9 (la détection ne lit que le texte du presse-papiers). C'est le premier contrôle actif de l'onglet Général, dont tous les autres restent désactivés faute de mécanisme. ✅
 - **Phase 15 — TROISIÈME occurrence du piège "détacher n'est pas supprimer".** Annuler un collage markdown retirait les blocs du document mais les laissait persistés en base. Même classe de bug qu'en phases 8 et 10. La règle et son motif de test sont désormais **inscrits dans `CLAUDE.md` §5** pour que les phases suivantes ne la redécouvrent pas : un test qui ne regarde que `note.blocks` ne voit rien, il faut un vrai `fetch` après `save()`. ✅
 
+- **Phase 16 — Le titre d'un lien de page n'est jamais stocké**, il est résolu depuis `linkedNoteID` à chaque rendu : un renommage de la cible se propage donc tout seul, sans invalidation ni synchronisation. ✅
+- **Phase 16 — Le sélecteur `@` réutilise `SlashMenuView` et l'overlay calculé du menu `/`**, plutôt qu'un nouveau composant ou un `.popover` (qui volerait le focus et couperait la frappe). Différence assumée avec le `/` : il ne se ferme pas sur zéro résultat, puisque c'est précisément l'état qui propose "Créer la page". ✅
+- **Phase 16 — Schéma d'URL enregistré au niveau système** (`CFBundleURLTypes` + `onOpenURL`), sinon le "Copier le lien interne" de la phase 11 restait inutilisable hors de l'app. À noter : `xcodegen` n'est plus installé sur la machine, la clé a donc été écrite à la fois dans `project.yml` (source de vérité) et directement dans `App/Info.plist` (généré) pour être effective sans régénération. ✅
+- **Phase 16 — Les backlinks parcourent tous les blocs sans prédicat côté store** : `#Predicate` ne sait ni descendre dans `BlockAttributes` (struct aplatie par SwiftData) ni comparer un `BlockType` par valeur - deux limites vérifiées empiriquement. À optimiser si le volume devient gênant. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -214,6 +219,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Menu Format désactivé** (voir Décisions) : les raccourcis eux-mêmes fonctionnent, seules les entrées de menu sont inertes.
 - **Raccourcis clavier jamais exercés dans une vraie fenêtre** : c'est la limite la plus gênante de cette phase, puisqu'un raccourci ne se vérifie vraiment qu'à l'usage. Le câblage `@FocusedValue`/`.focusedSceneValue`, le grisage effectif des entrées de menu et le déplacement réel de l'anneau de focus restent à confirmer à la main dans Xcode.
 - **Le regroupement réel de l'annulation n'a jamais été observé** : `groupsByEvent` est documenté par Foundation et le raisonnement tient, mais personne n'a constaté dans une vraie fenêtre qu'une frappe d'espace suivie d'une conversion se défait bien en un seul ⌘Z. C'est le point de la phase 15 à vérifier en priorité dès qu'une fenêtre sera disponible.
+- **Backlinks non temps réel** : recalculés au changement de note affichée, pas à chaque frappe. Un lien créé pendant qu'on consulte la cible n'apparaît qu'à la réouverture.
+- **`xcodegen` n'est plus installé** : `project.yml` reste la source de vérité, mais toute modification qui en dépend doit aujourd'hui être reportée à la main dans les fichiers générés. À réinstaller (`brew install xcodegen`).
 
 ## Prochaine action concrète
 **La vérification visuelle reste le point qui domine tout.** Rien des phases 7 à 15 n'a été vu à l'écran : aucune fenêtre n'était disponible, et la capture d'écran est bloquée tant que le terminal n'est pas autorisé dans *Réglages Système -> Confidentialité et sécurité -> Enregistrement de l'écran*. Les 799 tests couvrent la logique, les contrastes sont calculés, le build passe - mais la conformité visuelle au design déposé est entièrement à contrôler. La liste de ce qui n'a pas été observé est dans "Points ouverts", phase par phase.

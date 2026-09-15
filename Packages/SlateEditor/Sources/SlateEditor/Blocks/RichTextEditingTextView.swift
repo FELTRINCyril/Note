@@ -138,6 +138,10 @@ final class RichTextEditingTextView: NSTextView {
         if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuReturn() == true {
             return
         }
+        // Selecteur de page "@"/"[[" (Phase 16) : meme priorite que le menu "/" ci-dessus.
+        if blockLifecycleDelegate?.richTextViewShouldHandlePageMentionReturn() == true {
+            return
+        }
         // Markdown natif (Phase 15, docs/15_markdown_natif.md) : motifs sans espace
         // (`` ``` ``, `---`) qui ne se declenchent qu'a l'Entree -- AVANT le split de
         // bloc normal, jamais apres (une conversion prend la main sur cette pression
@@ -182,6 +186,9 @@ final class RichTextEditingTextView: NSTextView {
         if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuMoveSelection(.up) == true {
             return
         }
+        if blockLifecycleDelegate?.richTextViewShouldHandlePageMentionMoveSelection(.up) == true {
+            return
+        }
         if isCaretOnFirstVisualLine, let x = currentCaretVisualColumnX,
            blockLifecycleDelegate?.richTextViewShouldHandleMoveUp(visualColumnX: x) == true {
             return
@@ -193,6 +200,9 @@ final class RichTextEditingTextView: NSTextView {
     /// absolue du menu "/" en tete, meme raison.
     override func moveDown(_ sender: Any?) {
         if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuMoveSelection(.down) == true {
+            return
+        }
+        if blockLifecycleDelegate?.richTextViewShouldHandlePageMentionMoveSelection(.down) == true {
             return
         }
         if isCaretOnLastVisualLine, let x = currentCaretVisualColumnX,
@@ -231,6 +241,9 @@ final class RichTextEditingTextView: NSTextView {
         // Menu "/" (Phase 6) : menu ouvert = Echap ferme le menu SEUL, jamais la
         // selection du bloc entier de la Phase 5 ci-dessous.
         if blockLifecycleDelegate?.richTextViewShouldHandleSlashMenuEscape() == true {
+            return
+        }
+        if blockLifecycleDelegate?.richTextViewShouldHandlePageMentionEscape() == true {
             return
         }
         if blockLifecycleDelegate?.richTextViewShouldHandleCancelEditing() == true {

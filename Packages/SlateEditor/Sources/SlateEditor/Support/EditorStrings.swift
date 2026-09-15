@@ -102,19 +102,20 @@ enum EditorStrings {
             return String(localized: "editor.blockType.code", bundle: .module)
         case .heading1, .heading2, .heading3, .heading4, .heading5, .heading6,
              .image, .file, .tableRow, .tableCell, .column,
-             .bookmark, .embed, .databaseView, .pageLink,
-             .callout, .table, .columnList, .divider:
+             .bookmark, .embed, .databaseView,
+             .callout, .table, .columnList, .divider, .pageLink:
             return type.rawValue
         }
     }
 
-    /// Libelle de `.callout`/`.table`/`.columnList`/`.divider`, extrait de
-    /// `blockTypeLabel(_:)` pour rester sous la limite de complexite cyclomatique de
-    /// SwiftLint -- meme motif que `mediaTypeLabel(_:)`/`headingTypeLabel(_:)`.
+    /// Libelle de `.callout`/`.table`/`.columnList`/`.divider`/`.pageLink` (Phase 16) --
+    /// meme motif que `mediaTypeLabel(_:)`.
     private static func structuralBlockTypeLabel(_ type: BlockType) -> String? {
         switch type {
         case .callout:
             String(localized: "editor.blockType.callout", bundle: .module)
+        case .pageLink:
+            String(localized: "editor.blockType.pageLink", bundle: .module)
         case .table:
             String(localized: "editor.blockType.table", bundle: .module)
         case .columnList:

@@ -97,6 +97,15 @@ targets:
         NSHumanReadableCopyright: ""
         ITSAppUsesNonExemptEncryption: false
         NSApplicationCategoryType: public.app-category.productivity
+        # Schema d'URL interne (phase 16) : permet a macOS d'ouvrir Slate sur une
+        # note precise depuis un lien slate://note/<uuid>, tel que celui copie par
+        # "Copier le lien interne" (phase 11). Sans cet enregistrement, ce lien n'est
+        # resoluble QUE depuis l'interieur de l'app.
+        CFBundleURLTypes:
+          - CFBundleURLName: com.gemaddis.slate.note
+            CFBundleTypeRole: Viewer
+            CFBundleURLSchemes:
+              - slate
         # Pas de UIBackgroundModes ici : la cle est iOS-only, Xcode la retire du
         # bundle macOS avec un avertissement. Sur macOS, les push CloudKit passent
         # par l'entitlement com.apple.developer.aps-environment (App/Slate.entitlements)

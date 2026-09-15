@@ -11,9 +11,7 @@ import SwiftUI
 /// pour rester sous la limite de longueur de fichier de `CLAUDE.md` §5) pour que
 /// celle-ci reste une simple `View` (lisant son environnement dans `body`, pas dans un
 /// type conforme a `NSViewRepresentable` ou l'acces a `context.environment` suit des
-/// regles differentes). Pas `private` (etait fileprivate a `RichTextBlockView.swift`
-/// avant l'extraction) : `internal`, necessaire pour rester utilisable depuis
-/// `RichTextBlockView.body`, dans l'autre fichier.
+/// regles differentes). Pas `private` : `internal`, necessaire depuis `RichTextBlockView.body`.
 struct RichTextEditingRepresentable: NSViewRepresentable {
     let block: Block
     let editorController: EditorController
@@ -254,6 +252,7 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
             guard let textView = notification.object as? RichTextEditingTextView else { return }
             let caretOffset = RichTextOffset(utf16Offset: textView.selectedRange().location, in: textView.string)
             editorController.updateSlashMenuState(for: block, plainText: textView.string, caretOffset: caretOffset)
+            editorController.updatePageMentionState(for: block, plainText: textView.string, caretOffset: caretOffset)
 
             // Barre de formatage flottante (Phase 7, artboard P1 A) : voir la
             // documentation de `EditorController.inlineSelection`. Le rectangle LOCAL de
@@ -370,6 +369,7 @@ struct RichTextEditingRepresentable: NSViewRepresentable {
             editorController.handleSlashMenuEscape(in: block)
         }
 
+        // Selecteur "@"/"[[" + lien interne (Phase 16) : `+PageMention.swift`.
         // MARK: - Markdown natif (Phase 15, docs/15_markdown_natif.md)
 
         func richTextViewShouldHandleMarkdownReturnTrigger(undoManager: UndoManager?) -> Bool {
