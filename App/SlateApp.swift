@@ -22,7 +22,40 @@ struct SlateApp: App {
     private let containerResult: Result<ModelContainer, any Error>
 
     init() {
-        containerResult = Result { try SlateContainer.make() }
+        containerResult = Result { try Self.makeContainer() }
+    }
+
+    /// Cree le container, en ISOLANT les tests d'interface des donnees reelles.
+    ///
+    /// Les tests d'interface (`SlateUITestsApp`) lancent cette app pour de vrai. Sans
+    /// cette isolation ils ecrivent dans le store de l'utilisateur : une premiere passe
+    /// d'audit a ainsi cree 23 dossiers parasites dans la base de Cyril, chaque test
+    /// creant son propre dossier de travail. Un test qui abime les donnees qu'il est
+    /// cense proteger ne vaut rien.
+    ///
+    /// Quand `SLATE_UITEST_ISOLATED_STORE` vaut `1`, le store va dans un sous-dossier
+    /// jetable, jamais dans `default.store`. L'emplacement est calcule ICI et non fourni
+    /// par le test : l'app est sandboxee, elle ne peut ecrire que dans son propre
+    /// conteneur, et un chemin venant du runner (hors conteneur) fait echouer la
+    /// creation du container -- constate avant d'arriver a cette version.
+    ///
+    /// Seul le harnais de test definit cette variable : un lancement normal ne la voit
+    /// jamais et garde l'emplacement standard.
+    private static func makeContainer() throws -> ModelContainer {
+        guard ProcessInfo.processInfo.environment["SLATE_UITEST_ISOLATED_STORE"] == "1" else {
+            return try SlateContainer.make()
+        }
+        let base = try FileManager.default.url(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let directory = base
+            .appendingPathComponent("UITests", isDirectory: true)
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        return try SlateContainer.make(storeURL: directory.appendingPathComponent("default.store"))
     }
 
     var body: some Scene {

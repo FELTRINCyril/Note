@@ -12,19 +12,19 @@ import XCTest
 /// CONFIDENTIALITE : les captures sont toujours prises sur la FENETRE de Slate, jamais
 /// sur l'ecran entier (`XCUIScreen.main`), qui contiendrait les autres applications de
 /// l'utilisateur.
+@MainActor
 final class SlateLaunchUITests: XCTestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
     }
 
+    /// Passe TOUJOURS par le harnais partage : il isole le store (voir
+    /// `SlateUITestSupport.launchedApp`). Un `XCUIApplication()` lance directement
+    /// ecrirait dans les donnees reelles de l'utilisateur.
     private func launchedApp() -> XCUIApplication {
-        let app = XCUIApplication()
-        app.launch()
-        XCTAssertTrue(
-            app.wait(for: .runningForeground, timeout: 30),
-            "L'app n'est pas passee au premier plan en 30 s."
-        )
+        let app = SlateUITestSupport.launchedApp(self)
+        XCTAssertEqual(app.state, .runningForeground, "L'app n'est pas passee au premier plan.")
         return app
     }
 
