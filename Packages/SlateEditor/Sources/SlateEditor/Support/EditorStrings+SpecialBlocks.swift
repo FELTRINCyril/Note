@@ -5,6 +5,24 @@ import Foundation
 /// longueur de fichier/de corps de type de `CLAUDE.md` §5. Meme type (`EditorStrings`),
 /// aucune nouvelle surface publique qui lui soit propre.
 extension EditorStrings {
+    // MARK: - Menu de bloc en lot (sous-etape 5.6, selection multi-blocs)
+
+    /// Bandeau de synthese en tete du menu quand il agit sur une PLAGE de plusieurs
+    /// blocs (docs/05_editeur_blocs.md, sous-etape 5.6, point explicite : "le menu de
+    /// bloc doit refleter qu'on agit sur une plage"). Deplace ici (Phase 17) pour
+    /// rester sous la limite de longueur de fichier de `EditorStrings.swift`.
+    static func blockMenuSelectionSummary(_ count: Int) -> String {
+        let template = String(localized: "editor.blockMenu.selection.summary", bundle: .module)
+        return String(format: template, count)
+    }
+
+    /// "Supprimer" pluralise avec le NOMBRE de blocs de la plage -- jamais un simple
+    /// "Supprimer" qui laisserait ignorer combien de blocs disparaissent.
+    static func blockMenuDeleteRangeTitle(_ count: Int) -> String {
+        let template = String(localized: "editor.blockMenu.delete.rangeTitle", bundle: .module)
+        return String(format: template, count)
+    }
+
     static var calloutIconAccessibilityLabel: String {
         String(localized: "editor.callout.iconAccessibilityLabel", bundle: .module)
     }

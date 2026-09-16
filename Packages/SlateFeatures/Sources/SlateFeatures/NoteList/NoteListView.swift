@@ -122,6 +122,15 @@ public struct NoteListView: View {
         // recherche (releve en revue de fin de Phase 4).
         let data = resolveListData(for: folder)
         VStack(spacing: 0) {
+            // Point d'entree de la base pleine page (Phase 17, "les deux hebergements") :
+            // au meme niveau que la liste des notes du dossier, voir
+            // `DatabaseFolderSectionView`.
+            DatabaseFolderSectionView(
+                databases: folder.databases ?? [],
+                selectedDatabaseID: appState.selectedDatabase?.id,
+                onSelect: { appState.selectedDatabase = $0 },
+                onCreate: { createDatabase(in: folder) }
+            )
             searchBar
             contentBody(folder, data: data)
         }
@@ -320,6 +329,21 @@ public struct NoteListView: View {
         guard let note = try? navigation.createNote(titled: title, in: folder) else { return }
         appState.selectedNote = note
         focusedNoteID = note.id
+    }
+
+    /// Cree une base PLEINE PAGE dans `folder` (Phase 17, "les deux hebergements") via
+    /// `DatabaseFolderCreation` (logique pure, testee independamment), puis insere
+    /// reellement dans le `ModelContext` et selectionne la base pour l'ouvrir aussitot.
+    private func createDatabase(in folder: Folder) {
+        let created = DatabaseFolderCreation.makeDatabase(
+            in: folder,
+            name: String(localized: "database.folderSection.defaultName", bundle: .module),
+            firstFieldName: String(localized: "database.folderSection.defaultFieldName", bundle: .module)
+        )
+        modelContext.insert(created.database)
+        modelContext.insert(created.firstField)
+        try? modelContext.save()
+        appState.selectedDatabase = created.database
     }
 }
 

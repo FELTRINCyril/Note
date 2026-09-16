@@ -4,7 +4,8 @@ import Testing
 
 @testable import SlateModel
 
-/// Verifie que le schema complet (7 entites) respecte les deux contraintes CloudKit
+/// Verifie que le schema complet (11 entites depuis la Phase 17, voir
+/// `SlateSchema.swift`) respecte les deux contraintes CloudKit
 /// rappelees par `docs/DEV_ENV.md` et `docs/02_modele_donnees.md` :
 /// - toute propriete (attribut) non optionnelle a une valeur par defaut ;
 /// - toute relation est optionnelle.
@@ -74,12 +75,13 @@ struct CloudKitSchemaValidationTests {
     }
 
     @Test
-    func allSevenEntitiesAreRegisteredInTheSchema() {
+    func allElevenEntitiesAreRegisteredInTheSchema() {
         let schema = Schema(versionedSchema: SlateSchemaV1.self)
         let entityNames = Set(schema.entities.map { $0.name })
 
         #expect(entityNames == [
-            "Workspace", "Space", "Folder", "Note", "Block", "Attachment", "Tag"
+            "Workspace", "Space", "Folder", "Note", "Block", "Attachment", "Tag",
+            "Database", "DatabaseField", "DatabaseRow", "DatabaseCell"
         ])
     }
 }

@@ -138,6 +138,25 @@ public enum SlateAccentColor: String, CaseIterable, Sendable, Equatable, Identif
             : WCAGContrast.darkening(lightRGB, toReachContrast: 4.5, with: Self.editorBackgroundLightRGB)
     }
 
+    // MARK: - Libelle de pastille (Phase 17, design/tokens.md §18)
+
+    /// Variante de l'accent utilisable EN TEXTE sur SON PROPRE fond `.subtle`
+    /// (`DatabasePillView`, statut/etiquette d'une base de donnees) -- DISTINCTE de
+    /// `linkRGB` : `accent.subtle` compose sur `bg.editor` reste tres proche du blanc/
+    /// noir pur, mais suffisamment different pour que `linkRGB` (calibre sur `bg.editor`
+    /// lui-meme) retombe sous l'AA une fois pose sur ce fond legerement teinte (mesure
+    /// dans `DatabaseContrastTests` : jusqu'a 3,02:1 en sombre). Meme methode que
+    /// `linkRGB` (assombrissement/eclaircissement jusqu'a 4,5:1), mais la cible du calcul
+    /// est le fond REELLEMENT porte (`accent.subtle` compose sur `bg.editor`), pas
+    /// `bg.editor` seul.
+    public func pillLabelRGB(dark: Bool) -> SlateRGB {
+        let backdrop = dark ? Self.editorBackgroundDarkRGB : Self.editorBackgroundLightRGB
+        let ownBackground = WCAGContrast.compositeOverBackground(subtleRGB(dark: dark), backdrop)
+        return dark
+            ? WCAGContrast.lightening(darkRGB, toReachContrast: 4.5, with: ownBackground)
+            : WCAGContrast.darkening(lightRGB, toReachContrast: 4.5, with: ownBackground)
+    }
+
     // MARK: - Ajustements de luminosite (purs, sans alpha-blending)
 
     /// Multiplie les trois composantes RGB par `factor` (assombrissement HSB a teinte/

@@ -185,6 +185,74 @@ enum SlateUIStrings {
         }
     }
 
+    // MARK: - Database (Phase 17)
+
+    static var databaseColumnResizeLabel: String {
+        String(localized: "ui.database.column.resize.label", bundle: .module)
+    }
+
+    static var databaseColumnReorderLabel: String {
+        String(localized: "ui.database.column.reorder.label", bundle: .module)
+    }
+
+    static var databaseCalculationPlaceholder: String {
+        String(localized: "ui.database.calculation.placeholder", bundle: .module)
+    }
+
+    static func databaseCalculationDisplayName(_ calculation: SlateDatabaseColumnCalculation) -> String {
+        switch calculation {
+        case .none: String(localized: "ui.database.calculation.none", bundle: .module)
+        case .count: String(localized: "ui.database.calculation.count", bundle: .module)
+        case .sum: String(localized: "ui.database.calculation.sum", bundle: .module)
+        case .average: String(localized: "ui.database.calculation.average", bundle: .module)
+        case .min: String(localized: "ui.database.calculation.min", bundle: .module)
+        case .max: String(localized: "ui.database.calculation.max", bundle: .module)
+        case .empty: String(localized: "ui.database.calculation.empty", bundle: .module)
+        case .filled: String(localized: "ui.database.calculation.filled", bundle: .module)
+        case .percentFilled: String(localized: "ui.database.calculation.percentFilled", bundle: .module)
+        }
+    }
+
+    static var databaseUnassignedLabel: String {
+        String(localized: "ui.database.person.unassigned", bundle: .module)
+    }
+
+    static var databaseGalleryNoPreview: String {
+        String(localized: "ui.database.gallery.noPreview", bundle: .module)
+    }
+
+    static var databaseCalendarTodayLabel: String {
+        String(localized: "ui.database.calendar.today", bundle: .module)
+    }
+
+    static var databaseCalendarPreviousMonth: String {
+        String(localized: "ui.database.calendar.previousMonth", bundle: .module)
+    }
+
+    static var databaseCalendarNextMonth: String {
+        String(localized: "ui.database.calendar.nextMonth", bundle: .module)
+    }
+
+    static var databaseAddOptionLabel: String {
+        String(localized: "ui.database.fieldEditor.addOption", bundle: .module)
+    }
+
+    static var databaseRemoveOptionLabel: String {
+        String(localized: "ui.database.fieldEditor.removeOption", bundle: .module)
+    }
+
+    static var databaseAddFilterLabel: String {
+        String(localized: "ui.database.filters.addFilter", bundle: .module)
+    }
+
+    static var databaseAddFilterGroupLabel: String {
+        String(localized: "ui.database.filters.addFilterGroup", bundle: .module)
+    }
+
+    static var databaseRemoveConditionLabel: String {
+        String(localized: "ui.database.filters.removeCondition", bundle: .module)
+    }
+
     // MARK: - SlateAccentColor
 
     static func accentDisplayName(_ accent: SlateAccentColor) -> String {

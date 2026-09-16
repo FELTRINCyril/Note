@@ -316,6 +316,8 @@ extension EditorController {
             executeColumnsCommand(in: block)
         } else if command.targetType == .image || command.targetType == .file {
             executeMediaCommand(targetType: command.targetType, in: block)
+        } else if command.targetType == .databaseView {
+            executeDatabaseCommand(in: block)
         } else if trimmedText.isEmpty {
             BlockConversion.convert(block, to: command.targetType)
             applyFocus(EditorCaretRequest(blockID: block.id, placement: .offset(0)))

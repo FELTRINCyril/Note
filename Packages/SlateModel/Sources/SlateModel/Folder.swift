@@ -72,6 +72,12 @@ public final class Folder {
     @Relationship(deleteRule: .cascade, inverse: \Note.folder)
     public var notes: [Note]? = []
 
+    /// Bases de donnees pleine page contenues directement dans ce dossier (Phase 17,
+    /// voir `Database.hostMode`). Supprimer ce dossier supprime ces bases (et, par
+    /// cascade, leurs champs, lignes et cellules).
+    @Relationship(deleteRule: .cascade, inverse: \Database.folder)
+    public var databases: [Database]? = []
+
     public init(
         id: UUID = UUID(),
         name: String = "",

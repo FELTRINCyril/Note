@@ -17,7 +17,9 @@ import SlateModel
 /// - `advanced` : `code`, `table` (Phase 8, structure en sous-blocs -- voir
 ///   `EditorController+SlashMenu.executeTableCommand(in:leftoverIsEmpty:)`), `columnList`
 ///   (Phase 10, meme raison : structure en sous-blocs, voir
-///   `EditorController+Columns.executeColumnsCommand(in:)`).
+///   `EditorController+Columns.executeColumnsCommand(in:)`), `databaseView` (Phase 17,
+///   voir `EditorController+SlashMenu+Database.executeDatabaseCommand(in:)` : cree
+///   TOUJOURS un nouveau bloc, comme `image`/`file`, plus une `Database` inline attachee).
 /// - `media` : `image`, `file` (Phase 9). Rendu REEL desormais (`ImageBlockContentView`/
 ///   `FileBlockContentView`, routes par `BlockRenderRouting`), meme insertion "toujours
 ///   un nouveau bloc en dessous + paragraphe vide focalise" que `table`
@@ -26,10 +28,11 @@ import SlateModel
 /// - EXCLUS explicitement, meme motif : `column` (JAMAIS propose, meme une fois
 ///   `columnList` rendu : structure INTERNE d'une rangee de colonnes, jamais un point
 ///   d'insertion valide pour l'utilisateur -- voir `BlockRenderKind.unsupported`, meme
-///   raisonnement que `tableRow`/`tableCell`), `bookmark`/`embed`/`databaseView`/
-///   `pageLink` (v2), et `tableRow`/`tableCell`. Chaque type qui gagnera un rendu reel
-///   dans une phase ulterieure devra rejoindre `allCommands` a ce moment-la -- jamais
-///   avant. Cette liste est donc EXTENSIBLE par construction, pas fermee.
+///   raisonnement que `tableRow`/`tableCell`), `bookmark`/`embed`/`pageLink` (v2), et
+///   `tableRow`/`tableCell`. `databaseView` a quitte ce groupe (Phase 17 : rendu reel,
+///   voir ci-dessus). Chaque type qui gagnera un rendu reel dans une phase ulterieure
+///   devra rejoindre `allCommands` a ce moment-la -- jamais avant. Cette liste est donc
+///   EXTENSIBLE par construction, pas fermee.
 ///
 /// ## Convention des alias
 /// Chaque `aliases` couvre le FRANCAIS et l'ANGLAIS, en minuscules SANS accents (ex.
@@ -213,6 +216,15 @@ public enum SlashCommandRegistry {
                 systemImage: "rectangle.split.2x1",
                 category: .advanced,
                 targetType: .columnList
+            ),
+            SlashCommand(
+                id: "databaseView",
+                title: EditorStrings.blockTypeLabel(.databaseView),
+                subtitle: EditorStrings.slashCommandSubtitle(.databaseView),
+                aliases: ["base de donnees", "base", "database", "table", "grille", "tableau de donnees"],
+                systemImage: "tablecells.badge.ellipsis",
+                category: .advanced,
+                targetType: .databaseView
             )
         ]
     }

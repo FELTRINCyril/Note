@@ -84,6 +84,9 @@ enum EditorStrings {
         if let mediaLabel = mediaTypeLabel(type) {
             return mediaLabel
         }
+        if let databaseLabel = databaseTypeLabel(type) {
+            return databaseLabel
+        }
         if let structuralLabel = structuralBlockTypeLabel(type) {
             return structuralLabel
         }
@@ -165,24 +168,6 @@ enum EditorStrings {
         String(localized: "editor.blockMenu.delete.title", bundle: .module)
     }
 
-    // MARK: - Menu de bloc en lot (sous-etape 5.6, selection multi-blocs)
-
-    /// Bandeau de synthese en tete du menu quand il agit sur une PLAGE de plusieurs
-    /// blocs (docs/05_editeur_blocs.md, sous-etape 5.6, point explicite : "le menu de
-    /// bloc doit refleter qu'on agit sur une plage").
-    static func blockMenuSelectionSummary(_ count: Int) -> String {
-        let template = String(localized: "editor.blockMenu.selection.summary", bundle: .module)
-        return String(format: template, count)
-    }
-
-    /// "Supprimer" pluralise avec le NOMBRE de blocs de la plage -- jamais un simple
-    /// "Supprimer" qui laisserait ignorer combien de blocs disparaissent (voir la
-    /// documentation de tete de fichier).
-    static func blockMenuDeleteRangeTitle(_ count: Int) -> String {
-        let template = String(localized: "editor.blockMenu.delete.rangeTitle", bundle: .module)
-        return String(format: template, count)
-    }
-
     // MARK: - Menu de commandes / (phase 6)
 
     /// Sous-titre (description courte) de chaque commande "/" -- voir la documentation
@@ -200,6 +185,9 @@ enum EditorStrings {
         }
         if let mediaSubtitle = mediaSlashCommandSubtitle(type) {
             return mediaSubtitle
+        }
+        if let databaseSubtitle = databaseSlashCommandSubtitle(type) {
+            return databaseSubtitle
         }
         if let structuralSubtitle = structuralSlashCommandSubtitle(type) {
             return structuralSubtitle

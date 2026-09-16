@@ -4,24 +4,24 @@
 > Source de vérité des cases cochées : `PLAN.md`. Ce fichier ajoute le contexte (commits, qualité, décisions).
 > ⚠️ Ne pas supprimer : c'est le récap que consulte Cyril. Il ne prétend pas être la source d'avancement, `PLAN.md` l'est.
 
-**Dernière mise à jour :** fin de la phase 16.
+**Dernière mise à jour :** fin de la phase 17.
 
 ---
 
 ## En un coup d'œil
 
-**16 / 21 phases terminées.** Jalon v1 complet, jalon v2 entamé.
+**17 / 21 phases terminées.** Jalon v1 complet, jalon v2 entamé.
 
 ```
 Fondations v0  ██████████ 100 %   (3/3)   ✅ terminé
 App v1         ██████████ 100 %   (12/12) ✅ terminé
-Notion v2      ████░░░░░░   40 %   (2/5)  ⏳ en cours
+Notion v2      ██████░░░░   60 %   (3/5)  ⏳ en cours
 Mobilité v3    ░░░░░░░░░░    0 %   (0/1)   ⬜ à venir
 ```
 
-- **Où on en est :** phase 16 (liens internes) validée. Le déclencheur `@` (et `[[`) ouvre un sélecteur de pages, insère un lien dont le titre suit les renommages, propose de créer la page à la volée, gère les cibles supprimées, et affiche les backlinks. Deux éléments laissés en attente depuis les phases 7 et 11 sont soldés : le champ de recherche du popover de lien est activé, et `slate://note/<uuid>` est résolu, y compris depuis l'extérieur de l'app.
-- **Prochaine étape :** **Phase 17 — Bases de données**, la plus grosse du projet, à découper en sous-étapes.
-- **Qualité au dernier point (phase 16) :** 827 tests verts (111 `SlateModel` · 418 `SlateEditor` · 102 `SlateUI` · 94 `SlateServices` · 102 `SlateFeatures`) · build complet de l'app OK · 0 violation SwiftLint en `--strict`.
+- **Où on en est :** phase 17 (bases de données) validée, la plus grosse du projet. Modèle complet (bases, champs typés, lignes, cellules), moteur de requête pur (filtres, tris, regroupements, calculs), les 5 vues (grille, kanban, calendrier, galerie, liste) sur les mêmes données, éditeur de champ avec relations et rollups configurables, templates, et hébergement pleine page **ou** inline dans une note.
+- **Prochaine étape :** **Phase 18 — Fonctionnalités IA**, l'autre gros morceau, à découper.
+- **Qualité au dernier point (phase 17) :** 890 tests verts (147 `SlateModel` · 420 `SlateEditor` · 117 `SlateFeatures` · 112 `SlateUI` · 94 `SlateServices`) · build complet de l'app OK · 0 violation SwiftLint en `--strict` sur 434 fichiers.
 
 Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis · ✔️ design livré
 
@@ -57,8 +57,8 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 |---|---|---|---|---|
 | 15 | Markdown natif à la frappe | ✅ | — | `872b114` |
 | 16 | Liens internes & sous-pages | ✅ | — | `48f48ef` |
-| 17 | Bases de données | ⏳ **prochaine** | 🎨 ✔️ | — |
-| 18 | Fonctionnalités IA | ⬜ | 🎨 ✔️ | — |
+| 17 | Bases de données | ✅ | 🎨 ✔️ | `PH17` |
+| 18 | Fonctionnalités IA | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
 
 ### Jalon v3 — Mobilité
@@ -156,6 +156,12 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Phase 16 — Schéma d'URL enregistré au niveau système** (`CFBundleURLTypes` + `onOpenURL`), sinon le "Copier le lien interne" de la phase 11 restait inutilisable hors de l'app. À noter : `xcodegen` n'est plus installé sur la machine, la clé a donc été écrite à la fois dans `project.yml` (source de vérité) et directement dans `App/Info.plist` (généré) pour être effective sans régénération. ✅
 - **Phase 16 — Les backlinks parcourent tous les blocs sans prédicat côté store** : `#Predicate` ne sait ni descendre dans `BlockAttributes` (struct aplatie par SwiftData) ni comparer un `BlockType` par valeur - deux limites vérifiées empiriquement. À optimiser si le volume devient gênant. ✅
 
+- **Phase 17 — Pas de package `SlateDatabase`**, contrairement à ce que suggérait le doc : ajouter un package impose de régénérer le projet avec `xcodegen`, **qui n'est plus installé**. Modèle et moteur dans `SlateModel`, vues dans `SlateFeatures`, composants dans `SlateUI`. ✅
+- **Phase 17 — `CellValue` stocké en blob JSON, jamais en propriété `@Model` directe.** Une valeur de cellule est hétérogène, et ses cas `.multiSelect`/`.relation` encodent un tableau, donc un conteneur *unkeyed* : posée telle quelle, elle aurait reproduit le `fatalError` du composite coder (piège n°2). Même motif que `Block.text`. ✅
+- **Phase 17 — Le moteur de requête est du Swift pur, sans aucun import SwiftData.** Le doc l'exigeait testable indépendamment de l'UI : filtres, tris, regroupements et calculs opèrent sur des projections en valeur (`DatabaseSnapshot`), ce qui les rend rapides à tester et réutilisables par les 5 vues et par les rollups. ✅
+- **Phase 17 — Les relations sont des `UUID` en JSON, pas de vraies relations SwiftData.** Plus simple et compatible CloudKit, mais **rien ne se nettoie tout seul** : toute suppression doit passer par `Database.deleteRow/deleteField/delete` (`Database+Integrity.swift`), sinon des références mortes subsistent. C'est la variante base de données du piège maison "détacher n'est pas supprimer". ✅
+- **Phase 17 — Un token de libellé de pastille a dû être créé** : `textLink` tombe à 3,02:1 une fois composé sur le fond atténué d'une pastille, alors qu'il tient l'AA sur le fond d'éditeur pour lequel il a été calibré. ✅
+
 ## Décisions en attente
 *(aucune)*
 
@@ -221,6 +227,11 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 - **Le regroupement réel de l'annulation n'a jamais été observé** : `groupsByEvent` est documenté par Foundation et le raisonnement tient, mais personne n'a constaté dans une vraie fenêtre qu'une frappe d'espace suivie d'une conversion se défait bien en un seul ⌘Z. C'est le point de la phase 15 à vérifier en priorité dès qu'une fenêtre sera disponible.
 - **Backlinks non temps réel** : recalculés au changement de note affichée, pas à chaque frappe. Un lien créé pendant qu'on consulte la cible n'apparaît qu'à la réouverture.
 - **`xcodegen` n'est plus installé** : `project.yml` reste la source de vérité, mais toute modification qui en dépend doit aujourd'hui être reportée à la main dans les fichiers générés. À réinstaller (`brew install xcodegen`).
+- **Templates persistés en JSON hors SwiftData** (un fichier par base dans Application Support) : donc **non synchronisés par CloudKit**, contrairement au reste des données. À reprendre si la synchronisation des templates devient nécessaire.
+- **État d'affichage non persisté** : vue active, filtres, tris et largeurs de colonnes sont perdus au relancement (aucune entité dédiée dans le modèle).
+- **Base inline volontairement réduite** : CRUD réel sur texte/nombre/date/case/URL, mais sélections en lecture seule, et ni filtres ni bascule de vue. `SlateEditor` ne dépend pas de `SlateFeatures`, dupliquer le moteur complet n'aurait pas eu de sens.
+- **Vue semaine du calendrier simplifiée** (une seule rangée), faute de maquette détaillée.
+- **Aucune vérification visuelle de la phase 17** : 5 vues, menus et éditeurs, tout est couvert par la logique et les contrastes calculés, rien n'a été vu à l'écran.
 
 ## Prochaine action concrète
 **La vérification visuelle reste le point qui domine tout.** Rien des phases 7 à 15 n'a été vu à l'écran : aucune fenêtre n'était disponible, et la capture d'écran est bloquée tant que le terminal n'est pas autorisé dans *Réglages Système -> Confidentialité et sécurité -> Enregistrement de l'écran*. Les 799 tests couvrent la logique, les contrastes sont calculés, le build passe - mais la conformité visuelle au design déposé est entièrement à contrôler. La liste de ce qui n'a pas été observé est dans "Points ouverts", phase par phase.

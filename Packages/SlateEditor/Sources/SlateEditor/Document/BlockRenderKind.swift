@@ -43,8 +43,13 @@ public enum BlockRenderKind: Equatable, Sendable {
     /// porte aucun `RichText` -- ni convertible (`BlockConversion.convertibleTypes`),
     /// ni destinataire du caret, meme motif que `.divider`/`.table` ci-dessus.
     case pageLink
+    /// Base de donnees inline (Phase 17, `docs/17_base_de_donnees.md`) : grille CRUD
+    /// complete sur `Block.databaseView`, voir `DatabaseViewBlockContentView`. Ne porte
+    /// aucun `RichText` -- ni convertible (`BlockConversion.convertibleTypes`), ni
+    /// destinataire du caret, meme motif que `.pageLink`/`.table` ci-dessus.
+    case databaseView
     /// Type de bloc dont le rendu riche n'est pas encore construit (reserve a une
-    /// phase ulterieure : `bookmark`/`embed`/`databaseView` (v2)), ou bloc de structure
+    /// phase ulterieure : `bookmark`/`embed` (v2)), ou bloc de structure
     /// interne jamais rendu directement (`tableRow`/`tableCell`, voir `.table`
     /// ci-dessus ; `column`, voir `.columnList` ci-dessus). Porte le `BlockType`
     /// d'origine pour que le rendu de repli reste identifiable plutot qu'invisible.
@@ -72,6 +77,8 @@ public enum BlockRenderRouting {
             return .columnList
         case .pageLink:
             return .pageLink
+        case .databaseView:
+            return .databaseView
         // Les 9 premiers types de cette liste sont deja intercepts par `simpleKind(for:)`
         // ci-dessus (jamais atteints ici en pratique) : ils DOIVENT neanmoins rester
         // enumeres pour que ce `switch` reste EXHAUSTIF au sens du compilateur (voir la
@@ -79,7 +86,7 @@ public enum BlockRenderRouting {
         // blockTypeLabel(_:)`, ou les types heading1-6/image/file, deja interceptes par
         // un `if let` similaire, restent lister dans le groupe de repli.
         case .paragraph, .bulletedList, .numberedList, .todo, .quote, .code, .divider, .callout, .table,
-             .tableRow, .tableCell, .column, .bookmark, .embed, .databaseView:
+             .tableRow, .tableCell, .column, .bookmark, .embed:
             return structuralOrFutureKind(for: type)
         }
     }

@@ -45,8 +45,29 @@ public final class AppState {
     public var selectedFolder: Folder?
 
     /// Note actuellement selectionnee dans la colonne liste. Alimente la colonne
-    /// detail (Phase 5).
-    public var selectedNote: Note?
+    /// detail (Phase 5). Mutuellement exclusive avec `selectedDatabase` (Phase 17,
+    /// "les deux hebergements") : la colonne detail affiche soit une note soit une
+    /// base pleine page, jamais les deux -- voir les `didSet` ci-dessous et
+    /// `selectedDatabase`.
+    public var selectedNote: Note? {
+        didSet {
+            guard selectedNote != nil else { return }
+            selectedDatabase = nil
+        }
+    }
+
+    /// Base de donnees PLEINE PAGE actuellement selectionnee (Phase 17,
+    /// `docs/17_base_de_donnees.md`, "les deux hebergements" : `Database.hostMode ==
+    /// .fullPage`). Alimente la colonne detail au meme titre que `selectedNote` --
+    /// voir `NoteDetailColumnView`. Selectionner une base deselectionne la note en
+    /// cours (et reciproquement, voir `selectedNote`) : un seul document affiche a la
+    /// fois dans la colonne detail.
+    public var selectedDatabase: Database? {
+        didSet {
+            guard selectedDatabase != nil else { return }
+            selectedNote = nil
+        }
+    }
 
     /// Notes verrouillees (`Note.isLocked`) deverrouillees PENDANT cette session
     /// (Phase 12, `docs/12_verrouillage.md` : "reverrouillage automatique a la

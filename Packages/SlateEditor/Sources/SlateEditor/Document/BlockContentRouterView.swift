@@ -79,6 +79,8 @@ struct BlockContentRouterView: View {
             FileBlockContentView(block: block, editorController: editorController)
         case .pageLink:
             PageLinkBlockContentView(block: block, editorController: editorController)
+        case .databaseView:
+            DatabaseViewBlockContentView(block: block, editorController: editorController)
         case let .unsupported(type):
             UnsupportedBlockContentView(typeRawValue: type.rawValue, labelPrefix: strings.unsupportedBlockLabelPrefix)
         }

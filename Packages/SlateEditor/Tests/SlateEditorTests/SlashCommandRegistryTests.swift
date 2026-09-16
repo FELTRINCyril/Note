@@ -49,7 +49,7 @@ struct SlashCommandRegistryTests {
         #expect(encountered == expectedEncountered)
     }
 
-    @Test("Le registre couvre exactement les 18 types de bloc a rendu reel (Phase 10 : columnList)")
+    @Test("Le registre couvre exactement les 19 types de bloc a rendu reel (Phase 17 : databaseView)")
     func registryCoversExpectedTypes() {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let expected: Set<BlockType> = [
@@ -59,7 +59,8 @@ struct SlashCommandRegistryTests {
             .quote, .divider, .code,
             .callout, .table,
             .image, .file,
-            .columnList
+            .columnList,
+            .databaseView
         ]
         #expect(targetTypes == expected)
     }
@@ -69,7 +70,7 @@ struct SlashCommandRegistryTests {
         let targetTypes = Set(SlashCommandRegistry.allCommands.map(\.targetType))
         let excluded: [BlockType] = [
             .tableRow, .tableCell, .column,
-            .bookmark, .embed, .databaseView, .pageLink
+            .bookmark, .embed, .pageLink
         ]
         for type in excluded {
             #expect(!targetTypes.contains(type))

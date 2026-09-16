@@ -51,6 +51,17 @@ import SwiftData
 /// pour tout le sous-graphe concerne, et une vraie etape de `MigrationStage` (probable
 /// `.custom`, hors du perimetre CloudKit puisqu'un renommage casse la synchronisation -
 /// a signaler explicitement a Cyril avant de s'y engager).
+/// ## Phase 17 : ajout de 4 entites (`Database`, `DatabaseField`, `DatabaseRow`,
+/// `DatabaseCell`) sans bump de version
+///
+/// Meme raisonnement que pour `Folder.isExpanded` ci-dessus, applique cette fois a
+/// l'ajout d'entites entieres plutot que de proprietes : ajouter de nouveaux types de
+/// modele (donc de nouvelles tables/nouveaux record types CloudKit) a un schema existant
+/// est une operation additive, geree nativement par la migration legere de Core Data et
+/// autorisee par CloudKit. Aucun type existant n'est modifie (Block/Folder gagnent une
+/// relation optionnelle supplementaire, elle-meme additive au meme titre). Rester en
+/// `versionIdentifier(1, 0, 0)` reste donc coherent avec la regle deja posee : seul un
+/// renommage/une suppression/un changement de type justifierait une `SlateSchemaV2`.
 public enum SlateSchemaV1: VersionedSchema {
     public static var versionIdentifier: Schema.Version {
         Schema.Version(1, 0, 0)
@@ -64,7 +75,11 @@ public enum SlateSchemaV1: VersionedSchema {
             Note.self,
             Block.self,
             Attachment.self,
-            Tag.self
+            Tag.self,
+            Database.self,
+            DatabaseField.self,
+            DatabaseRow.self,
+            DatabaseCell.self
         ]
     }
 }

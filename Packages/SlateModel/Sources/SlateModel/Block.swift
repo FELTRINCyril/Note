@@ -109,6 +109,12 @@ public final class Block {
     @Relationship(deleteRule: .cascade, inverse: \Attachment.block)
     public var attachment: Attachment?
 
+    /// Base de donnees inline hebergee par ce bloc, uniquement pertinent pour
+    /// `type == .databaseView` (Phase 17, voir `Database.hostMode`). Supprimer ce bloc
+    /// supprime la base entiere (champs, lignes, cellules) qu'il heberge.
+    @Relationship(deleteRule: .cascade, inverse: \Database.hostBlock)
+    public var databaseView: Database?
+
     public init(
         id: UUID = UUID(),
         order: Int = 0,

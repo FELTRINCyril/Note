@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import SlateModel
 import SlateEditor
 import SlateServices
@@ -27,6 +28,15 @@ import SlateServices
 struct NoteDetailColumnView: View {
     @Environment(\.appState) private var appState
     @Environment(\.lockService) private var lockService
+    @Environment(\.modelContext) private var modelContext
+
+    /// Toutes les bases de l'espace de travail (Phase 17) : necessaire pour resoudre
+    /// les champs `.relation`/`.rollup` de la base pleine page affichee (voir
+    /// `DatabaseViewModel.relatedDatabases`) - une base ne connait ses cibles de
+    /// relation que par `UUID`, jamais par une vraie relation d'objets SwiftData (voir
+    /// `Database+Integrity.swift`).
+    @Query private var allDatabases: [Database]
+
     @State private var showsComingSoonAlert = false
     @State private var comingSoonMessage = ""
     @State private var isUnlockPasswordSheetPresented = false
@@ -43,7 +53,13 @@ struct NoteDetailColumnView: View {
 
     var body: some View {
         Group {
-            if let note = appState.selectedNote {
+            // Base pleine page (Phase 17, "les deux hebergements") : prioritaire sur
+            // `selectedNote`, mais les deux restent de toute facon mutuellement
+            // exclusifs (voir `AppState.selectedDatabase`/`selectedNote`).
+            if let database = appState.selectedDatabase {
+                let related = allDatabases.filter { $0.id != database.id }
+                DatabaseFullPageView(database: database, modelContext: modelContext, relatedDatabases: related)
+            } else if let note = appState.selectedNote {
                 if note.isLocked && !appState.isUnlockedThisSession(note) {
                     LockedNoteView(
                         noteTitle: displayedTitle(for: note),
