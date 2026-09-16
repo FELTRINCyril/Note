@@ -57,7 +57,7 @@ Légende : ✅ terminé · ⏳ prochaine · ⬜ à venir · 🎨 design requis �
 |---|---|---|---|---|
 | 15 | Markdown natif à la frappe | ✅ | — | `872b114` |
 | 16 | Liens internes & sous-pages | ✅ | — | `48f48ef` |
-| 17 | Bases de données | ✅ | 🎨 ✔️ | `PH17` |
+| 17 | Bases de données | ✅ | 🎨 ✔️ | `c0e95f7` |
 | 18 | Fonctionnalités IA | ⏳ **prochaine** | 🎨 ✔️ | — |
 | 19 | Espaces de travail (workspaces) | ⬜ | 🎨 ✔️ | — |
 
