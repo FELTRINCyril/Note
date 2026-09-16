@@ -47,3 +47,6 @@ playground.xcworkspace
 # Divers
 *.log
 *.tmp
+
+# Artefacts de verification visuelle (regeneres a chaque execution des tests)
+*.xcresult/

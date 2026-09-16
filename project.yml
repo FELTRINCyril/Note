@@ -134,6 +134,29 @@ targets:
           CODE_SIGN_ENTITLEMENTS: App/Slate.entitlements
           SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) SLATE_CLOUDKIT"
 
+  # Tests d'interface (XCUITest). Ils lancent l'app POUR DE VRAI, la pilotent
+  # (clics, frappe, raccourcis) et capturent des captures d'ecran exploitables.
+  # C'est le seul moyen de verifier le comportement ET le rendu d'ecrans assembles :
+  # ImageRenderer (utilise par les tests de rendu de SlateUI) ne sait dessiner que
+  # du SwiftUI pur, jamais une NavigationSplitView, un ScrollView ou un materiau.
+  SlateUITestsApp:
+    type: bundle.ui-testing
+    platform: macOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: Slate
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.gemaddis.slate.uitests
+        TEST_TARGET_NAME: Slate
+        # Le runner a besoin d'un Info.plist pour etre signe. On le laisse generer
+        # automatiquement plutot que d'en versionner un : il ne contient rien de
+        # specifique a Slate.
+        GENERATE_INFOPLIST_FILE: YES
+        # Le runner n'a pas besoin de lire tout l'arbre de sources : pas de
+        # SwiftLint ici, donc le sandbox de scripts reste actif.
+
 schemes:
   Slate:
     build:
@@ -149,6 +172,7 @@ schemes:
         - package: SlateEditor/SlateEditorTests
         - package: SlateServices/SlateServicesTests
         - package: SlateFeatures/SlateFeaturesTests
+        - SlateUITestsApp
     profile:
       config: Release
     analyze:

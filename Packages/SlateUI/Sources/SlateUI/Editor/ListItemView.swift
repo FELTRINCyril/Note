@@ -18,7 +18,15 @@ public struct ListItemView<Content: View>: View {
                 .slateFont(SlateFont.body)
                 .monospacedDigit() // la colonne ne bouge pas au passage de 9 a 10
                 .foregroundStyle(SlateColor.textSecondary)
-                .frame(width: SlateGeometry.listMarkerWidth, alignment: marker.isOrdered ? .trailing : .center)
+                .lineLimit(1)
+                // `minWidth`, pas `width` : a 15 pt Regular, "10." ne tient pas dans les
+                // 18 pt de `listMarkerWidth` (calibres pour "9.") et retombait sur DEUX
+                // lignes ("1" / "0.") dans une largeur fixe -- constat reel a l'image
+                // (`block_list_items_light.png`), le commentaire "la colonne ne bouge
+                // pas au passage de 9 a 10" documentait donc une intention non tenue.
+                // `minWidth` garde la position des marqueurs a 1 chiffre inchangee et ne
+                // laisse grandir la colonne que pour les index a 2+ chiffres.
+                .frame(minWidth: SlateGeometry.listMarkerWidth, alignment: marker.isOrdered ? .trailing : .center)
                 .accessibilityHidden(true)
             content
                 .slateFont(SlateFont.body)
