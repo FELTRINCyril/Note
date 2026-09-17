@@ -24,7 +24,7 @@ final class SlateNoteListUITests: XCTestCase {
 
         SlateUITestSupport.capture(window, named: "20-dossier-vide", in: self)
 
-        let newNoteButton = app.buttons["Nouvelle note"]
+        let newNoteButton = SlateUITestSupport.sidebarNewNoteButton(in: app)
         XCTAssertTrue(newNoteButton.waitForExistence(timeout: 5))
         XCTAssertTrue(newNoteButton.isEnabled, "Le bouton Nouvelle note reste desactive alors qu'un dossier est selectionne.")
         newNoteButton.click()
@@ -33,7 +33,7 @@ final class SlateNoteListUITests: XCTestCase {
         SlateUITestSupport.capture(window, named: "21-note-creee-dans-la-liste", in: self)
 
         XCTAssertTrue(
-            app.staticTexts["Nouvelle note"].firstMatch.waitForExistence(timeout: 5),
+            SlateUITestSupport.noteCell(titled: "Nouvelle note", in: app).waitForExistence(timeout: 5),
             "La note nouvellement creee n'apparait pas (titre par defaut 'Nouvelle note')."
         )
     }
@@ -52,7 +52,7 @@ final class SlateNoteListUITests: XCTestCase {
             return
         }
 
-        let newNoteButton = app.buttons["Nouvelle note"]
+        let newNoteButton = SlateUITestSupport.sidebarNewNoteButton(in: app)
         for _ in 0..<2 {
             XCTAssertTrue(newNoteButton.waitForExistence(timeout: 5))
             newNoteButton.click()

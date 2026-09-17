@@ -22,18 +22,23 @@ final class SlateSidebarUITests: XCTestCase {
 
         SlateUITestSupport.capture(window, named: "10-sidebar-etat-initial", in: self)
 
-        // Le selecteur de workspace affiche le nom du workspace courant : on verifie sa
-        // presence textuelle (le constat sur un eventuel doublon nom/sous-titre se fait
-        // a la lecture de la capture, un `StaticText` isole ne suffit pas a le prouver
-        // par assertion).
+        // Le selecteur de workspace est un SEUL `Button` accessible (nom+sous-titre
+        // combines par `.accessibilityLabel` dans `WorkspaceSwitcherRow`, voir sa
+        // documentation) : le libelle expose est donc exactement le nom du workspace,
+        // "Espace de travail" par defaut. Le constat sur le doublon VISUEL nom/sous-titre
+        // se fait a la lecture de la capture, une assertion ne peut prouver que le
+        // libelle accessible existe.
         XCTAssertTrue(
-            app.staticTexts["Espace de travail"].waitForExistence(timeout: 5),
-            "Le libelle du workspace par defaut est introuvable dans la sidebar."
+            app.buttons["Espace de travail"].waitForExistence(timeout: 5),
+            "Le bouton du workspace par defaut est introuvable dans la sidebar."
         )
 
+        // L'en-tete de section est affiche en MAJUSCULES ("ESPACES") -- c'est la valeur
+        // reellement exposee a l'accessibilite, distincte du libelle localise
+        // "sidebar.section.spaces" ("Espaces") transforme a l'affichage.
         XCTAssertTrue(
-            app.staticTexts["Espaces"].exists,
-            "L'en-tete de section 'Espaces' est introuvable."
+            app.staticTexts["ESPACES"].exists,
+            "L'en-tete de section 'ESPACES' est introuvable."
         )
     }
 
@@ -49,8 +54,14 @@ final class SlateSidebarUITests: XCTestCase {
         XCTAssertTrue(created, "La sequence de creation de dossier n'a pas pu etre menee a son terme.")
         guard created else { return }
 
+        // La ligne de dossier est un SEUL element combine (`.accessibilityElement(
+        // children: .combine)` dans `FolderRow`, role `StaticText`) : son texte complet
+        // inclut le compte de notes ("<nom>, aucune note") et se lit sur `value`, pas sur
+        // `label` (constate en pratique malgre le `.accessibilityLabel(...)` explicite de
+        // la vue) -- d'ou `CONTAINS` sur les deux plutot qu'une correspondance exacte.
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@ OR value CONTAINS[c] %@", folderName, folderName)
         XCTAssertTrue(
-            app.staticTexts[folderName].waitForExistence(timeout: 5),
+            app.staticTexts.matching(predicate).firstMatch.waitForExistence(timeout: 5),
             "Le nouveau dossier n'apparait pas dans l'arbre de la sidebar."
         )
 
@@ -72,8 +83,8 @@ final class SlateSidebarUITests: XCTestCase {
             return
         }
 
-        let predicate = NSPredicate(format: "label CONTAINS[c] %@", folderName)
-        let row = app.descendants(matching: .any).matching(predicate).firstMatch
+        let predicate = NSPredicate(format: "label CONTAINS[c] %@ OR value CONTAINS[c] %@", folderName, folderName)
+        let row = app.staticTexts.matching(predicate).firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 5), "Ligne du dossier introuvable pour le clic droit.")
         row.rightClick()
         SlateUITestSupport.capture(window, named: "13-menu-contextuel-dossier", in: self)

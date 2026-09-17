@@ -21,12 +21,12 @@ final class SlateOrganizationUITests: XCTestCase {
             return
         }
 
-        let newNoteButton = app.buttons["Nouvelle note"]
+        let newNoteButton = SlateUITestSupport.sidebarNewNoteButton(in: app)
         XCTAssertTrue(newNoteButton.waitForExistence(timeout: 5))
         newNoteButton.click()
         Thread.sleep(forTimeInterval: 1)
 
-        let noteCell = app.staticTexts["Nouvelle note"].firstMatch
+        let noteCell = SlateUITestSupport.noteCell(titled: "Nouvelle note", in: app)
         guard noteCell.waitForExistence(timeout: 5) else {
             XCTFail("Cellule de note introuvable dans la liste pour le clic droit.")
             return
@@ -55,12 +55,12 @@ final class SlateOrganizationUITests: XCTestCase {
             return
         }
 
-        let newNoteButton = app.buttons["Nouvelle note"]
+        let newNoteButton = SlateUITestSupport.sidebarNewNoteButton(in: app)
         XCTAssertTrue(newNoteButton.waitForExistence(timeout: 5))
         newNoteButton.click()
         Thread.sleep(forTimeInterval: 1)
 
-        let noteCell = app.staticTexts["Nouvelle note"].firstMatch
+        let noteCell = SlateUITestSupport.noteCell(titled: "Nouvelle note", in: app)
         guard noteCell.waitForExistence(timeout: 5) else {
             XCTFail("Cellule de note introuvable, mise a la corbeille non testee.")
             return

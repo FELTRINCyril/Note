@@ -53,7 +53,7 @@ final class SlateSettingsUITests: XCTestCase {
         let settingsWindow = app.windows.count > 1 ? app.windows.element(boundBy: 1) : app.windows.firstMatch
         SlateUITestSupport.capture(settingsWindow, named: "81-reglages-apparence-avant", in: self)
 
-        let darkButton = app.buttons["Sombre"]
+        let darkButton = SlateUITestSupport.segment(labeled: "Sombre", in: app)
         guard darkButton.waitForExistence(timeout: 5) else {
             XCTFail("Segment de theme 'Sombre' introuvable dans l'onglet Apparence.")
             return
@@ -63,14 +63,14 @@ final class SlateSettingsUITests: XCTestCase {
         SlateUITestSupport.capture(settingsWindow, named: "82-reglages-apparence-theme-sombre", in: self)
         SlateUITestSupport.capture(window, named: "83-fenetre-principale-theme-sombre", in: self)
 
-        let lightButton = app.buttons["Clair"]
+        let lightButton = SlateUITestSupport.segment(labeled: "Clair", in: app)
         if lightButton.waitForExistence(timeout: 3) {
             lightButton.click()
             Thread.sleep(forTimeInterval: 1)
             SlateUITestSupport.capture(window, named: "84-fenetre-principale-theme-clair", in: self)
         }
 
-        let systemButton = app.buttons["Système"]
+        let systemButton = SlateUITestSupport.segment(labeled: "Système", in: app)
         if systemButton.waitForExistence(timeout: 3) {
             systemButton.click()
         }

@@ -26,7 +26,7 @@ final class SlateShortcutsUITests: XCTestCase {
         SlateUITestSupport.capture(window, named: "A0-apres-cmd-n", in: self)
 
         XCTAssertTrue(
-            app.staticTexts["Nouvelle note"].firstMatch.waitForExistence(timeout: 5),
+            SlateUITestSupport.noteCell(titled: "Nouvelle note", in: app).waitForExistence(timeout: 5),
             "Cmd+N ne semble pas avoir cree de note dans le dossier selectionne."
         )
     }
@@ -56,6 +56,11 @@ final class SlateShortcutsUITests: XCTestCase {
 
     /// Barre de menus complete (Fichier/Edition/Format/Affichage), au-dela de ce que
     /// `SlateLaunchUITests.testMenuBarExposesExpectedCommands` verifie deja.
+    ///
+    /// Le menu "Affichage" de `SlateAppCommands` (`CommandGroup(after: .sidebar)`)
+    /// s'attache au menu SYSTEME "View" de macOS, dont le titre localise en francais est
+    /// "Présentation" -- pas "Affichage" (verifie sur l'app reelle). Attendre "Affichage"
+    /// ici serait une hypothese fausse, pas un defaut de l'app.
     func testFullMenuBarStructure() throws {
         let app = SlateUITestSupport.launchedApp(self)
         let menuBar = app.menuBars.firstMatch
@@ -64,14 +69,14 @@ final class SlateShortcutsUITests: XCTestCase {
         let titles = menuBar.menuBarItems.allElementsBoundByIndex.map { $0.title }
         SlateUITestSupport.capture(app.windows.firstMatch, named: "A4-fenetre-avant-inspection-menus", in: self)
 
-        for expected in ["Fichier", "Édition", "Format", "Affichage"] {
+        for expected in ["Fichier", "Édition", "Présentation", "Format"] {
             XCTAssertTrue(titles.contains(expected), "Menu manquant : \(expected). Vus : \(titles)")
         }
 
-        let affichage = menuBar.menuBarItems["Affichage"]
-        affichage.click()
-        let affichageItems = affichage.menuItems.allElementsBoundByIndex.map { $0.title }
-        affichage.typeKey(XCUIKeyboardKey.escape, modifierFlags: [])
+        let presentation = menuBar.menuBarItems["Présentation"]
+        presentation.click()
+        let presentationItems = presentation.menuItems.allElementsBoundByIndex.map { $0.title }
+        presentation.typeKey(XCUIKeyboardKey.escape, modifierFlags: [])
 
         for expected in [
             "Afficher/masquer la barre latérale",
@@ -79,8 +84,8 @@ final class SlateShortcutsUITests: XCTestCase {
             "Mode focus"
         ] {
             XCTAssertTrue(
-                affichageItems.contains(expected),
-                "Entree de menu Affichage manquante ou differente : \(expected). Vues : \(affichageItems)"
+                presentationItems.contains(expected),
+                "Entree de menu Presentation manquante ou differente : \(expected). Vues : \(presentationItems)"
             )
         }
     }
